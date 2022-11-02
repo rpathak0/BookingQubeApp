@@ -15,6 +15,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -152,131 +153,136 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <ImageBackground style={styles.container} source={splash_image}>
-        <HeaderComponent
-          title="Register"
-          navAction="back"
-          nav={this.props.navigation}
-        />
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <ImageBackground style={styles.container} source={splash_image}>
+          <HeaderComponent
+            title="Register"
+            navAction="back"
+            nav={this.props.navigation}
+          />
 
-        <View style={styles.homeContainer}>
-          <Text style={styles.loginTextStyle}>Register</Text>
+          <View style={styles.homeContainer}>
+            <Text style={styles.loginTextStyle}>Register</Text>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.loginFormTextInput}
-              placeholder="Name"
-              placeholderTextColor="#c4c3cb"
-              keyboardType="default"
-              underlineColorAndroid="transparent"
-              value={this.state.name}
-              onChangeText={this.handleNameChange}
-            />
-          </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.loginFormTextInput}
+                placeholder="Name"
+                placeholderTextColor="#c4c3cb"
+                keyboardType="default"
+                underlineColorAndroid="transparent"
+                value={this.state.name}
+                onChangeText={this.handleNameChange}
+              />
+            </View>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.loginFormTextInput}
-              placeholder="Email"
-              placeholderTextColor="#c4c3cb"
-              keyboardType="default"
-              underlineColorAndroid="transparent"
-              value={this.state.email}
-              onChangeText={this.handleEmailChange}
-            />
-          </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.loginFormTextInput}
+                placeholder="Email"
+                placeholderTextColor="#c4c3cb"
+                keyboardType="default"
+                underlineColorAndroid="transparent"
+                value={this.state.email}
+                onChangeText={this.handleEmailChange}
+              />
+            </View>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.loginFormTextInput}
-              placeholder="Password"
-              placeholderTextColor="#c4c3cb"
-              keyboardType="default"
-              secureTextEntry={this.state.hidePassword}
-              underlineColorAndroid="transparent"
-              value={this.state.password}
-              onChangeText={this.handlePasswordChange}
-            />
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.loginFormTextInput}
+                placeholder="Password"
+                placeholderTextColor="#c4c3cb"
+                keyboardType="default"
+                secureTextEntry={this.state.hidePassword}
+                underlineColorAndroid="transparent"
+                value={this.state.password}
+                onChangeText={this.handlePasswordChange}
+              />
+
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.touchAbleButton}
+                onPress={this.setPasswordVisibility}>
+                <Image
+                  source={
+                    this.state.hidePassword
+                      ? require('../assets/icon/ic_hide.png')
+                      : require('../assets/icon/ic_show.png')
+                  }
+                  style={styles.buttonImage}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.agreeTextStyle}>
+              By clicking "Register", I accept the{' '}
+              <Text style={{color: '#1b89ef'}}>Terms of Service</Text> and have
+              read the <Text style={{color: '#1b89ef'}}>Privacy Policy</Text>.{' '}
+              {'\n'} I agree that bookingqube may share my information with event
+              organizers.
+            </Text>
 
             <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.touchAbleButton}
-              onPress={this.setPasswordVisibility}>
+              style={styles.buttonContainer}
+              onPress={this.handleRegister}>
               <Image
-                source={
-                  this.state.hidePassword
-                    ? require('../assets/icon/ic_hide.png')
-                    : require('../assets/icon/ic_show.png')
-                }
-                style={styles.buttonImage}
+                source={ic_login}
+                resizeMode="cover"
+                style={styles.loginIconStyle}
               />
+              <Text style={styles.loginButtonTextStyle}>Register</Text>
             </TouchableOpacity>
-          </View>
 
-          <Text style={styles.agreeTextStyle}>
-            By clicking "Register", I accept the{' '}
-            <Text style={{color: '#1b89ef'}}>Terms of Service</Text> and have
-            read the <Text style={{color: '#1b89ef'}}>Privacy Policy</Text>.{' '}
-            {'\n'} I agree that bookingqube may share my information with event
-            organizers.
-          </Text>
+            <View style={styles.forgetAndRegisterContainer}>
+              <Text style={styles.additionalTextStyle}>
+                Already Have An Account?
+              </Text>
 
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={this.handleRegister}>
-            <Image
-              source={ic_login}
-              resizeMode="cover"
-              style={styles.loginIconStyle}
-            />
-            <Text style={styles.loginButtonTextStyle}>Register</Text>
-          </TouchableOpacity>
-
-          <View style={styles.forgetAndRegisterContainer}>
-            <Text style={styles.additionalTextStyle}>
-              Already Have An Account?
-            </Text>
-
-            <Text style={styles.additionalTextStyle} onPress={this.handleLogin}>
-              Login
-            </Text>
-          </View>
-
-          {/* <View style={styles.lineContainer}></View> */}
-
-          {/* <View style={styles.socialMediaContainer}>
-            <Text style={styles.socialTextStyle}>Or Continue with</Text>
-            <View style={styles.socialLoginContainer}>
-              <View style={styles.facebookViewContainer}>
-                <Image
-                  source={facebook}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle}>Facebook</Text>
-              </View>
-
-              <View style={styles.googleViewContainer}>
-                <Image
-                  source={google}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle1}>Google</Text>
-              </View>
+              <Text style={styles.additionalTextStyle} onPress={this.handleLogin}>
+                Login
+              </Text>
             </View>
-          </View> */}
-        </View>
 
-        {this.state.showProcessingLoader && <ProcessingLoader />}
-      </ImageBackground>
+            {/* <View style={styles.lineContainer}></View> */}
+
+            {/* <View style={styles.socialMediaContainer}>
+              <Text style={styles.socialTextStyle}>Or Continue with</Text>
+              <View style={styles.socialLoginContainer}>
+                <View style={styles.facebookViewContainer}>
+                  <Image
+                    source={facebook}
+                    resizeMode="cover"
+                    style={styles.socialMediaIconStyle}
+                  />
+
+                  <Text style={styles.facebookTextStyle}>Facebook</Text>
+                </View>
+
+                <View style={styles.googleViewContainer}>
+                  <Image
+                    source={google}
+                    resizeMode="cover"
+                    style={styles.socialMediaIconStyle}
+                  />
+
+                  <Text style={styles.facebookTextStyle1}>Google</Text>
+                </View>
+              </View>
+            </View> */}
+          </View>
+
+          {this.state.showProcessingLoader && <ProcessingLoader />}
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#00192f',

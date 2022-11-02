@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -147,6 +148,7 @@ const LoginScreen = ({navigation}) => {
 
   
     return (
+      <SafeAreaView style={styles.safeAreaContainer}>
       <ImageBackground style={styles.container} source={splash_image}>
         <HeaderComponent
           title="Login"
@@ -253,12 +255,16 @@ const LoginScreen = ({navigation}) => {
 
         {loginFrom?.showProcessingLoader && <ProcessingLoader />}
       </ImageBackground>
+      </SafeAreaView>
     );
   
 }
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#00192f',

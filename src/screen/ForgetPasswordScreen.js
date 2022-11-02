@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -122,84 +123,89 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <ImageBackground style={styles.container} source={splash_image}>
-        <HeaderComponent
-          title="Forget Password"
-          navAction="back"
-          nav={this.props.navigation}
-        />
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <ImageBackground style={styles.container} source={splash_image}>
+          <HeaderComponent
+            title="Forget Password"
+            navAction="back"
+            nav={this.props.navigation}
+          />
 
-        <View style={styles.homeContainer}>
-          <Text style={styles.loginTextStyle}>Forget Password</Text>
+          <View style={styles.homeContainer}>
+            <Text style={styles.loginTextStyle}>Forget Password</Text>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.loginFormTextInput}
-              placeholder="Email"
-              placeholderTextColor="#c4c3cb"
-              keyboardType="default"
-              underlineColorAndroid="transparent"
-              value={this.state.email}
-              onChangeText={this.handleEmailChange}
-            />
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.loginFormTextInput}
+                placeholder="Email"
+                placeholderTextColor="#c4c3cb"
+                keyboardType="default"
+                underlineColorAndroid="transparent"
+                value={this.state.email}
+                onChangeText={this.handleEmailChange}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={this.handleLogin}>
+              <Image
+                source={ic_login}
+                resizeMode="cover"
+                style={styles.loginIconStyle}
+              />
+              <Text style={styles.loginButtonTextStyle}>Forget Password</Text>
+            </TouchableOpacity>
+
+            {/* <View style={styles.forgetAndRegisterContainer}>
+              <Text style={styles.additionalTextStyle}>Forgot Password?</Text>
+
+              <Text
+                style={styles.additionalTextStyle}
+                onPress={this.handleRegister}>
+                Register
+              </Text>
+            </View> */}
+
+            {/* <View style={styles.lineContainer}></View>
+
+            <View style={styles.socialMediaContainer}>
+              <Text style={styles.socialTextStyle}>Or Continue with</Text>
+              <View style={styles.socialLoginContainer}>
+                <View style={styles.facebookViewContainer}>
+                  <Image
+                    source={facebook}
+                    resizeMode="cover"
+                    style={styles.socialMediaIconStyle}
+                  />
+
+                  <Text style={styles.facebookTextStyle}>Facebook</Text>
+                </View>
+
+                <View style={styles.googleViewContainer}>
+                  <Image
+                    source={google}
+                    resizeMode="cover"
+                    style={styles.socialMediaIconStyle}
+                  />
+
+                  <Text style={styles.facebookTextStyle}>Google</Text>
+                </View>
+              </View>
+            </View> */}
           </View>
 
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={this.handleLogin}>
-            <Image
-              source={ic_login}
-              resizeMode="cover"
-              style={styles.loginIconStyle}
-            />
-            <Text style={styles.loginButtonTextStyle}>Forget Password</Text>
-          </TouchableOpacity>
-
-          {/* <View style={styles.forgetAndRegisterContainer}>
-            <Text style={styles.additionalTextStyle}>Forgot Password?</Text>
-
-            <Text
-              style={styles.additionalTextStyle}
-              onPress={this.handleRegister}>
-              Register
-            </Text>
-          </View> */}
-
-          {/* <View style={styles.lineContainer}></View>
-
-          <View style={styles.socialMediaContainer}>
-            <Text style={styles.socialTextStyle}>Or Continue with</Text>
-            <View style={styles.socialLoginContainer}>
-              <View style={styles.facebookViewContainer}>
-                <Image
-                  source={facebook}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle}>Facebook</Text>
-              </View>
-
-              <View style={styles.googleViewContainer}>
-                <Image
-                  source={google}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle}>Google</Text>
-              </View>
-            </View>
-          </View> */}
-        </View>
-
-        {this.state.showProcessingLoader && <ProcessingLoader />}
-      </ImageBackground>
+          {this.state.showProcessingLoader && <ProcessingLoader />}
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#00192f',

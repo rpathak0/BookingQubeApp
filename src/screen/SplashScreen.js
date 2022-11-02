@@ -5,6 +5,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import SafeAreaView from 'react-native-safe-area-view';
 
 // Image
 import logo from '../assets/image/logo.png';
@@ -57,23 +58,28 @@ export default class SplashScreen extends Component {
     const rand = Math.floor(Math.random() * 9) + 1;
 
     return (
-      <ImageBackground style={styles.container} source={splash_image}>
-        <View style={styles.homeContainer}>
-          <Text style={styles.logoTextStyle}>
-            {initialArr.map((item,i) => (
-              <Text key={i} onPress={this.handleText} style={{color: backColor[rand]}}>
-                {item.text}
-              </Text>
-            ))}
-          </Text>
-          <Image source={logo} resizeMode="cover" style={styles.logoStyle} />
-        </View>
-      </ImageBackground>
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <ImageBackground style={styles.container} source={splash_image}>
+          <View style={styles.homeContainer}>
+            <Text style={styles.logoTextStyle}>
+              {initialArr.map((item,i) => (
+                <Text key={i} onPress={this.handleText} style={{color: backColor[rand]}}>
+                  {item.text}
+                </Text>
+              ))}
+            </Text>
+            <Image source={logo} resizeMode="cover" style={styles.logoStyle} />
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#00192f',

@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
+import {StyleSheet, StatusBar} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
@@ -53,10 +54,17 @@ export default class App extends Component {
     const AppContainer = createAppContainer(RootNavigator);
     return (
       <LoginContextProvider>
-        <SafeAreaProvider>
+        <SafeAreaProvider style={styles.container}>
           <AppContainer ref={this.setNavigatorRef} />
         </SafeAreaProvider>
       </LoginContextProvider>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      marginTop:StatusBar.currentHeight,
+  }
+});
