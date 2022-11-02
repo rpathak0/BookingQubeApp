@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
-  FlatList
+  FlatList,
+  StatusBar
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -314,6 +315,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f1f1f1',
+    marginTop:StatusBar.currentHeight,
   },
   homeContainer: {
     flex: 1,
