@@ -1,5 +1,10 @@
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-toast-message';
 
 export const showToast = message => {
-  Toast.show(message, Toast.LONG, Toast.BOTTOM);
+  Toast.show({
+    type: 'info',
+    text1: message,
+    position: 'bottom'
+  });
+
 };

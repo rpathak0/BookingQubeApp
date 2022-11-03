@@ -5,8 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // User Preferences Keys
 export const async_keys = {
-  userId: '',
-  loggedInUserId: '',
+  userId: 'userId',
+  loggedInUserId: 'loggedInUserId',
   userInfo: 'userInfo',
 };
 

@@ -41,15 +41,15 @@ import { LoginContext } from '../context/LoginContext';
 import { User } from '../utils/user';
 
 // Validation
-// import {isEmailAddress} from '../validation/FormValidator';
+import {isEmailAddress} from '../validation/FormValidator';
 
 // export default class LoginScreen extends Component
 const LoginScreen = ({navigation}) => {
   
   const {setLogin, setType} = useContext(LoginContext);
-  const [loginFrom ,setLoginForm] =  useState([
+  const [loginFrom ,setLoginForm] =  useState(
     {"hidePassword": true}
-  ])
+  )
   
 
   const handleChange = (value,name) => {
@@ -83,16 +83,16 @@ const LoginScreen = ({navigation}) => {
 
   const handleLogin = async () => {
     Keyboard.dismiss();
-
-    // const {email, password} = this.state;
-
+    
+    const {email, password} = loginFrom;
+    
     // validation
-    // if (!isEmailAddress(email)) {
-    //   Alert.alert('', 'Please enter email!', [{text: 'OK'}], {
-    //     cancelable: false,
-    //   });
-    //   return;
-    // }
+    if (!isEmailAddress(email)) {
+      Alert.alert('', 'Please enter valid email!', [{text: 'OK'}], {
+        cancelable: false,
+      });
+      return;
+    }
 
     if (loginFrom?.password.trim() === '') {
       Alert.alert('', 'Please enter valid password!', [{text: 'OK'}], {
@@ -123,6 +123,15 @@ const LoginScreen = ({navigation}) => {
           new User().setToken(token);
           setType(auth?.role_id);
           setLogin('true');
+
+          console.log('async_keys.userId', async_keys.userId);
+          console.log('token', token);
+          
+          console.log('async_keys.userInfo', async_keys.userInfo);
+          console.log('response.data.role_id', response.data.role_id);
+          
+          console.log('response.data.avatar', response.data.avatar);
+
           await storeData(async_keys.userId, token);
           await storeData(async_keys.userInfo, response.data.role_id);
           await storeData('avatar', response.data.avatar);
@@ -131,6 +140,7 @@ const LoginScreen = ({navigation}) => {
           // this.forceUpdate();
           // this.props.navigation.navigate('LoggedOut');
         } else {
+          console.log('errorrrrs', errors);
           const {username} = errors;
 
           // stopping processing loader
@@ -163,7 +173,8 @@ const LoginScreen = ({navigation}) => {
               style={styles.loginFormTextInput}
               placeholder="Email"
               placeholderTextColor="#c4c3cb"
-              keyboardType="default"
+              keyboardType="email-address"
+              autoCapitalize="none"
               underlineColorAndroid="transparent"
               value={ loginFrom?.email }
               onChangeText={(value)=>{handleChange(value,'email')}}

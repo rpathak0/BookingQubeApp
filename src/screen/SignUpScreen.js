@@ -40,7 +40,7 @@ import {BASE_URL, makeRequest} from '../api/ApiInfo';
 // Validation
 import {isEmailAddress} from '../validation/FormValidator';
 
-export default class LoginScreen extends Component {
+export default class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,6 +72,7 @@ export default class LoginScreen extends Component {
     Keyboard.dismiss();
 
     const {name, email, password} = this.state;
+    console.log('handleregis', this.state);
 
     // validation
     if (name.trim() === '') {
@@ -180,8 +181,9 @@ export default class LoginScreen extends Component {
               <TextInput
                 style={styles.loginFormTextInput}
                 placeholder="Email"
+                autoCapitalize="none"
                 placeholderTextColor="#c4c3cb"
-                keyboardType="default"
+                keyboardType="email-address"
                 underlineColorAndroid="transparent"
                 value={this.state.email}
                 onChangeText={this.handleEmailChange}

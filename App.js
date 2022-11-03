@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, Platform} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 // Splash Screen
 import SplashScreen from './src/screen/SplashScreen';
@@ -14,6 +15,8 @@ import {nsSetTopLevelNavigator} from './src/routes/NavigationService';
 // User Preference
 import {async_keys, getData} from './src/api/UserPreference';
 import LoginContextProvider from './src/context/LoginContext';
+
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : StatusBar.currentHeight;
 
 export default class App extends Component {
   constructor(props) {
@@ -56,6 +59,7 @@ export default class App extends Component {
       <LoginContextProvider>
         <SafeAreaProvider style={styles.container}>
           <AppContainer ref={this.setNavigatorRef} />
+          <Toast />
         </SafeAreaProvider>
       </LoginContextProvider>
     );
@@ -65,6 +69,6 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-      marginTop:StatusBar.currentHeight,
+      marginTop:STATUSBAR_HEIGHT,
   }
 });
