@@ -134,7 +134,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.event"
+        applicationId "com.bookingqube.bookingqubeapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

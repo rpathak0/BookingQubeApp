@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,6 +35,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This lets you play music.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This lets you scan Ticket QrCode from the app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -43,8 +45,6 @@
 	<string>This lets you choose photos from your phone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This lets you choose photos from your phone.</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>This lets you play music.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
