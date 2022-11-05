@@ -44,7 +44,8 @@ import header_image from '../assets/image/header_image.png';
 import { BASE_URL, makeRequest } from '../api/ApiInfo';
 
 // User Preference
-import { async_keys, getData } from '../api/UserPreference';
+import { async_keys, getData, clearData } from '../api/UserPreference';
+
 import { showToast } from '../component/CustomToast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -226,6 +227,82 @@ export default class ProfileScreen extends Component {
       await openSettings();
     } catch (error) {
       console.log('cannot open settings', error);
+    }
+  };
+
+  confirmProfileDelete = async () => {
+    // confirmation dialog
+    Alert.alert(
+      'Delete Account',
+      'Are you sure, you want to delete your account?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Yes', onPress: this.handleDeleteProfile},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  handleDeleteProfile = async () => {
+
+    // getting token from AsyncStorage
+    const token = await getData(async_keys.userId);
+
+    // axios
+    const axios = require('axios');
+
+    // creating custom header
+    let axiosConfig = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    try {
+      // starting processing loader
+      this.setState({ showProcessingLoader: true });
+
+      var data = new FormData();
+      await axios
+        .post(BASE_URL + 'profile/delete', data, axiosConfig)
+        .then(response => {
+          console.log('response', response);
+          let newResponse = response.data;
+
+          if (newResponse) {
+            const { success, data } = newResponse;
+
+            if (success === true) {
+              // starting processing loader
+              this.setState({ showProcessingLoader: false });
+
+              // showing toast
+              showToast('Profile Deleted successfully!');
+              
+              // Logout the user
+              this.handleLogoutOkPress()
+            }
+          }
+        });
+    } catch (error) {
+      // starting processing loader
+      this.setState({ showProcessingLoader: false });
+
+      showToast('Something went wrong.');
+      console.log('error--->', error)
+    }
+  };
+
+  handleLogoutOkPress = async () => {
+    try {
+      // clearing user preferences
+      await clearData();
+
+      // resetting navigation
+      this.props.navigation.navigate('Home');
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -527,6 +604,12 @@ export default class ProfileScreen extends Component {
               onPress={this.handleUpdateProfile}>
               <Text style={styles.saveProfileText}>Save Profile</Text>
             </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.buttonContainerDelete}
+              onPress={this.confirmProfileDelete}>
+              <Text style={styles.saveProfileText}>Delete Account</Text>
+            </TouchableOpacity>
 
             {/* <Text style={styles.hostText}>Want to create & host events ?</Text> */}
 
@@ -643,13 +726,23 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     height: hp(6),
-    width: wp(30),
+    width: wp(90),
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
     backgroundColor: '#1b89ef',
+  },
+  buttonContainerDelete: {
+    height: hp(6),
+    width: wp(90),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: wp(4),
+    marginVertical: hp(2),
+    borderRadius: wp(4),
+    backgroundColor: '#ff7273',
   },
   saveProfileText: {
     fontSize: wp(3.5),

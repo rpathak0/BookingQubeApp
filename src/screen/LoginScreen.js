@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Keyboard,
   Alert,
+  Platform,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -109,7 +110,7 @@ const LoginScreen = ({navigation}) => {
       const params = {
         email: loginFrom?.email,
         password: loginFrom?.password,
-        device_name: 'android',
+        device_name: Platform.OS,
       };
 
       // calling api
