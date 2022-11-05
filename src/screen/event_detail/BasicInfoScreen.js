@@ -23,6 +23,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { STORAGE_URL } from '../../api/ApiInfo';
 // Component
 
+import { SERVER } from '../../services/apiConfig';
 
 // Icon
 import ic_facebook from '../../assets/icon/ic_facebook.png';
@@ -48,8 +49,6 @@ export default class BasicInfoScreen extends Component {
 
   handleFacebook = async () => {
     try {
-      // Linking.openURL('https://bookingqube.com/');
-
       const { poster, title, description } = this.props.data.event;
       const htmlTagRegex = /<[^>]*>?/gm;
       const dsc = description
@@ -77,7 +76,7 @@ export default class BasicInfoScreen extends Component {
           let facebookParameters = [];
 
           facebookParameters.push(
-            'u=' + encodeURI('https://bookingqube.com/'),
+            'u=' + encodeURI(SERVER),
           );
           if (title) {
             facebookParameters.push('quote=' + encodeURI(title));
@@ -99,7 +98,7 @@ export default class BasicInfoScreen extends Component {
 
     const { title } = this.props.data.event;
     twitterParameters.push(
-      'url=' + encodeURI('https://bookingqube.com/'),
+      'url=' + encodeURI(SERVER),
     );
 
     twitterParameters.push('text=' + encodeURI(title));
@@ -118,7 +117,7 @@ export default class BasicInfoScreen extends Component {
   handleLinkedin = async () => {
     const { title,description } = this.props.data.event;
     try {
-      const url = `https://www.linkedin.com/shareArticle?mini=true&summary=${description}&title=${title}&url=https://bookingqube.com/events/${title}`;
+      const url = `https://www.linkedin.com/shareArticle?mini=true&summary=${description}&title=${title}&url=`+SERVER+`events/${title}`;
       Linking.openURL(url);
     } catch (error) {
     }
@@ -128,7 +127,7 @@ export default class BasicInfoScreen extends Component {
     try {
       const { title } = this.props.data.event;
 
-      Linking.openURL(`whatsapp://send?text=https://bookingqube.com/events/${title}`);
+      Linking.openURL(`whatsapp://send?text=`+SERVER+`events/${title}`);
     } catch (error) {
       console.log(error.message);
     }
@@ -137,7 +136,7 @@ export default class BasicInfoScreen extends Component {
   handleReddit = async () => {
     try {
       const { title } = this.props.data.event;
-      let url = `https://www.reddit.com/submit?title=${title}&url=https://bookingqube.com/events/${title}`
+      let url = `https://www.reddit.com/submit?title=${title}&url=`+SERVER+`events/${title}`
       Linking.openURL(url);
     } catch (error) {
       console.log(error.message);
@@ -147,7 +146,7 @@ export default class BasicInfoScreen extends Component {
   copyclipboard = async () => {
     try {
       const { title } = this.props.data.event;
-      let url = `https://bookingqube.com/events/${title}`
+      let url = SERVER+`events/${title}`
       Clipboard.setString(url);
       ToastAndroid.show('URL has been copied to clipboard', ToastAndroid.SHORT);
     } catch (error) {
@@ -158,7 +157,7 @@ export default class BasicInfoScreen extends Component {
 
   handleChain = async () => {
     try {
-      Linking.openURL('https://bookingqube.com/');
+      Linking.openURL(SERVER);
     } catch (error) {
       console.log(error.message);
     }

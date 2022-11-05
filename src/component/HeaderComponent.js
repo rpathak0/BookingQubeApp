@@ -17,7 +17,7 @@ import { async_keys, getData } from '../api/UserPreference';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import logo from '../assets/image/logo.png';
 // API Info
-import { BASE_URL, makeRequest } from '../api/ApiInfo';
+import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
 import { LoginContext } from '../context/LoginContext';
 const HeaderComponent = props => {
 
@@ -108,7 +108,7 @@ const HeaderComponent = props => {
         style={styles.notificationIconContainer}>
         {(img) ?
           <Image
-            source={{ uri: `https://bookingqube.com/storage/${img}` }}
+            source={{ uri: STORAGE_URL+`${img}` }}
             resizeMode="cover"
             style={styles.cartIconStyle}
           />

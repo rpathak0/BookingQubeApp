@@ -3,11 +3,11 @@
 
 // User Preference
 import {async_keys, getData} from './UserPreference';
+import { API_URL, API_STORAGE } from '../services/apiConfig';
 
 // Base URL
-//export const BASE_URL = 'https://devdemo.shrigenesis.com/events_app/api/v1/';
-export const BASE_URL = 'https://bookingqube.com/api/v1/';
-export const STORAGE_URL = 'https://bookingqube.com/storage/';
+export const BASE_URL = API_URL;
+export const STORAGE_URL = API_STORAGE;
 
 // Methods
 export const makeRequest = async (url, params = null) => {

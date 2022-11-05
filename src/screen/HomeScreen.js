@@ -35,7 +35,7 @@ import splash_image from '../assets/image/spalsh_image.png';
 import banner from '../assets/image/banner.jpg';
 
 // API Info
-import { BASE_URL } from '../api/ApiInfo';
+import { BASE_URL, STORAGE_URL } from '../api/ApiInfo';
 import axios from 'axios';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import Events from './home_detail/Events';
@@ -172,7 +172,7 @@ export default class HomeScreen extends Component {
     if (isLoading) {
       return <CustomLoader />;
     }
-    const imageUrl = 'https://bookingqube.com/storage/';
+    const imageUrl = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent title="Home" nav={this.props.navigation} />

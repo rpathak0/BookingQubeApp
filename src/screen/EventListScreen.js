@@ -426,9 +426,6 @@ export default class EventListScreen extends Component {
   itemSeparator = () => <View style={styles.separator} />;
 
   render() {
-    //const imageUrl = 'https://bookingqube.com/events_app/storage/';
-    const imageUrl = 'https://bookingqube.com/storage/';
-
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent

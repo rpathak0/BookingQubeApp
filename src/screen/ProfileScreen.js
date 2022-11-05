@@ -41,7 +41,7 @@ import ic_man from '../assets/icon/ic_man.png';
 import header_image from '../assets/image/header_image.png';
 
 // API Info
-import { BASE_URL, makeRequest } from '../api/ApiInfo';
+import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
 
 // User Preference
 import { async_keys, getData, clearData } from '../api/UserPreference';
@@ -391,8 +391,7 @@ export default class ProfileScreen extends Component {
       return <CustomLoader />;
     }
 
-    //  const url = 'https://bookingqube.com/events_app/storage/';
-    const url = 'https://bookingqube.com/storage/';
+    const url = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
