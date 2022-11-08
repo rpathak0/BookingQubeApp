@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, StatusBar, Platform} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
 import './locales/i18n';
+import { withTranslation } from 'react-i18next';
 
 // Splash Screen
 import SplashScreen from './src/screen/SplashScreen';
@@ -20,16 +21,22 @@ import LoginContextProvider from './src/context/LoginContext';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : StatusBar.currentHeight;
 
-export default App = () => {
-  const [isLoading, setIsLoading] = useState(null);
-  const [checkScanning, setCheckScanning] = useState(null);
-  const [guestCheckoutSuccess, setGuestCheckoutSuccess] = useState(null);
-  
-  const RootNavigator = createRootNavigator(checkScanning,guestCheckoutSuccess);
-  const AppContainer = createAppContainer(RootNavigator);
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+      checkScanning: null,
+      guestCheckoutSuccess: null,
+    };
+  }
 
+  componentDidMount() {
+    // Initial setup
+    setTimeout(this.initialSetup, 2000);
+  }
 
-  const initialSetup = async () => {
+  initialSetup = async () => {
     const organizer = await getData(async_keys.userInfo);
     const guestCheckoutSuccess = await getData('guestCheckoutSuccess');
     try {
@@ -38,30 +45,32 @@ export default App = () => {
 
     }
   };
-    
-  const setNavigatorRef = ref => {
+
+  setNavigatorRef = ref => {
     nsSetTopLevelNavigator(ref);
   };
 
-  useEffect(() => {
-    setTimeout(initialSetup, 2000);
-  }, []);
+  render() {
+    // const { t, i18n } = this.props;
+    const {isLoading, checkScanning,guestCheckoutSuccess} = this.state;
+    if (isLoading) {
+      return <SplashScreen />;
+    }
 
-  if (isLoading) {
-    return <SplashScreen />;
-  } else {
-      return (
-        <LoginContextProvider>
-          <SafeAreaProvider style={styles.container}>
-            <AppContainer ref={this.setNavigatorRef} />
-            <Toast />
-          </SafeAreaProvider>
-        </LoginContextProvider>
-      );
+    const RootNavigator = createRootNavigator(checkScanning,guestCheckoutSuccess);
+    const AppContainer = createAppContainer(RootNavigator);
+    return (
+      <LoginContextProvider>
+        <SafeAreaProvider style={styles.container}>
+          <AppContainer ref={this.setNavigatorRef}  />
+          <Toast />
+        </SafeAreaProvider>
+      </LoginContextProvider>
+    );
   }
+}
 
-};
-
+export default (App);
 
 const styles = StyleSheet.create({
   container: {
