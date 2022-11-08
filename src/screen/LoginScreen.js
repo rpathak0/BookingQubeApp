@@ -12,6 +12,8 @@ import {
   Keyboard,
   Alert,
   Platform,
+  I18nManager,
+  Button
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -19,6 +21,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import RNRestart from 'react-native-restart';
+
+import { useTranslation } from 'react-i18next';
+
 
 // Component
 import ProcessingLoader from '../component/ProcessingLoader';
@@ -51,6 +56,8 @@ const LoginScreen = ({navigation}) => {
   const [loginFrom ,setLoginForm] =  useState(
     {"hidePassword": true}
   )
+
+  const { t, i18n } = useTranslation();
   
 
   const handleChange = (value,name) => {
@@ -167,7 +174,7 @@ const LoginScreen = ({navigation}) => {
           nav={navigation}
         />
         <View style={styles.homeContainer}>
-          <Text style={styles.loginTextStyle}>Login</Text>
+          <Text style={styles.loginTextStyle}>{ t('hello') }</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -222,6 +229,18 @@ const LoginScreen = ({navigation}) => {
             />
             <Text style={styles.loginButtonTextStyle}>Login</Text>
           </TouchableOpacity>
+
+          <Button
+            title={t('Change language')}
+            onPress={() => {
+              i18n
+                .changeLanguage(i18n.language === 'ar' ? 'en' : 'ar')
+                .then(() => {
+                  I18nManager.forceRTL(i18n.language === 'ar');
+                  RNRestart.Restart();
+                });
+            }}
+          />
 
           <View style={styles.forgetAndRegisterContainer}>
             <Text

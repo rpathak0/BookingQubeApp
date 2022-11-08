@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, StatusBar, Platform} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+
+import './locales/i18n';
 
 // Splash Screen
 import SplashScreen from './src/screen/SplashScreen';
@@ -18,22 +20,16 @@ import LoginContextProvider from './src/context/LoginContext';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : StatusBar.currentHeight;
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      checkScanning: null,
-      guestCheckoutSuccess: null,
-    };
-  }
+export default App = () => {
+  const [isLoading, setIsLoading] = useState(null);
+  const [checkScanning, setCheckScanning] = useState(null);
+  const [guestCheckoutSuccess, setGuestCheckoutSuccess] = useState(null);
+  
+  const RootNavigator = createRootNavigator(checkScanning,guestCheckoutSuccess);
+  const AppContainer = createAppContainer(RootNavigator);
 
-  componentDidMount() {
-    // Initial setup
-    setTimeout(this.initialSetup, 2000);
-  }
 
-  initialSetup = async () => {
+  const initialSetup = async () => {
     const organizer = await getData(async_keys.userInfo);
     const guestCheckoutSuccess = await getData('guestCheckoutSuccess');
     try {
@@ -42,29 +38,30 @@ export default class App extends Component {
 
     }
   };
-
-  setNavigatorRef = ref => {
+    
+  const setNavigatorRef = ref => {
     nsSetTopLevelNavigator(ref);
   };
 
-  render() {
-    const {isLoading, checkScanning,guestCheckoutSuccess} = this.state;
-    if (isLoading) {
-      return <SplashScreen />;
-    }
+  useEffect(() => {
+    setTimeout(initialSetup, 2000);
+  }, []);
 
-    const RootNavigator = createRootNavigator(checkScanning,guestCheckoutSuccess);
-    const AppContainer = createAppContainer(RootNavigator);
-    return (
-      <LoginContextProvider>
-        <SafeAreaProvider style={styles.container}>
-          <AppContainer ref={this.setNavigatorRef} />
-          <Toast />
-        </SafeAreaProvider>
-      </LoginContextProvider>
-    );
+  if (isLoading) {
+    return <SplashScreen />;
+  } else {
+      return (
+        <LoginContextProvider>
+          <SafeAreaProvider style={styles.container}>
+            <AppContainer ref={this.setNavigatorRef} />
+            <Toast />
+          </SafeAreaProvider>
+        </LoginContextProvider>
+      );
   }
-}
+
+};
+
 
 const styles = StyleSheet.create({
   container: {
