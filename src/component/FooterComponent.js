@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
   AppState,
-  Alert,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -19,7 +18,6 @@ import SafeAreaView from 'react-native-safe-area-view';
 import ic_home from '../assets/icon/ic_home.png';
 import ic_footer_category from '../assets/icon/ic_footer_category.png';
 import ic_footer_event from '../assets/icon/ic_footer_event.png';
-import ic_footer_login from '../assets/icon/ic_footer_login.png';
 
 // User Preference
 import {async_keys, getData, clearData} from '../api/UserPreference';
@@ -70,50 +68,6 @@ export default class FooterComponent extends PureComponent {
     } else {
       this.props.nav.navigate('MyBooking');
     }
-  };
-
-  handleLogin = async () => {
-    // getting token from AsyncStorage
-    const token = await getData(async_keys.userId);
-
-    if (token === null) {
-      this.setState({checkUserActivity: token});
-      this.props.nav.navigate('Login');
-    } else {
-      this.setState({checkUserActivity: token});
-      // console.log('here');
-      this.forceUpdate();
-      // this.props.nav.navigate('Profile');
-    }
-  };
-
-  handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure, you want to logout?',
-      [
-        {text: 'Cancel', style: 'cancel'},
-        {text: 'OK', onPress: this.handleLogoutOkPress},
-      ],
-      {cancelable: false},
-    );
-  };
-
-  handleLogoutOkPress = async () => {
-    try {
-      this.setState({checkUserActivity: null});
-      // clearing user preferences
-      await clearData();
-
-      // resetting navigation
-      this.props.navigation.navigate('Home');
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  handleScanTicket = () => {
-    this.props.nav.navigate('ScanTicket');
   };
 
   render() {
@@ -184,64 +138,7 @@ export default class FooterComponent extends PureComponent {
           </View>
         </TouchableHighlight>
 
-        {/* {this.state.checkUserActivity === null ? (
-          <TouchableHighlight
-            underlayColor="transparent"
-            onPress={this.handleLogin}
-            style={tab === 'EventList' ? selectedTabStyle : styles.footerMenu}>
-            <View style={styles.singleMenu}>
-              <Image
-                source={ic_footer_login}
-                style={styles.footerNavigatorIcon}
-              />
-              <Text
-                style={[
-                  this.state.checkDarkMode === 1
-                    ? styles.footerMenuTextBlack
-                    : styles.footerMenuText,
-                ]}>
-                Login
-              </Text>
-            </View>
-          </TouchableHighlight>
-        ) : (
-          <TouchableHighlight
-            underlayColor="transparent"
-            onPress={this.handleLogout}
-            style={tab === 'EventList' ? selectedTabStyle : styles.footerMenu}>
-            <View style={styles.singleMenu}>
-              <Image
-                source={ic_footer_login}
-                style={styles.footerNavigatorIcon}
-              />
-              <Text
-                style={[
-                  this.state.checkDarkMode === 1
-                    ? styles.footerMenuTextBlack
-                    : styles.footerMenuText,
-                ]}>
-                Logout
-              </Text>
-            </View>
-          </TouchableHighlight>
-        )} */}
-
-        {/* <TouchableHighlight
-          underlayColor="transparent"
-          onPress={this.handleScanTicket}
-          style={tab === 'ScanTicket' ? selectedTabStyle : styles.footerMenu}>
-          <View style={styles.singleMenu}>
-            <Image source={ic_home} style={styles.footerNavigatorIcon} />
-            <Text
-              style={[
-                this.state.checkDarkMode === 1
-                  ? styles.footerMenuTextBlack
-                  : styles.footerMenuText,
-              ]}>
-              Scan Ticket
-            </Text>
-          </View>
-        </TouchableHighlight> */}
+        
       </SafeAreaView>
     );
   }
