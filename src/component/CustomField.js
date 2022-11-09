@@ -19,7 +19,11 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+
+import { withTranslation } from 'react-i18next';
+
 import close_image from '../assets/icon/close.png';
+
 class CustomField extends Component {
   constructor(props) {
     super(props);
@@ -256,6 +260,7 @@ class CustomField extends Component {
     );
   };
   renderFileInput = item => {
+    const { t } = this.props;
     return (
       <View style={{marginBottom: 10}}>
         <Text style={{padding: 5, paddingLeft: 0}}>
@@ -271,7 +276,7 @@ class CustomField extends Component {
               borderRadius: 5,
               padding: 40,
             }}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>Pick File</Text>
+            <Text style={{fontWeight: 'bold', color: 'black'}}>{t('choose_file')}</Text>
           </TouchableOpacity>
         ) : (
           <View>
@@ -308,6 +313,7 @@ class CustomField extends Component {
     );
   };
   render() {
+    
     return (
       <View>
         <View
@@ -421,7 +427,7 @@ class CustomField extends Component {
   }
 }
 
-export default CustomField;
+export default withTranslation()(CustomField);
 
 const Styles = StyleSheet.create({
   activeRadio: {

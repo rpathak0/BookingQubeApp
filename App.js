@@ -51,7 +51,6 @@ class App extends Component {
   };
 
   render() {
-    // const { t, i18n } = this.props;
     const {isLoading, checkScanning,guestCheckoutSuccess} = this.state;
     if (isLoading) {
       return <SplashScreen />;
@@ -62,7 +61,7 @@ class App extends Component {
     return (
       <LoginContextProvider>
         <SafeAreaProvider style={styles.container}>
-          <AppContainer ref={this.setNavigatorRef}  />
+          <AppContainer ref={this.setNavigatorRef}/>
           <Toast />
         </SafeAreaProvider>
       </LoginContextProvider>
@@ -70,7 +69,7 @@ class App extends Component {
   }
 }
 
-export default (App);
+export default withTranslation()(App);
 
 const styles = StyleSheet.create({
   container: {

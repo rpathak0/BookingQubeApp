@@ -1,6 +1,24 @@
 {
     "translation": {
       "hello":"Hello World",
-      "this line is translated":"This line is translated"
+      "this line is translated":"This line is translated",
+      
+      "choose_file":"Choose File",
+      "logout":"Logout",
+      "sure_logout":"Are you sure to logout?",
+      "cancel":"Cancel",
+      "yes":"Yes",
+      "logout_success":"Logout Successfullyyyy  ",
+      
+      "home":"Homeeee",
+      
+      "url_copied":"Event URL copied to clipboard.",
+      "organizer":"Organizer",
+      "share_event":"Share Event",
+      
+      
+      
+      
+      "test":"test"
     }
 }
