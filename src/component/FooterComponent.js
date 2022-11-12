@@ -14,6 +14,8 @@ import {
 } from 'react-native-responsive-screen';
 import SafeAreaView from 'react-native-safe-area-view';
 
+import { withTranslation } from 'react-i18next';
+
 // Icon
 import ic_home from '../assets/icon/ic_home.png';
 import ic_footer_category from '../assets/icon/ic_footer_category.png';
@@ -22,7 +24,7 @@ import ic_footer_event from '../assets/icon/ic_footer_event.png';
 // User Preference
 import {async_keys, getData, clearData} from '../api/UserPreference';
 
-export default class FooterComponent extends PureComponent {
+class FooterComponent extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,6 +74,7 @@ export default class FooterComponent extends PureComponent {
 
   render() {
     const {tab} = this.props;
+    const { t } = this.props;
     const selectedTabStyle = [styles.footerMenu, {backgroundColor: '#ECEFFF'}];
 
     return (
@@ -93,7 +96,7 @@ export default class FooterComponent extends PureComponent {
                   ? styles.footerMenuTextBlack
                   : styles.footerMenuText,
               ]}>
-              Home
+              {t('home')}
             </Text>
           </View>
         </TouchableHighlight>
@@ -113,7 +116,7 @@ export default class FooterComponent extends PureComponent {
                   ? styles.footerMenuTextBlack
                   : styles.footerMenuText,
               ]}>
-              My Bookings
+              {t('my_bookings')}
             </Text>
           </View>
         </TouchableHighlight>
@@ -133,7 +136,7 @@ export default class FooterComponent extends PureComponent {
                   ? styles.footerMenuTextBlack
                   : styles.footerMenuText,
               ]}>
-              Event
+              {t('event')}
             </Text>
           </View>
         </TouchableHighlight>
@@ -143,6 +146,8 @@ export default class FooterComponent extends PureComponent {
     );
   }
 }
+
+export default withTranslation()(FooterComponent);
 
 const styles = StyleSheet.create({
   footerContainer: {

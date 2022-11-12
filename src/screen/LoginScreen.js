@@ -12,8 +12,6 @@ import {
   Keyboard,
   Alert,
   Platform,
-  I18nManager,
-  Button
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -57,7 +55,7 @@ const LoginScreen = ({navigation}) => {
     {"hidePassword": true}
   )
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
 
   const handleChange = (value,name) => {
@@ -229,18 +227,6 @@ const LoginScreen = ({navigation}) => {
             />
             <Text style={styles.loginButtonTextStyle}>{t('login')}</Text>
           </TouchableOpacity>
-
-          {/* <Button
-            title={t('Change language')}
-            onPress={() => {
-              i18n
-                .changeLanguage(i18n.language === 'ar' ? 'en' : 'ar')
-                .then(() => {
-                  I18nManager.forceRTL(i18n.language === 'ar');
-                  RNRestart.Restart();
-                });
-            }}
-          /> */}
 
           <View style={styles.forgetAndRegisterContainer}>
             <Text

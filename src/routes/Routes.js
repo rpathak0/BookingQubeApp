@@ -110,7 +110,7 @@ const onLogoutYesPress = (nav, t) => async () => {
 
 const onDrawerItemPress = props => route => {
   const { t } = props.screenProps;
-  if (route.route.routeName !== 'Logout') {
+  if (route.route.routeName !== 'DrawerLogout') {
     props.onItemPress(route);
     return;
   }
@@ -153,6 +153,7 @@ const CustomDrawerContentComponent = props => {
   );
   
 };
+
 
 const AdminNavigator = createStackNavigator(
   {
@@ -235,98 +236,7 @@ const MyBookingNavigator = createStackNavigator(
   },
 );
 
-const LoggedOutNavigator1 = createDrawerNavigator(
-  {
-    Home: {
-      screen: HomeNavigator,
-    },
-    Event: {
-      screen: EventListingNavigator,
-    },
-    'My Booking': {
-      screen: MyBookingNavigator,
-    },
-    Profile: {
-      screen: ProfileNavigator,
-    },
-    'Check In': {
-      screen: ScanTicketScreen,
-    },
-    'Check Out': {
-      screen: ScanOutScreen,
-    },
-    Logout: {
-      screen: 'No Screen',
-    },
-  },
-  {
-    initialRouteName: 'Home',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-
-
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
-
-
-
-
-const LoggedOutNavigator2 = createDrawerNavigator(
-  {
-    Home: {
-      screen: HomeNavigator,
-    },
-    Event: {
-      screen: EventListingNavigator,
-    },
-    'My Booking': {
-      screen: MyBookingNavigator,
-    },
-    Profile: {
-      screen: ProfileNavigator,
-    },
-    Logout: {
-      screen: 'No Screen',
-    },
-  },
-  {
-    initialRouteName: 'Home',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
-
-
-const AfterGuestLoginNavigator = createDrawerNavigator(
-  {
-    Home: {
-      screen: HomeNavigator,
-    },
-    Event: {
-      screen: EventListingNavigator,
-    },
-    'My Booking': {
-      screen: MyBookingNavigator,
-    },
-    Profile: {
-      screen: ProfileNavigator,
-    },
-    Logout: {
-      screen: 'No Screen',
-    },
-  },
-  {
-    initialRouteName: 'My Booking',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-
-
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
-
+/* =====----=-=-==-===-- Drawer Labels multi-lingual =====----=-=-==-===-- */
 // Home
 const DrawerHome = createStackNavigator(
   {
@@ -375,6 +285,152 @@ DrawerLogin.navigationOptions = ({ screenProps: { t } }) => ({
   drawerLabel: t('login', { order: 3 }),
 });
 
+// MyBooking
+const DrawerMyBookings = createStackNavigator(
+  {
+    MyBookings: {
+      screen: MyBookingNavigator,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('my_bookings', { order: 4 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerMyBookings.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('my_bookings', { order: 4 }),
+});
+
+// Profile
+const DrawerProfile = createStackNavigator(
+  {
+    Profile: {
+      screen: ProfileNavigator,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('profile', { order: 5 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerProfile.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('profile', { order: 5 }),
+});
+
+// Logout
+const DrawerLogout = createStackNavigator(
+  {
+    Logout: {
+      screen: 'No Screen',
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('logout', { order: 6 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerLogout.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('logout', { order: 6 }),
+});
+
+// Check-in
+const DrawerCheckIn = createStackNavigator(
+  {
+    CheckIn: {
+      screen: ScanTicketScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('check_in', { order: 6 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerCheckIn.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('check_in', { order: 6 }),
+});
+
+// Check-out
+const DrawerCheckOut = createStackNavigator(
+  {
+    CheckIn: {
+      screen: ScanOutScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('check_out', { order: 7 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerCheckOut.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('check_out', { order: 7 }),
+});
+/* =====----=-=-==-===-- Drawer Labels multi-lingual =====----=-=-==-===-- */
+
+
+
+// this is showing after organizer login
+const LoggedOutNavigator1 = createDrawerNavigator(
+  {
+    DrawerHome,
+    DrawerEvent,
+    DrawerMyBookings,
+    DrawerProfile,
+    DrawerCheckIn,
+    DrawerCheckOut,
+    DrawerLogout,
+  },
+  {
+    initialRouteName: 'DrawerHome',
+    unmountInactiveRoutes: true,
+    contentComponent: CustomDrawerContentComponent,
+  },
+);
+
+
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
+
+
+
+
+
+// this is showing after customer login
+const LoggedOutNavigator2 = createDrawerNavigator(
+  {
+    DrawerHome,
+    DrawerEvent,
+    DrawerMyBookings,
+    DrawerProfile,
+    DrawerLogout,
+  },
+  {
+    initialRouteName: 'DrawerHome',
+    unmountInactiveRoutes: true,
+    contentComponent: CustomDrawerContentComponent,
+  },
+);
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
+
+
+const AfterGuestLoginNavigator = createDrawerNavigator(
+  {
+    DrawerHome,
+    DrawerEvent,
+    DrawerMyBookings,
+    DrawerProfile,
+    DrawerLogout,
+  },
+  {
+    initialRouteName: 'DrawerMyBookings',
+    unmountInactiveRoutes: true,
+    contentComponent: CustomDrawerContentComponent,
+  },
+);
+
+
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
+
+
+
 
 const LoggedOutNavigator = createDrawerNavigator(
   {
@@ -383,6 +439,7 @@ const LoggedOutNavigator = createDrawerNavigator(
     DrawerLogin,
   },
   {
+    initialRouteName: 'DrawerHome',
     unmountInactiveRoutes: true,
     contentComponent: CustomDrawerContentComponent,
   },

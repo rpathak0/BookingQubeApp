@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, Image, StyleSheet, I18nManager } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -16,12 +16,17 @@ import login_icon from '../assets/icon/login.png';
 import { async_keys, getData } from '../api/UserPreference';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import logo from '../assets/image/logo.png';
+
+import { useTranslation } from 'react-i18next';
+import english_icon from '../assets/image/english.png';
+import qatar_icon from '../assets/image/qatar.png';
+
 // API Info
 import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
 import { LoginContext } from '../context/LoginContext';
 const HeaderComponent = props => {
 
-
+  const { t, i18n } = useTranslation();
 
   const [img, setImg] = useState('');
   const [defualtAvatar, setDefaultAvatar] = useState(login_icon);
@@ -102,30 +107,53 @@ const HeaderComponent = props => {
         {title}
       </Text>
 
-      <TouchableOpacity
-        onPress={handleProfile}
-        activeOpacity={1}
-        style={styles.notificationIconContainer}>
-        {(img) ?
-          <Image
-            source={{ uri: STORAGE_URL+`${img}` }}
-            resizeMode="cover"
-            style={styles.cartIconStyle}
-          />
-          :
+      <View style={styles.menuContainer}>
 
+        <TouchableOpacity
+          onPress={() => {
+            i18n
+              .changeLanguage(i18n.language === 'ar' ? 'en' : 'ar')
+              .then(() => {
+                I18nManager.forceRTL(i18n.language === 'ar');
+                RNRestart.Restart();
+              });
+          }}
+          activeOpacity={1}
+          style={styles.languageSwitch}>
+          {(i18n.language === 'en') ?
+            <Image
+              source={english_icon}
+              resizeMode="cover"
+              style={styles.cartIconStyle}
+            /> : 
+            <Image
+              source={qatar_icon}
+              resizeMode="cover"
+              style={styles.cartIconStyle}
+            />
+          }
+        </TouchableOpacity>
 
-          <Image
-            source={defualtAvatar}
-            resizeMode="cover"
-            style={styles.cartIconStyle}
-          />
+        <TouchableOpacity
+          onPress={handleProfile}
+          activeOpacity={1}
+          style={styles.notificationIconContainer}>
+          {(img) ?
+            <Image
+              source={{ uri: STORAGE_URL+`${img}` }}
+              resizeMode="cover"
+              style={styles.cartIconStyle}
+            /> : 
+            <Image
+              source={defualtAvatar}
+              resizeMode="cover"
+              style={styles.cartIconStyle}
+            />
+          }
+        </TouchableOpacity>
+      </View>
 
-
-
-        }
-
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -175,8 +203,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   notificationIconContainer: {
-    marginLeft: 'auto',
     padding: wp(2),
+  },
+  languageSwitch: {
+    padding: wp(2),
+  },
+  menuContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   notificationIcon: {
     width: wp(5.6),
