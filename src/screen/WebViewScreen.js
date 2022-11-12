@@ -7,7 +7,9 @@ import { SafeAreaView } from "react-native";
 import { WebView } from 'react-native-webview';
 import CustomLoader from '../component/CustomLoader';
 
-export default class WebViewScreen extends Component {
+import { withTranslation } from 'react-i18next';
+
+class WebViewScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,12 +37,13 @@ export default class WebViewScreen extends Component {
   };
 
   handleNavigationStateChanged = navState => {
+    const { t } = this.props;
     const { url, title } = navState;
     if (title.includes('payment/cancel')) {
-      this.props.navigation.state.params.onPaymentCallback({ success: false, message: "You have cancelled the payment, Please complete the payment." });
+      this.props.navigation.state.params.onPaymentCallback({ success: false, message: t('payment_cancelled') });
       this.props.navigation.goBack();
     } else if (title.includes('payment/success')) {
-      this.props.navigation.state.params.onPaymentCallback({ success: true, message: "Your ticket has been booked successfully." });
+      this.props.navigation.state.params.onPaymentCallback({ success: true, message: t('payment_success') });
       this.props.navigation.goBack();
     }
   };
@@ -62,6 +65,10 @@ export default class WebViewScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(WebViewScreen);
+
+
 const styles = StyleSheet.create({
   container: {
     height: 350,

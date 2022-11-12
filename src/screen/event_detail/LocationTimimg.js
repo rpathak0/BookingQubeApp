@@ -14,9 +14,9 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
+import { withTranslation } from 'react-i18next';
 
-
-export default class LocationTimimg extends Component {
+class LocationTimimg extends Component {
   constructor(props) {
     super(props);
   }
@@ -24,13 +24,14 @@ export default class LocationTimimg extends Component {
   render() {
 
     const { venue, city, address, zipCode, start_date_format,end_date_format ,start_time_format, end_time_format } = this.props.data.event;
+    const { t } = this.props;
 
     return (
       <View style={styles.eventLocationContainer}>
         <LinearGradient
           colors={['#47a0f2', '#ed4592']}
           style={styles.whereBoxContainer}>
-          <Text style={styles.whereTextStyle}>Where</Text>
+          <Text style={styles.whereTextStyle}>{t('where')}</Text>
           <Text style={styles.whereTextStyle}>{venue}</Text>
           <Text style={styles.addressTextStyle}>
             {address} {zipCode}
@@ -41,12 +42,12 @@ export default class LocationTimimg extends Component {
         <LinearGradient
           colors={['#47a0f2', '#ed4592']}
           style={styles.whereBoxContainer}>
-          <Text style={styles.whereTextStyle}>When</Text>
+          <Text style={styles.whereTextStyle}>{t('when')}</Text>
           <Text style={styles.addressTextStyle}>
             {start_date_format} 
           </Text>
           <Text style={styles.addressTextStyle}>
-           Till 
+           {t('till')} 
           </Text>
           <Text style={styles.addressTextStyle}>
            {end_date_format}
@@ -56,6 +57,8 @@ export default class LocationTimimg extends Component {
     );
   }
 }
+
+export default withTranslation()(LocationTimimg);
 
 const styles = StyleSheet.create({
   container: {

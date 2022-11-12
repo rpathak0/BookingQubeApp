@@ -21,12 +21,12 @@ import CountDown from 'react-native-countdown-component';
 import { convertTimeZoneDateTime, getCurrentTime, getSaleExpirationSeconds, remaingDaysCount } from '../../Helper/dateConverter';
 // Component
 
+import { withTranslation } from 'react-i18next';
 
 
 
 
-
-export default class Events extends Component {
+class Events extends Component {
   constructor(props) {
     super(props);
    
@@ -37,8 +37,9 @@ export default class Events extends Component {
 
   daysRemaining(eventStartDate) {
     const remaingDays  = (remaingDaysCount(eventStartDate) + 1)
+    const { t } = this.props;
     if (remaingDays >= 0) {
-      return remaingDays + " Days Left";
+      return remaingDays +' '+ t('days_left');
     } else {
       return moment(eventStartDate).format('DD MMM YYYY');
     }
@@ -52,14 +53,16 @@ export default class Events extends Component {
     const remaingDaysFromStartDate = eventDate.diff(todaysDate, 'days');
     const remaingDaysFromEndDate = endDate.diff(todaysDate, 'days');
 
+    const { t } = this.props;
+
     if (remaingDaysFromStartDate >= 0) {
-      return "Upcomming";
+      return t('upcomming');
     }
     if (remaingDaysFromStartDate <= 0 && remaingDaysFromEndDate >= 0) {
-      return "Started";
+      return t('started');
     }
     if (remaingDaysFromStartDate <= 0) {
-      return "Ended";
+      return t('ended');
     }
   }
   handleEvent (item){
@@ -82,6 +85,7 @@ export default class Events extends Component {
   
 
   renderTicketCategory(item) {
+    const { t } = this.props;
     let type = "sale";
     let tickets = item?.tickets.filter(t=>t.sale_start_date != null && this.checkSaleIslive(t));
     console.log("tickets=============",tickets);
@@ -103,7 +107,7 @@ export default class Events extends Component {
                   digitStyle={{color: '#000'}}
                   timeLabelStyle={{fontSize:wp(2.8),color: '#000', marginLeft:wp(3) }}
                   timeToShow={['D','H','M','S']}
-                  timeLabels={{d:'Days',h:'hours',m: 'Minutes', s: 'seconds'}}
+                  timeLabels={{d:t('days'),h:t('hours'),m: t('minutes'), s: t('seconds')}}
               />
             </View>
         )}
@@ -145,6 +149,7 @@ export default class Events extends Component {
 
     var eventList = this.props.eventList;
     var backGroundImage = this.props.backGroundImage;
+    const { t } = this.props;
     
     return (
         <View style={styles.featuredEventContainer}>
@@ -204,11 +209,11 @@ export default class Events extends Component {
                     <>
                       <View style={styles.onlineLeftContainer}>
                         <Text style={styles.eventDaysLeftText}>
-                          Online
+                          {t('online')}
                         </Text>
                       </View>
                       <View style={styles.eventOnlineContainer}>
-                        <Text style={styles.eventTimeText}>Event</Text>
+                        <Text style={styles.eventTimeText}>{t('event')}</Text>
                       </View>
                     </>
                     
@@ -223,11 +228,11 @@ export default class Events extends Component {
                   <Text style={styles.eventTimeText}>{this.eventStatusText(item)}</Text>
                 </View>
 
-                {item.tickets.map(t => {
-                  if (t.title === 'Free') {
+                {item.tickets.map(ticket => {
+                  if (ticket.title === 'Free') {
                     return (
-                      <View key={`${index}-${t.title}-${Math.random(5)}`} style={styles.eventWorthContainer}>
-                        <Text style={styles.eventWorthText}>Free</Text>
+                      <View key={`${index}-${ticket.title}-${Math.random(5)}`} style={styles.eventWorthContainer}>
+                        <Text style={styles.eventWorthText}>{t('free')}</Text>
                       </View>
                     );
                   }
@@ -235,15 +240,15 @@ export default class Events extends Component {
 
                 {item.repetitive_type === 1 ? (
                   <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>Repetitive Daily</Text>
+                    <Text style={styles.eventRoutineText}>{t('repetitive_daily')}</Text>
                   </View>
                 ) : item.repetitive_type === 2 ? (
                   <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>Repetitive Weekly</Text>
+                    <Text style={styles.eventRoutineText}>{t('repetitive_weekly')}</Text>
                   </View>
                 ) : item.repetitive_type === 3 ? (
                   <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>Repetitive Monthly</Text>
+                    <Text style={styles.eventRoutineText}>{t('repetitive_monthly')}</Text>
                   </View>
                 ) : item.repetitive_type === null ? null : null}
               </TouchableOpacity>
@@ -254,6 +259,8 @@ export default class Events extends Component {
     );
   }
 }
+
+export default withTranslation()(Events);
 
 const styles = StyleSheet.create({
   container: {
@@ -297,8 +304,6 @@ const styles = StyleSheet.create({
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    // marginLeft: wp(4),
-    // backgroundColor: '#334759',
     borderRadius: wp(1),
     color: '#000',
   },

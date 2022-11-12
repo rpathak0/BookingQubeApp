@@ -16,6 +16,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { withTranslation } from 'react-i18next';
+
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
@@ -23,7 +25,7 @@ import FooterComponent from '../component/FooterComponent';
 // Image
 // import header_image from '../assets/image/header_image.png';
 
-export default class SeatingChartScreen extends Component {
+class SeatingChartScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -431,6 +433,8 @@ export default class SeatingChartScreen extends Component {
   }
 
   render() {
+    const { t } = this.props;
+
     const royalPlatinumList = () => {
       return this.state.royalPlatinum.map(item => {
         return (
@@ -530,13 +534,13 @@ export default class SeatingChartScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Seating Chart"
+          title={t('seating_chart')}
           navAction="back"
           nav={this.props.navigation}
         />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <Text style={styles.textInputText}>Seating Chart</Text>
+            <Text style={styles.textInputText}>{t('seating_chart')}</Text>
             {/* <ImageBackground
               source={header_image}
               resizeMode="cover"
@@ -609,6 +613,8 @@ export default class SeatingChartScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(SeatingChartScreen);
 
 const styles = StyleSheet.create({
   container: {

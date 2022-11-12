@@ -40,7 +40,10 @@ import {BASE_URL, makeRequest} from '../api/ApiInfo';
 // Validation
 import {isEmailAddress} from '../validation/FormValidator';
 
-export default class SignUpScreen extends Component {
+import { withTranslation } from 'react-i18next';
+import { t } from 'i18next';
+
+class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,6 +72,7 @@ export default class SignUpScreen extends Component {
   };
 
   handleRegister = async () => {
+    const { t } = this.props;
     Keyboard.dismiss();
 
     const {name, email, password} = this.state;
@@ -76,21 +80,21 @@ export default class SignUpScreen extends Component {
 
     // validation
     if (name.trim() === '') {
-      Alert.alert('', 'Please enter name!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_name_first'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
     }
 
     if (!isEmailAddress(email)) {
-      Alert.alert('', 'Please enter email!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_email_first'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
     }
 
     if (password.trim() === '') {
-      Alert.alert('', 'Please enter valid password!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_valid_password'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
@@ -153,22 +157,23 @@ export default class SignUpScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <ImageBackground style={styles.container} source={splash_image}>
           <HeaderComponent
-            title="Register"
+            title={t('register')}
             navAction="back"
             nav={this.props.navigation}
           />
 
           <View style={styles.homeContainer}>
-            <Text style={styles.loginTextStyle}>Register</Text>
+            <Text style={styles.loginTextStyle}>{t('register')}</Text>
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder="Name"
+                placeholder={t('name')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 underlineColorAndroid="transparent"
@@ -180,7 +185,7 @@ export default class SignUpScreen extends Component {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder="Email"
+                placeholder={t('email')}
                 autoCapitalize="none"
                 placeholderTextColor="#c4c3cb"
                 keyboardType="email-address"
@@ -193,7 +198,7 @@ export default class SignUpScreen extends Component {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder="Password"
+                placeholder={t('password')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 secureTextEntry={this.state.hidePassword}
@@ -216,7 +221,7 @@ export default class SignUpScreen extends Component {
                 />
               </TouchableOpacity>
             </View>
-
+            
             <Text style={styles.agreeTextStyle}>
               By clicking "Register", I accept the{' '}
               <Text style={{color: '#1b89ef'}}>Terms of Service</Text> and have
@@ -233,16 +238,16 @@ export default class SignUpScreen extends Component {
                 resizeMode="cover"
                 style={styles.loginIconStyle}
               />
-              <Text style={styles.loginButtonTextStyle}>Register</Text>
+              <Text style={styles.loginButtonTextStyle}>{t('register')}</Text>
             </TouchableOpacity>
 
             <View style={styles.forgetAndRegisterContainer}>
               <Text style={styles.additionalTextStyle}>
-                Already Have An Account?
+                {t('already_account')}
               </Text>
 
               <Text style={styles.additionalTextStyle} onPress={this.handleLogin}>
-                Login
+                {t('login')}
               </Text>
             </View>
 
@@ -281,6 +286,8 @@ export default class SignUpScreen extends Component {
   }
 }
 
+export default withTranslation()(SignUpScreen);
+
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
@@ -315,7 +322,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: wp(2),
     color: '#fff',
-    backgroundColor: '#334759',
     borderRadius: wp(1),
   },
   touchAbleButton: {

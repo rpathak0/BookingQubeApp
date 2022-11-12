@@ -18,6 +18,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { withTranslation } from 'react-i18next';
+
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import ProcessingLoader from '../component/ProcessingLoader';
@@ -40,7 +42,7 @@ import {BASE_URL, makeRequest} from '../api/ApiInfo';
 // Validation
 import {isEmailAddress} from '../validation/FormValidator';
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,13 +65,14 @@ export default class LoginScreen extends Component {
   };
 
   handleLogin = async () => {
+    const { t } = this.props;
     Keyboard.dismiss();
 
     const {email} = this.state;
 
     // validation
     if (!isEmailAddress(email)) {
-      Alert.alert('', 'Please enter email!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_email_first'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
@@ -122,22 +125,23 @@ export default class LoginScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
     return (
       <SafeAreaView style={styles.safeAreaContainer}>
         <ImageBackground style={styles.container} source={splash_image}>
           <HeaderComponent
-            title="Forget Password"
+            title={t('forgot_password')}
             navAction="back"
             nav={this.props.navigation}
           />
 
           <View style={styles.homeContainer}>
-            <Text style={styles.loginTextStyle}>Forget Password</Text>
+            <Text style={styles.loginTextStyle}>{t('forgot_password')}</Text>
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder="Email"
+                placeholder={t('email')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 underlineColorAndroid="transparent"
@@ -154,45 +158,9 @@ export default class LoginScreen extends Component {
                 resizeMode="cover"
                 style={styles.loginIconStyle}
               />
-              <Text style={styles.loginButtonTextStyle}>Forget Password</Text>
+              <Text style={styles.loginButtonTextStyle}>{t('forgot_password')}</Text>
             </TouchableOpacity>
-
-            {/* <View style={styles.forgetAndRegisterContainer}>
-              <Text style={styles.additionalTextStyle}>Forgot Password?</Text>
-
-              <Text
-                style={styles.additionalTextStyle}
-                onPress={this.handleRegister}>
-                Register
-              </Text>
-            </View> */}
-
-            {/* <View style={styles.lineContainer}></View>
-
-            <View style={styles.socialMediaContainer}>
-              <Text style={styles.socialTextStyle}>Or Continue with</Text>
-              <View style={styles.socialLoginContainer}>
-                <View style={styles.facebookViewContainer}>
-                  <Image
-                    source={facebook}
-                    resizeMode="cover"
-                    style={styles.socialMediaIconStyle}
-                  />
-
-                  <Text style={styles.facebookTextStyle}>Facebook</Text>
-                </View>
-
-                <View style={styles.googleViewContainer}>
-                  <Image
-                    source={google}
-                    resizeMode="cover"
-                    style={styles.socialMediaIconStyle}
-                  />
-
-                  <Text style={styles.facebookTextStyle}>Google</Text>
-                </View>
-              </View>
-            </View> */}
+            
           </View>
 
           {this.state.showProcessingLoader && <ProcessingLoader />}
@@ -201,6 +169,8 @@ export default class LoginScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(LoginScreen);
 
 const styles = StyleSheet.create({
   safeAreaContainer: {
@@ -236,7 +206,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: wp(2),
     color: '#fff',
-    backgroundColor: '#334759',
     borderRadius: wp(1),
   },
   buttonContainer: {

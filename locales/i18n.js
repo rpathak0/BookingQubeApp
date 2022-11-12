@@ -10,12 +10,8 @@ import ar from './ar.json';
 
 
 const resources = {
-  en: {
-    translation: en
-  },
-  ar: {
-    translation: ar
-  }
+  en: en,
+  ar: ar
 };
 
 i18n

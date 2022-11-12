@@ -20,6 +20,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
+import { withTranslation } from 'react-i18next';
+
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
@@ -39,7 +41,7 @@ import { BASE_URL } from '../api/ApiInfo';
 import { async_keys, getData } from '../api/UserPreference';
 import Events from './home_detail/Events';
 
-export default class EventListScreen extends Component {
+class EventListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -426,10 +428,12 @@ export default class EventListScreen extends Component {
   itemSeparator = () => <View style={styles.separator} />;
 
   render() {
+    const { t } = this.props;
+
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Event"
+          title={t('event')}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -439,7 +443,7 @@ export default class EventListScreen extends Component {
               source={header_image}
               resizeMode="cover"
               style={styles.headerImageStyle}>
-              <Text style={styles.titleText}>EVENTS</Text>
+              <Text style={styles.titleText}>{t('events')}</Text>
               <View style={styles.eventHeadlineContainer}>
                 <Image
                   source={ic_header_home_icon}
@@ -448,14 +452,14 @@ export default class EventListScreen extends Component {
                 />
 
                 <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>Events</Text>
+                <Text style={styles.eventText}>{t('events')}</Text>
               </View>
             </ImageBackground>
 
-            <Text style={styles.textInputText}>Search Event</Text>
+            <Text style={styles.textInputText}>{t('search_events')}</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Type Event Name/Venue/City/State"
+                placeholder={t('search_events_ie')}
                 placeholderTextColor="#c4c3cb"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -465,7 +469,7 @@ export default class EventListScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Category</Text>
+            <Text style={styles.textInputText}>{t('category')}</Text>
 
             <View style={styles.inputContainer}>
               {this.searchData === null ? (
@@ -486,11 +490,11 @@ export default class EventListScreen extends Component {
               )}
             </View>
 
-            <Text style={styles.textInputText}>Date</Text>
+            <Text style={styles.textInputText}>{t('date')}</Text>
             <View style={styles.inputContainer}>
               <TouchableOpacity onPress={this.handleShowDatePicker}>
                 {this.state.dateFilter === '' ? (
-                  <Text style={[styles.descriptionText, styles.dateFilterPadding]}>Date Filter</Text>
+                  <Text style={[styles.descriptionText, styles.dateFilterPadding]}>{t('date_filter')}</Text>
                 ) : (
                   <Text style={styles.descriptionText}>
                     {this.state.dateFilter}
@@ -509,7 +513,7 @@ export default class EventListScreen extends Component {
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.textInputText}>Price</Text>
+            <Text style={styles.textInputText}>{t('price')}</Text>
             <View style={styles.inputContainer}>
               <RNPickerSelect
                 onValueChange={(v) => { this.handleSelectedPrice(v) }}
@@ -522,7 +526,7 @@ export default class EventListScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Country</Text>
+            <Text style={styles.textInputText}>{t('country')}</Text>
             <View style={styles.inputContainer}>
               <RNPickerSelect
                 items={this.state.country.map(item => ({
@@ -536,7 +540,7 @@ export default class EventListScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>City</Text>
+            <Text style={styles.textInputText}>{t('city')}</Text>
             <View style={styles.inputContainer}>
               <RNPickerSelect
                 onValueChange={this.handleSelectedCity}
@@ -559,13 +563,13 @@ export default class EventListScreen extends Component {
                 resizeMode="cover"
                 style={styles.resetIconStyle}
               />
-              <Text style={styles.resetText}>Reset Filter</Text>
+              <Text style={styles.resetText}>{t('reset_filters')}</Text>
             </TouchableOpacity>
 
             <Events
               eventList={this.state.featureEventList}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name="All Events"
+              name={t('all_events')}
               backGroundImage={false}
             />
           </View>
@@ -576,6 +580,8 @@ export default class EventListScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(EventListScreen);
 
 const pickerStyle = {
   // inputIOS: {

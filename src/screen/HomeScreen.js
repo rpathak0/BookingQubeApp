@@ -34,13 +34,15 @@ import splash_image from '../assets/image/spalsh_image.png';
 // import event_category_image from '../assets/image/event_category_image.jpg';
 import banner from '../assets/image/banner.jpg';
 
+import { withTranslation } from 'react-i18next';
+
 // API Info
 import { BASE_URL, STORAGE_URL } from '../api/ApiInfo';
 import axios from 'axios';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import Events from './home_detail/Events';
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -168,6 +170,7 @@ export default class HomeScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
     const { isLoading } = this.state;
     if (isLoading) {
       return <CustomLoader />;
@@ -175,7 +178,7 @@ export default class HomeScreen extends Component {
     const imageUrl = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
-        <HeaderComponent title="Home" nav={this.props.navigation} />
+        <HeaderComponent title={t('home')} nav={this.props.navigation} />
         <ScrollView
         // contentContainerStyle={{flex: 1}}
         >
@@ -196,7 +199,7 @@ export default class HomeScreen extends Component {
                 />
                 <TextInput
                   style={styles.loginFormTextInput}
-                  placeholder="Type Event Name/Venue/City/State"
+                  placeholder={t('search_events_ie')}
                   placeholderTextColor="#838383"
                   keyboardType="default"
                   underlineColorAndroid="transparent"
@@ -215,24 +218,24 @@ export default class HomeScreen extends Component {
                 resizeMode="cover"
                 style={styles.searchIconStyle}
               />
-              <Text style={styles.searchEventText}>Search Event</Text>
+              <Text style={styles.searchEventText}>{t('search_events')}</Text>
             </TouchableOpacity>
 
             <Events eventList={this.state.featureEventList}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name="Featured Event"
+              name={t('featured_events')}
               backGroundImage={false}
             />
             <View>
               <TouchableOpacity
                 style={styles.button}
                 onPress={this.handleAllEvent}>
-                <Text style={styles.buttonText}>View All Events</Text>
+                <Text style={styles.buttonText}>{t('featured_events')}</Text>
               </TouchableOpacity>
             </View>
 
 
-            <Text style={styles.featuredEventText}>Event Category</Text>
+            <Text style={styles.featuredEventText}>{t('event_category')}</Text>
             <ImageBackground
               source={splash_image}
               style={styles.eventCategoryContainer}>
@@ -263,19 +266,19 @@ export default class HomeScreen extends Component {
             <Events
               eventList={this.state.upcomingEventList}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name="Upcoming Event"
+              name={t('upcomming_events')}
               backGroundImage={false}
             />
 
             <Events
               eventList={this.state.topSellingEvents}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name="Top Selling Events"
+              name={t('top_selling')}
               backGroundImage={true}
             />
 
 
-            <Text style={styles.featuredEventText}>Explore Best Cities</Text>
+            <Text style={styles.featuredEventText}>{t('explore_cities')}</Text>
             <ImageBackground
               source={splash_image}
               style={styles.eventCategoryContainer}>
@@ -310,6 +313,8 @@ export default class HomeScreen extends Component {
 
   }
 }
+
+export default withTranslation()(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -354,8 +359,6 @@ const styles = StyleSheet.create({
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    // marginLeft: wp(4),
-    // backgroundColor: '#334759',
     borderRadius: wp(1),
     color: '#000',
   },

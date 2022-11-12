@@ -14,10 +14,12 @@ import {
 } from 'react-native-responsive-screen';
 import StarRating from 'react-native-star-rating-widget';
 
+import { withTranslation } from 'react-i18next';
+
 import ic_5star from '../../assets/icon/ic_5star.png';
 
 
-export default class ReviewRatings extends Component {
+class ReviewRatings extends Component {
   constructor(props) {
     super(props);
   }
@@ -25,6 +27,7 @@ export default class ReviewRatings extends Component {
   render() {
 
     const { reviews } = this.props.data.event;
+    const { t } = this.props;
     console.log(reviews);
 
     return (
@@ -32,7 +35,7 @@ export default class ReviewRatings extends Component {
         {reviews?.length > 0 && (
           <View style={styles.ratingReviewsContainer}>
             <Text style={styles.ratingsAndReviewsTitleText}>
-              Ratings & Reviews
+              {t('rating_review')}
             </Text>
             <Text style={styles.totalReviewsText}>
               {reviews?.length} Review(s)
@@ -50,7 +53,7 @@ export default class ReviewRatings extends Component {
                     rating={parseFloat(item.rating)}
                   />
                     <Text style={styles.ratingText}>
-                      {item.rating + ' ' + 'Out of 5.0'}
+                      {item.rating + ' ' + t('rating_5')}
                      </Text>
                 </View>
 
@@ -64,6 +67,8 @@ export default class ReviewRatings extends Component {
     );
   }
 }
+
+export default withTranslation()(ReviewRatings);
 
 const styles = StyleSheet.create({
   container: {

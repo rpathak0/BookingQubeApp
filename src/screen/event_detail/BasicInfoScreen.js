@@ -10,13 +10,15 @@ import {
   TouchableOpacity,
   Dimensions,
   Linking,
-  ToastAndroid,
   FlatList,
 } from 'react-native';
+import {showToast} from '../../component/CustomToast';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+
+import { withTranslation } from 'react-i18next';
 
 import RNFetchBlob from 'rn-fetch-blob';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -37,7 +39,7 @@ import onlineBar from '../../assets/image/bar.png';
 
 
 
-export default class BasicInfoScreen extends Component {
+class BasicInfoScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -144,11 +146,12 @@ export default class BasicInfoScreen extends Component {
   };
 
   copyclipboard = async () => {
+    const { t } = this.props;
     try {
       const { title } = this.props.data.event;
       let url = SERVER+`events/${title}`
       Clipboard.setString(url);
-      ToastAndroid.show('URL has been copied to clipboard', ToastAndroid.SHORT);
+      showToast(t('url_copied'));
     } catch (error) {
       console.log(error.message);
     }
@@ -185,7 +188,7 @@ export default class BasicInfoScreen extends Component {
 
 
   render() {
-
+    const { t } = this.props;
     var listItems = [];
     const { title, poster, event_type_text, category_name, online_location,orgainser } = this.props.data.event;
     var isFreeTickets = this.props.data.free_tickets?.length > 0 ? true : false;
@@ -208,7 +211,7 @@ export default class BasicInfoScreen extends Component {
         />
 
         <Text style={styles.eventTitleTextStyle}>{title}</Text>
-        <Text style={styles.eventOrganiserTextStyle}>By : {orgainser}</Text>
+        <Text style={styles.eventOrganiserTextStyle}>{t('organizer')} {orgainser}</Text>
 
         <View style={styles.eventTypeContainer}>
           <FlatList
@@ -225,7 +228,7 @@ export default class BasicInfoScreen extends Component {
         </View>
 
         <View style={styles.shareEventContainer}>
-          <Text style={styles.shareEventText}>Share Event</Text>
+          <Text style={styles.shareEventText}>{t('share_event')}</Text>
 
           <TouchableOpacity
             style={styles.iconOnPress}
@@ -291,6 +294,8 @@ export default class BasicInfoScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(BasicInfoScreen);
 
 const styles = StyleSheet.create({
   container: {

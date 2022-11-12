@@ -51,6 +51,8 @@ import { isEmailAddress, isMobileNumber } from '../validation/FormValidator';
 
 import RadioForm from 'react-native-simple-radio-button';
 
+import { withTranslation } from 'react-i18next';
+
 import dropDown from '../assets/icon/down-arrows.png';
 import radiocheck from '../assets/icon/radiocheck.png';
 import radiouncheck from '../assets/icon/uncheck.png';
@@ -84,7 +86,7 @@ var rsvpOption = [
   { label: "Free (R.S.V.P)", value: 'on' },
 ];
 const axios = require('axios');
-export default class CheckOutScreen extends Component {
+class CheckOutScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -801,6 +803,7 @@ export default class CheckOutScreen extends Component {
 
   render() {
     const { isLoading } = this.state;
+    const { t } = this.props;
     const getSeatBacgroundColor = seat => {
       const { ticketList } = this.state;
       var bgc = 'transparent';
@@ -883,7 +886,7 @@ export default class CheckOutScreen extends Component {
               return (
                 <View>
                   <CustomField
-                    title={`Add Person ${ite} Details`}
+                    title={`#${ite}`+t('attendee_details')}
                     customFieldsData={this.state.customFiled}
                     ticket={item}
                     seat={this.state.currentSelectedSeat}
@@ -912,34 +915,34 @@ export default class CheckOutScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Checkout"
+          title={t('checkout')}
           navAction="back"
           nav={this.props.navigation}
         />
         <ScrollView>
           <View style={styles.homeContainer}>
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Booking Info</Text>
+              <Text style={styles.headerText}>{t('booking_info')}</Text>
             </View>
 
             <View style={styles.eventInformationContainer}>
-              <Text style={styles.eventCategoryText}>Event Category</Text>
+              <Text style={styles.eventCategoryText}>{t('event_category')}</Text>
               <Text style={styles.eventCategoryTitle}>
                 {this.eventInfo.title}
               </Text>
 
-              <Text style={styles.eventCategoryText}>Venue</Text>
+              <Text style={styles.eventCategoryText}>{t('venue')}</Text>
               <Text style={styles.eventCategoryTitle}>
                 {this.eventInfo.venue}
               </Text>
 
-              <Text style={styles.eventCategoryText}>Start - End Date</Text>
+              <Text style={styles.eventCategoryText}>{t('start_end_date')}</Text>
               <Text style={styles.eventCategoryTitle}>
                 {convertTimeZoneFormatted(this.eventInfo.finalDate.start_date, '', 'dddd MMM DD, YYYY')} -
                 {convertTimeZoneFormatted(this.eventInfo.finalDate.end_date, '', ' dddd MMM DD, YYYY')}
               </Text>
 
-              <Text style={styles.eventCategoryText}>Timings</Text>
+              <Text style={styles.eventCategoryText}>{t('timings')}</Text>
               <Text style={styles.eventCategoryTitle}>
                 {convertTimeZone(`${this.eventInfo.finalDate.start_date} ${this.eventInfo.finalDate.start_time}`).formattedTime} - {convertTimeZone(`${this.eventInfo.finalDate.end_date} ${this.eventInfo.finalDate.end_time}`).formattedTime}
               </Text>
@@ -949,7 +952,7 @@ export default class CheckOutScreen extends Component {
             {/* Tickets */}
             <View>
               <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Tickets</Text>
+                <Text style={styles.headerText}>{t('tickets')}</Text>
               </View>
 
               {this.state.tickets.map((item, i) => {
@@ -957,7 +960,7 @@ export default class CheckOutScreen extends Component {
                   <View key={i} style={styles.ticketContainer}>
                     {item?.sale_end_date != null && this.checkSaleIslive(item) && (
                       <View style={styles.eventSaleContainer}>
-                        <Text style={{ textAlignVertical: 'center', color: '#000', fontWeight: '600', fontSize: wp(3.8) }}>On Sale  : </Text>
+                        <Text style={{ textAlignVertical: 'center', color: '#000', fontWeight: '600', fontSize: wp(3.8) }}>{t('on_sale')} </Text>
                         <CountDown
                           until={getSaleExpirationSeconds(item?.sale_end_date)}
                           size={15}
@@ -966,9 +969,9 @@ export default class CheckOutScreen extends Component {
                           digitStyle={{ backgroundColor: '#50E0FF' }}
                           // timeLabelStyle={{fontSize:wp(2.8),color: '#000', marginLeft:wp(3) }}
                           timeToShow={['D', 'H', 'M', 'S']}
-                          timeLabels={{ d: 'Days', h: 'hours', m: 'Minutes', s: 'seconds' }}
+                          timeLabels={{ d: t('days'), h: t('hours'), m: t('minutes'), s: t('seconds') }}
                         />
-                        <Text style={{ textAlignVertical: 'center', paddingLeft: wp(4), color: '#000' }}>left </Text>
+                        <Text style={{ textAlignVertical: 'center', paddingLeft: wp(4), color: '#000' }}> {t('left')}</Text>
                       </View>
                     )}
                     <View style={styles.ticketPricingContainer}>
@@ -1004,13 +1007,13 @@ export default class CheckOutScreen extends Component {
                         <View style={styles.selectPickerWrapper}>
                           <RNPickerSelect
                             placeholder={{
-                              label: 'Qty',
+                              label: t('qty'),
                               value: 0,
                             }}
                             onValueChange={value => { this.handleSelectValue(value, item, '') }}
                             fixAndroidTouchableBug={true}
                             items={getListTicketQuantity(item).map((list, i) => ({
-                              label: list.label + " Ticket(s)",
+                              label: list.label + ' '+t('tickets'),
                               value: list.value,
                               key: i,
                             }))}
@@ -1051,19 +1054,19 @@ export default class CheckOutScreen extends Component {
                         <View style={styles.seatingAvailabilityContainer}>
                           <View style={styles.ticketLegendsWrapper}>
                             <View style={{ ...styles.bookedContainer, backgroundColor: 'grey' }}></View>
-                            <Text style={styles.seatingText}>Disabled</Text>
+                            <Text style={styles.seatingText}>{t('disabled')}</Text>
                           </View>
                           <View style={styles.ticketLegendsWrapper}>
                             <View style={{ ...styles.bookedContainer, backgroundColor: 'red' }}></View>
-                            <Text style={styles.seatingText}>Reserved</Text>
+                            <Text style={styles.seatingText}>{t('reserved')}</Text>
                           </View>
                           <View style={styles.ticketLegendsWrapper}>
                             <View style={{ ...styles.bookedContainer, borderWidth: 1, borderColor: 'green' }}></View>
-                            <Text style={styles.seatingText}>Available</Text>
+                            <Text style={styles.seatingText}>{t('available')}</Text>
                           </View>
                           <View style={styles.ticketLegendsWrapper}>
                             <View style={{ ...styles.bookedContainer, backgroundColor: 'green' }}></View>
-                            <Text style={styles.seatingText}>Selected</Text>
+                            <Text style={styles.seatingText}>{t('selected')}</Text>
                           </View>
                         </View>
                         <ScrollView
@@ -1136,7 +1139,7 @@ export default class CheckOutScreen extends Component {
                       <View style={styles.promocodeContainer}>
                         <TextInput
                           style={styles.loginFormTextInput}
-                          placeholder="Enter Promocode"
+                          placeholder={t('enter_promocode')}
                           placeholderTextColor="#000"
                           keyboardType="default"
                           underlineColorAndroid="transparent"
@@ -1145,7 +1148,7 @@ export default class CheckOutScreen extends Component {
                         />
                         <TouchableOpacity style={styles.applyContainer}
                           onPress={() => { this.applyPromocode(item) }}>
-                          <Text style={styles.applyText}>Apply</Text>
+                          <Text style={styles.applyText}>{t('apply')}</Text>
                         </TouchableOpacity>
                       </View>
                     )}
@@ -1156,12 +1159,12 @@ export default class CheckOutScreen extends Component {
             </View>
 
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Payment Summary</Text>
+              <Text style={styles.headerText}>{t('payment_summary')}</Text>
             </View>
 
             <View style={styles.totalTicketMainContainer}>
               <View style={styles.totalTicketContainer}>
-                <Text style={styles.totalTicketText}>No. of tickets</Text>
+                <Text style={styles.totalTicketText}>{t('no_of_tickets')}</Text>
 
                 <Text style={styles.totalTicketText}>
                   {this.state.ticketList.reduce((pre, curr) => pre + parseInt(curr.value), 0)}
@@ -1172,13 +1175,13 @@ export default class CheckOutScreen extends Component {
 
             <View style={styles.totalTicketMainContainer}>
               <View style={styles.totalTicketContainer}>
-                <Text style={styles.totalTicketText}>Sub total</Text>
+                <Text style={styles.totalTicketText}>{t('sub_total')}</Text>
                 <Text style={styles.totalTicketText}>
                   {this.state.totalPrice} {this.eventInfo.currency}
                 </Text>
               </View>
               <View style={styles.totalTicketContainer}>
-                <Text style={styles.totalTicketText}>Taxes</Text>
+                <Text style={styles.totalTicketText}>{t('taxes')}</Text>
 
                 <Text style={styles.totalTicketText}>
                   {this.state.taxAmount} {this.eventInfo.currency}
@@ -1186,7 +1189,7 @@ export default class CheckOutScreen extends Component {
 
               </View>
               <View style={styles.totalTicketContainer}>
-                <Text style={styles.totalTicketText}>Total amount</Text>
+                <Text style={styles.totalTicketText}>{t('total_amount')}</Text>
                 <Text style={styles.totalTicketText}>
                   {this.state.grandTotal} {this.eventInfo.currency}
                 </Text>
@@ -1194,13 +1197,13 @@ export default class CheckOutScreen extends Component {
               {this.state.promocodeDiscount > 0 && (
                 <>
                   <View style={styles.totalTicketContainer}>
-                    <Text style={styles.totalTicketText}>Promocode Discount</Text>
+                    <Text style={styles.totalTicketText}>{t('promocode_discount')}</Text>
                     <Text style={styles.discountOnTicketText}>
                       - {this.state.promocodeDiscount} {this.eventInfo.currency}
                     </Text>
                   </View>
                   <View style={styles.totalTicketContainer}>
-                    <Text style={styles.totalTicketText}>Net Payable Amount</Text>
+                    <Text style={styles.totalTicketText}>{t('net_payable')}</Text>
                     <Text style={styles.totalTicketText}>
                       {this.state.netTotal} {this.eventInfo.currency}
                     </Text>
@@ -1213,7 +1216,7 @@ export default class CheckOutScreen extends Component {
               {(this.state.ticketList.reduce((pre, curr) => pre + parseInt(curr.value), 0) > 0) && (parseFloat(this.state.netTotal) > 0.00) && (
                 <>
                   <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>Payment Method</Text>
+                    <Text style={styles.headerText}>{t('payment_method')}</Text>
                   </View>
                   <View style={styles.paymentMethodWrapper}>
 
@@ -1279,20 +1282,20 @@ export default class CheckOutScreen extends Component {
                   <TouchableOpacity
                     style={styles.registerButtonContainer}
                     onPress={this.handleRegister}>
-                    <Text style={styles.registerText}>Register</Text>
+                    <Text style={styles.registerText}>{t('register')}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.checkoutAsGuest}
                     onPress={this.handleCheckoutAsGuest}>
-                    <Text style={styles.registerText}>Checkout as Guest</Text>
+                    <Text style={styles.registerText}>{t('checkout_guest')}</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
                 <TouchableOpacity
                   style={styles.checkout}
                   onPress={this.handleCheckout}>
-                  <Text style={styles.registerText}>Checkout</Text>
+                  <Text style={styles.registerText}>{t('checkout')}</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -1302,11 +1305,11 @@ export default class CheckOutScreen extends Component {
           style={styles.modalStyle}
           isVisible={this.state.checkModal}
           onBackdropPress={this.handleClosePopUp}>
-          <Text style={styles.textInputText}>Name*</Text>
+          <Text style={styles.textInputText}>{t('name')}*</Text>
 
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder="Name"
+              placeholder={t('name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
@@ -1316,11 +1319,11 @@ export default class CheckOutScreen extends Component {
             />
           </View>
 
-          <Text style={styles.textInputText}>Email*</Text>
+          <Text style={styles.textInputText}>{t('email')}*</Text>
 
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder="Email"
+              placeholder={t('email')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="email-address"
@@ -1330,11 +1333,11 @@ export default class CheckOutScreen extends Component {
             />
           </View>
 
-          <Text style={styles.textInputText}>Phone Number*</Text>
+          <Text style={styles.textInputText}>{t('phone_number')}*</Text>
 
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder="Phone Number"
+              placeholder={t('phone_number')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="number-pad"
@@ -1347,7 +1350,7 @@ export default class CheckOutScreen extends Component {
           <TouchableOpacity
             style={styles.buttonContainer}
             onPress={this.handleCheckoutAsGuestContinue}>
-            <Text style={styles.saveProfileText}>Continue</Text>
+            <Text style={styles.saveProfileText}>{t('continue')}</Text>
           </TouchableOpacity>
 
           {this.state.showModalProcessingLoader && <ProcessingLoader />}
@@ -1362,6 +1365,8 @@ export default class CheckOutScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(CheckOutScreen);
 
 const pickerStyle = StyleSheet.create({
   inputIOS: {

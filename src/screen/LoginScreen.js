@@ -96,14 +96,14 @@ const LoginScreen = ({navigation}) => {
     
     // validation
     if (!isEmailAddress(email)) {
-      Alert.alert('', 'Please enter valid email!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_valid_email'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
     }
 
     if (loginFrom?.password.trim() === '') {
-      Alert.alert('', 'Please enter valid password!', [{text: 'OK'}], {
+      Alert.alert('', t('enter_valid_password'), [{text: t('ok')}], {
         cancelable: false,
       });
       return;
@@ -169,17 +169,17 @@ const LoginScreen = ({navigation}) => {
       <SafeAreaView style={styles.safeAreaContainer}>
       <ImageBackground style={styles.container} source={splash_image}>
         <HeaderComponent
-          title="Login"
+          title={t('login')}
           navAction="back"
           nav={navigation}
         />
         <View style={styles.homeContainer}>
-          <Text style={styles.loginTextStyle}>{ t('hello') }</Text>
+          <Text style={styles.loginTextStyle}>{ t('login') }</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.loginFormTextInput}
-              placeholder="Email"
+              placeholder={t('email')}
               placeholderTextColor="#c4c3cb"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -192,7 +192,7 @@ const LoginScreen = ({navigation}) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.loginFormTextInput}
-              placeholder="Password"
+              placeholder={t('password')}
               placeholderTextColor="#c4c3cb"
               keyboardType="default"
               secureTextEntry={loginFrom?.hidePassword}
@@ -227,10 +227,10 @@ const LoginScreen = ({navigation}) => {
               resizeMode="cover"
               style={styles.loginIconStyle}
             />
-            <Text style={styles.loginButtonTextStyle}>Login</Text>
+            <Text style={styles.loginButtonTextStyle}>{t('login')}</Text>
           </TouchableOpacity>
 
-          <Button
+          {/* <Button
             title={t('Change language')}
             onPress={() => {
               i18n
@@ -240,48 +240,21 @@ const LoginScreen = ({navigation}) => {
                   RNRestart.Restart();
                 });
             }}
-          />
+          /> */}
 
           <View style={styles.forgetAndRegisterContainer}>
             <Text
               style={styles.additionalTextStyle}
               onPress={handleForgetPassword}>
-              Forgot Password?
+              {t('forgot_password_1')}
             </Text>
 
             <Text
               style={styles.additionalTextStyle}
               onPress={handleRegister}>
-              Register
+              {t('register')}
             </Text>
           </View>
-
-          {/* <View style={styles.lineContainer}></View> */}
-
-          {/* <View style={styles.socialMediaContainer}>
-            <Text style={styles.socialTextStyle}>Or Continue with</Text>
-            <View style={styles.socialLoginContainer}>
-              <View style={styles.facebookViewContainer}>
-                <Image
-                  source={facebook}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle}>Facebook</Text>
-              </View>
-
-              <View style={styles.googleViewContainer}>
-                <Image
-                  source={google}
-                  resizeMode="cover"
-                  style={styles.socialMediaIconStyle}
-                />
-
-                <Text style={styles.facebookTextStyle}>Google</Text>
-              </View>
-            </View>
-          </View> */}
         </View>
 
         {loginFrom?.showProcessingLoader && <ProcessingLoader />}
@@ -326,7 +299,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: wp(2),
     color: '#fff',
-    backgroundColor: '#334759',
     borderRadius: wp(1),
   },
   touchAbleButton: {

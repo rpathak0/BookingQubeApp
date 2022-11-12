@@ -11,23 +11,27 @@ import {
 import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
 
-export default class CategoryScreen extends Component {
+import { withTranslation } from 'react-i18next';
+
+class CategoryScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Category"
+          title={t('category')}
           navAction="back"
           nav={this.props.navigation}
         />
 
         <View style={styles.homeContainer}>
-          <Text> Coming Soon </Text>
+          <Text>{t('coming_soon')}</Text>
         </View>
 
         <FooterComponent nav={this.props.navigation} />
@@ -35,6 +39,8 @@ export default class CategoryScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(CategoryScreen);
 
 const styles = StyleSheet.create({
   container: {

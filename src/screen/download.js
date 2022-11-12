@@ -3,7 +3,10 @@ import {PermissionsAndroid} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import moment from 'moment';
 
+import { useTranslation } from 'react-i18next';
+
 export const Download = async(url) =>{
+    const { t } = useTranslation();
     const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
 
     if(url && granted=='granted'){
@@ -20,23 +23,23 @@ export const Download = async(url) =>{
                 path:
                 PictureDir +'/'+
                 `${name}.${ext}`,
-                description: `${name}.${ext} Download`,
+                description: `${name}.${ext} `+t('download'),
             },
             };
             config(options)
             .fetch('GET', url)
             .then(async(res) => {
                 resolve(res);
-                SimpleToast.show('File Downloaded!')
+                SimpleToast.show(t('file_downloaded'))
             }).catch((err)=>{
-                SimpleToast.show('File Not Found!')
+                SimpleToast.show(t('file_not_found'))
                 console.log(err)
             });
         })
     }
     else
     {
-        SimpleToast.show('File not Found!')
+        SimpleToast.show(t('file_not_found'))
     }
         
 }

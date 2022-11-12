@@ -23,7 +23,10 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
-import {Download} from './download';
+
+import { withTranslation } from 'react-i18next';
+
+import {Download} from './Download';
 // Component
 import CustomLoader from '../component/CustomLoader';
 import HeaderComponent from '../component/HeaderComponent';
@@ -46,7 +49,7 @@ import {BASE_URL} from '../api/ApiInfo';
 // User Preference
 import {async_keys, getData} from '../api/UserPreference';
 
-export default class MyBookingScreen extends Component {
+class MyBookingScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,6 +83,7 @@ export default class MyBookingScreen extends Component {
   }
 
   fetchBookedTickets = async () => {
+    const { t } = this.props;
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
 
@@ -127,7 +131,7 @@ export default class MyBookingScreen extends Component {
 
       this.setState({isLoading: false});
 
-      showToast('Something went wrong.');
+      showToast(t('went_wrong'));
     }
   };
 
@@ -486,6 +490,8 @@ export default class MyBookingScreen extends Component {
 
 
   render() {
+    const { t } = this.props;
+
     const {isLoading} = this.state;
 
     if (isLoading) {
@@ -496,7 +502,7 @@ export default class MyBookingScreen extends Component {
       return (
         <SafeAreaView style={styles.container}>
           <HeaderComponent
-            title="My Booking"
+            title={t('my_bookings')}
             navAction="back"
             nav={this.props.navigation}
           />
@@ -506,7 +512,7 @@ export default class MyBookingScreen extends Component {
                 source={header_image}
                 resizeMode="cover"
                 style={styles.headerImageStyle}>
-                <Text style={styles.titleText}>MY BOOKINGS</Text>
+                <Text style={styles.titleText}>{t('my_bookings')}</Text>
                 <View style={styles.eventHeadlineContainer}>
                   <Image
                     source={ic_header_home_icon}
@@ -515,25 +521,15 @@ export default class MyBookingScreen extends Component {
                   />
 
                   <Text style={styles.slashText}>/</Text>
-                  <Text style={styles.eventText}>My Bookings</Text>
+                  <Text style={styles.eventText}>{t('my_bookings')}</Text>
                 </View>
               </ImageBackground>
 
-              {/* <Text style={styles.textInputText}>Events</Text>
-              <View style={styles.inputContainer}>
-                <RNPickerSelect
-                  onValueChange={this.handleSelectedEvent}
-                  items={[{label: 'All Events', value: 'All Events'}]}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
-                />
-              </View> */}
-
-              <Text style={styles.textInputText}>Booking Date</Text>
+              <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
                   {this.state.bookingDate === '' ? (
-                    <Text style={styles.descriptionText}>Booking Date</Text>
+                    <Text style={styles.descriptionText}>{t('booking_date')}</Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.bookingDate}
@@ -552,10 +548,10 @@ export default class MyBookingScreen extends Component {
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.textInputText}>Search Any</Text>
+              <Text style={styles.textInputText}>{t('search_any')}</Text>
               <View style={styles.inputContainer}>
                 <TextInput
-                  placeholder="Search"
+                  placeholder={t('search')}
                   placeholderTextColor="#000"
                   style={styles.loginFormTextInput}
                   keyboardType="default"
@@ -565,7 +561,7 @@ export default class MyBookingScreen extends Component {
                 />
               </View>
 
-              <Text style={styles.textInputText}>Events</Text>
+              <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
                 <RNPickerSelect
                   onValueChange={this.handleSelectedEvent}
@@ -578,11 +574,11 @@ export default class MyBookingScreen extends Component {
                 />
               </View>
 
-              <Text style={styles.textInputText}>Event Date</Text>
+              <Text style={styles.textInputText}>{t('event_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleEventDate}>
                   {this.state.eventDate === '' ? (
-                    <Text style={styles.descriptionText}>Event Date</Text>
+                    <Text style={styles.descriptionText}>{t('event_date')}</Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.eventDate}
@@ -604,21 +600,21 @@ export default class MyBookingScreen extends Component {
               {this.state.ticketList.map(item => {
                 return (
                   <View style={styles.bookedTicketContainer}>
-                    <Text style={styles.orderIdText}>Order Id</Text>
+                    <Text style={styles.orderIdText}>{t('order_id')}</Text>
                     <Text style={styles.orderIdText}>
                       # {item.order_number}
                     </Text>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Event</Text>
+                    <Text style={styles.eventTitleText}>{t('event')}</Text>
                     <Text
                       style={styles.eventPlaceText}
                       onPress={() => this.handleGotoEvent(item)}>
                       {item.event_title} ({item.event_category})
                     </Text>
 
-                    <Text style={styles.eventTitleText}>Timings</Text>
+                    <Text style={styles.eventTitleText}>{t('timings')}</Text>
                     <Text style={styles.eventTimeText}>
                       {item.event_start_date}
                       {'\n'}
@@ -628,14 +624,14 @@ export default class MyBookingScreen extends Component {
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Ticket</Text>
+                    <Text style={styles.eventTitleText}>{t('ticket')}</Text>
                     <Text style={styles.eventTimeText}>
                       {item.ticket_title} x {item.quantity}
                     </Text>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Order Total</Text>
+                    <Text style={styles.eventTitleText}>{t('order_total')}</Text>
                     <Text style={styles.eventTimeText}>
                       {item.net_price} {this.state.currency}
                     </Text>
@@ -643,7 +639,7 @@ export default class MyBookingScreen extends Component {
                     <View style={styles.lineContainer}></View>
 
                     <Text style={styles.eventTitleText}>
-                      Promocode Reward(-)
+                      {t('promocode_reward')}
                     </Text>
                     <Text style={styles.eventTimeText}>
                       {item.promocode} {this.state.currency}
@@ -651,12 +647,12 @@ export default class MyBookingScreen extends Component {
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Booked On</Text>
-                    <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')} (IST)</Text>
+                    <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
+                    <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Payment</Text>
+                    <Text style={styles.eventTitleText}>{t('payment')}</Text>
 
                     <View style={styles.paymentContainer}>
                       <Text style={styles.paymentMethodText}>
@@ -665,37 +661,37 @@ export default class MyBookingScreen extends Component {
 
                       <View style={styles.paymentMethodLine}></View>
                       {item.is_paid === 0 ? (
-                        <Text style={styles.paymentProcessText}>Pending</Text>
+                        <Text style={styles.paymentProcessText}>{t('pending')}</Text>
                       ) : (
-                        <Text style={styles.paymentProcessText}>Paid</Text>
+                        <Text style={styles.paymentProcessText}>{t('paid')}</Text>
                       )}
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Checked in</Text>
+                    <Text style={styles.eventTitleText}>{t('checked_in')}</Text>
                     <View style={styles.checkedInContainer}>
                       {item.checked_in === 0 ? (
-                        <Text style={styles.checkedInText}>No</Text>
+                        <Text style={styles.checkedInText}>{t('no')}</Text>
                       ) : (
-                        <Text style={styles.checkedInText}>Yes</Text>
+                        <Text style={styles.checkedInText}>{t('yes')}</Text>
                       )}
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Status</Text>
+                    <Text style={styles.eventTitleText}>{t('status')}</Text>
                     <View style={styles.statusContainer}>
                       {item.status === 1 ? (
-                        <Text style={styles.statusText}>Enabled</Text>
+                        <Text style={styles.statusText}>{t('enabled')}</Text>
                       ) : (
-                        <Text style={styles.statusText}>Disabled</Text>
+                        <Text style={styles.statusText}>{t('disabled')}</Text>
                       )}
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Cancellation</Text>
+                    <Text style={styles.eventTitleText}>{t('cancellation')}</Text>
                     {item.booking_cancel === 0 ? (
                       <TouchableOpacity
                         style={styles.cancellationContainer}
@@ -705,7 +701,7 @@ export default class MyBookingScreen extends Component {
                           resizeMode="cover"
                           style={styles.cancelIconStyle}
                         />
-                        <Text style={styles.cancelText}>Cancel</Text>
+                        <Text style={styles.cancelText}>{t('cancel')}</Text>
                       </TouchableOpacity>
                     ) : item.booking_cancel === 1 ? (
                       <View style={styles.cancellationContainer}>
@@ -715,7 +711,7 @@ export default class MyBookingScreen extends Component {
                           style={styles.cancelIconStyle}
                         /> */}
                         <Text style={styles.cancelText}>
-                          Cancellation pending
+                          {t('cancellation_pending')}
                         </Text>
                       </View>
                     ) : item.booking_cancel === 2 ? (
@@ -725,7 +721,7 @@ export default class MyBookingScreen extends Component {
                           resizeMode="cover"
                           style={styles.cancelIconStyle}
                         /> */}
-                        <Text style={styles.cancelText}>Approved</Text>
+                        <Text style={styles.cancelText}>{t('approved')}</Text>
                       </View>
                     ) : item.booking_cancel === 3 ? (
                       <View style={styles.cancellationContainer}>
@@ -734,21 +730,21 @@ export default class MyBookingScreen extends Component {
                           resizeMode="cover"
                           style={styles.cancelIconStyle}
                         /> */}
-                        <Text style={styles.cancelText}>Refunded</Text>
+                        <Text style={styles.cancelText}>{t('refunded')}</Text>
                       </View>
                     ) : null}
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>Expired</Text>
+                    <Text style={styles.eventTitleText}>{t('expired')}</Text>
                     <View style={styles.expiredContainer}>
-                      <Text style={styles.expiredText}>No</Text>
+                      <Text style={styles.expiredText}>{t('no')}</Text>
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
                     {item.is_paid != 1 ? null : (
-                      <Text style={styles.eventTitleText}>Actions</Text>
+                      <Text style={styles.eventTitleText}>{t('actions')}</Text>
                     )}
                     {item.is_paid != 1 ? null : (
                       <View style={styles.ticketActionContainer}>
@@ -761,7 +757,7 @@ export default class MyBookingScreen extends Component {
                             resizeMode="cover"
                             style={styles.downloadIconStyle}
                           />
-                          <Text style={styles.ticketText}>Ticket</Text>
+                          <Text style={styles.ticketText}>{t('ticket')}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={()=>{
@@ -772,7 +768,7 @@ export default class MyBookingScreen extends Component {
                             resizeMode="cover"
                             style={styles.downloadIconStyle}
                           />
-                          <Text style={styles.ticketText}>Invoice</Text>
+                          <Text style={styles.ticketText}>{t('invoice')}</Text>
                         </TouchableOpacity>
                       </View>
                     )}
@@ -789,7 +785,7 @@ export default class MyBookingScreen extends Component {
                           style={styles.downloadIconStyle}
                         />
                         <Text style={styles.ticketText}>
-                          Download Booking QRcode
+                          {t('download_qrcode')}
                         </Text>
                       </TouchableOpacity>
                     )}
@@ -805,18 +801,18 @@ export default class MyBookingScreen extends Component {
                           resizeMode="cover"
                           style={styles.downloadIconStyle}
                         />
-                        <Text style={styles.ticketText}>Check in</Text>
+                        <Text style={styles.ticketText}>{t('check_in')}</Text>
                       </TouchableOpacity>
                     )}
 
                     <View style={styles.lineContainer}></View>
 
                     <Text style={styles.eventTitleText}>
-                      Checkout Countdown
+                      {t('checkout_countdown')}
                     </Text>
 
                     <View style={styles.checkoutContainer}>
-                      <Text style={styles.expiredText}>N/A</Text>
+                      <Text style={styles.expiredText}>{t('na')}</Text>
                     </View>
                   </View>
                 );
@@ -830,7 +826,7 @@ export default class MyBookingScreen extends Component {
       return (
         <SafeAreaView style={styles.container}>
           <HeaderComponent
-            title="My Booking"
+            title={t('my_bookings')}
             navAction="back"
             nav={this.props.navigation}
           />
@@ -840,7 +836,7 @@ export default class MyBookingScreen extends Component {
                 source={header_image}
                 resizeMode="cover"
                 style={styles.headerImageStyle}>
-                <Text style={styles.titleText}>MY BOOKINGS</Text>
+                <Text style={styles.titleText}>{t('my_bookings')}</Text>
                 <View style={styles.eventHeadlineContainer}>
                   <Image
                     source={ic_header_home_icon}
@@ -849,7 +845,7 @@ export default class MyBookingScreen extends Component {
                   />
 
                   <Text style={styles.slashText}>/</Text>
-                  <Text style={styles.eventText}>My Bookings</Text>
+                  <Text style={styles.eventText}>{t('my_bookings')}</Text>
                 </View>
               </ImageBackground>
 
@@ -857,17 +853,17 @@ export default class MyBookingScreen extends Component {
               <View style={styles.inputContainer}>
                 <RNPickerSelect
                   onValueChange={this.handleSelectedEvent}
-                  items={[{label: 'All Events', value: 'All Events'}]}
+                  items={[{label: t('all_events'), value: t('all_events')}]}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
                 />
               </View>
 
-              <Text style={styles.textInputText}>Booking Date</Text>
+              <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
                   {this.state.bookingDate === '' ? (
-                    <Text style={styles.descriptionText}>Booking Date</Text>
+                    <Text style={styles.descriptionText}>{t('booking_date')}</Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.bookingDate}
@@ -886,10 +882,10 @@ export default class MyBookingScreen extends Component {
                 </TouchableOpacity>
               </View>
 
-              <Text style={styles.textInputText}>Search Any</Text>
+              <Text style={styles.textInputText}>{t('search_any')}</Text>
               <View style={styles.inputContainer}>
                 <TextInput
-                  placeholder="Search"
+                  placeholder={t('search')}
                   placeholderTextColor="#000"
                   style={styles.loginFormTextInput}
                   keyboardType="default"
@@ -899,21 +895,21 @@ export default class MyBookingScreen extends Component {
                 />
               </View>
 
-              <Text style={styles.textInputText}>Events</Text>
+              <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
                 <RNPickerSelect
                   onValueChange={this.handleSelectedShow}
-                  items={[{label: 'All Events', value: 'All Events'}]}
+                  items={[{label: t('all_events'), value: t('all_events')}]}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
                 />
               </View>
 
-              <Text style={styles.textInputText}>Event Date</Text>
+              <Text style={styles.textInputText}>{t('event_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleEventDate}>
                   {this.state.eventDate === '' ? (
-                    <Text style={styles.descriptionText}>Event Date</Text>
+                    <Text style={styles.descriptionText}>{t('event_date')}</Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.eventDate}
@@ -933,7 +929,7 @@ export default class MyBookingScreen extends Component {
               </View>
 
               <View style={styles.noBookingStatus}>
-                <Text>No Bookings</Text>
+                <Text>{t('no_bookings')}</Text>
               </View>
             </View>
           </ScrollView>
@@ -945,6 +941,8 @@ export default class MyBookingScreen extends Component {
     }
   }
 }
+
+export default withTranslation()(MyBookingScreen);
 
 const pickerStyle = {
   // inputIOS: {

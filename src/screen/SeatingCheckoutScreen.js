@@ -13,6 +13,8 @@ import {
   View,
 } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
+
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 // API Info
@@ -49,6 +51,8 @@ const SeatingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const { t } = useTranslation();
+
   useEffect(() => {
     getSeatingData();
   }, []);
@@ -92,7 +96,7 @@ const SeatingScreen = ({navigation}) => {
         style={backgroundStyle}>
         {loading ? (
           <View style={{backgroundColor: Colors.black}}>
-            <Text style={styles.color}>Loading Data...</Text>
+            <Text style={styles.color}>{t('loading')}</Text>
           </View>
         ) : (
           <>

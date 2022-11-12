@@ -16,9 +16,10 @@ import moment from 'moment';
 import { convertTimeZone, getSaleExpirationSeconds } from '../../Helper/dateConverter';
 import CountDown from 'react-native-countdown-component';
 
+import { withTranslation } from 'react-i18next';
 
 
-export default class Tickets extends Component {
+class Tickets extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,16 +73,18 @@ export default class Tickets extends Component {
     let tickets = this.props.data.tickets;
     console.log(tickets);
 
+    const { t } = this.props;
+
     return (
       <>
-        <Text style={styles.getYourTicketText}>Get your tickets now</Text>
+        <Text style={styles.getYourTicketText}>{t('get_tickets')}</Text>
         <Text style={styles.bookTicketText}>
-          Click on a date to book tickets
+          {t('book_ticket')}
         </Text>
 
         {tickets?.length > 0 && tickets[0]?.sale_end_date != null && this.checkSaleIslive(tickets[0]) && (
           <View style={styles.eventSaleContainer}>
-            <Text style={{ alignContent: 'center', color: '#fff' }}>On Sale  : </Text>
+            <Text style={{ alignContent: 'center', color: '#fff' }}>{t('on_sale')}</Text>
             <CountDown
               until={getSaleExpirationSeconds(tickets[0].sale_end_date)}
               size={15}
@@ -90,7 +93,7 @@ export default class Tickets extends Component {
               digitStyle={{ color: '#fff' }}
               timeLabelStyle={{ fontSize: wp(2.8), color: '#fff', marginLeft: wp(3) }}
               timeToShow={['D', 'H', 'M', 'S']}
-              timeLabels={{ d: 'Days', h: 'hours', m: 'Minutes', s: 'seconds' }}
+              timeLabels={{ d: t('days'), h: t('hours'), m: t('minutes'), s: t('seconds') }}
             />
           </View>
         )}
@@ -133,7 +136,7 @@ export default class Tickets extends Component {
                     ) : (
                       <View style={styles.listTimeContainer}>
                         <Text style={styles.listTimeText}>
-                          Ended
+                          {t('ended')}
                         </Text>
                       </View>
                     )}
@@ -170,6 +173,8 @@ export default class Tickets extends Component {
     );
   }
 }
+
+export default withTranslation()(Tickets);
 
 const styles = StyleSheet.create({
   container: {

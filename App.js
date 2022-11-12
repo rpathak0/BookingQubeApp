@@ -51,6 +51,7 @@ class App extends Component {
   };
 
   render() {
+    const { t, i18n } = this.props;
     const {isLoading, checkScanning,guestCheckoutSuccess} = this.state;
     if (isLoading) {
       return <SplashScreen />;
@@ -61,7 +62,7 @@ class App extends Component {
     return (
       <LoginContextProvider>
         <SafeAreaProvider style={styles.container}>
-          <AppContainer ref={this.setNavigatorRef}/>
+          <AppContainer ref={this.setNavigatorRef} screenProps={{ t, i18n }} />
           <Toast />
         </SafeAreaProvider>
       </LoginContextProvider>

@@ -19,6 +19,8 @@ import {
 } from 'react-native-responsive-screen';
 import RenderHtml from 'react-native-render-html';
 
+import { withTranslation } from 'react-i18next';
+
 // Component
 import CustomLoader from '../component/CustomLoader';
 import HeaderComponent from '../component/HeaderComponent';
@@ -38,10 +40,11 @@ import TagGroups from './event_detail/TagGroups';
 import Gallery from './event_detail/Gallery';
 import ReviewRatings from './event_detail/ReviewRatings';
 import SeatChart from './event_detail/SeatChart';
+import { t } from 'i18next';
 
 const width = Dimensions.get('window').width;
 
-export default class ViewEventScreen extends Component {
+class ViewEventScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,10 +93,11 @@ export default class ViewEventScreen extends Component {
   };
 
   handleGetTicket = async date => {
+    const { t } = this.props;
 
     const organizer = await getData(async_keys.userInfo);
     if (organizer === 3) {
-      showToast('Organizer cannot book ticket.');
+      showToast(t('organizer_not_book'));
     } else {
 
       const checkOutScreenData = {
@@ -122,6 +126,7 @@ export default class ViewEventScreen extends Component {
   render() {
 
     const { isLoading } = this.state;
+    const { t } = this.props;
 
     if (isLoading) {
       return <CustomLoader />;
@@ -131,7 +136,7 @@ export default class ViewEventScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Event Information"
+          title={t('event_info')}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -148,7 +153,7 @@ export default class ViewEventScreen extends Component {
                 resizeMode="cover"
                 style={styles.ticketIconStyle}
               />
-              <Text style={styles.getTicketText}>Get your tickets now</Text>
+              <Text style={styles.getTicketText}>{t('get_tickets')}</Text>
             </TouchableOpacity>
             <View style={{ marginHorizontal: wp(4) }}>
               <RenderHtml tagsStyles={{ p: { fontSize: wp(3.5) } }}
@@ -180,7 +185,7 @@ export default class ViewEventScreen extends Component {
             </TouchableOpacity>
             {/* Event Info */}
             <View style={styles.eventInfoContainer}>
-              <Text style={styles.eventInfoText}>Event Info</Text>
+              <Text style={styles.eventInfoText}>{t('event_info')}</Text>
               <View style={{ marginHorizontal: wp(4) }}>
 
                 <RenderHtml tagsStyles={{ p: { fontSize: wp(2.5) } }}
@@ -206,6 +211,8 @@ export default class ViewEventScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(ViewEventScreen);
 
 const styles = StyleSheet.create({
   container: {

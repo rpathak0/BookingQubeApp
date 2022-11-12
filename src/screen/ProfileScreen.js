@@ -49,7 +49,9 @@ import { async_keys, getData, clearData } from '../api/UserPreference';
 import { showToast } from '../component/CustomToast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class ProfileScreen extends Component {
+import { withTranslation } from 'react-i18next';
+
+class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -162,6 +164,7 @@ export default class ProfileScreen extends Component {
   };
 
   handlePermissions = async () => {
+    const { t } = this.props;
     try {
       if (Platform.OS === 'android') {
         const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
@@ -185,15 +188,15 @@ export default class ProfileScreen extends Component {
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
             Alert.alert(
-              'Permission Blocked',
-              'Press OK and provide "Storage" permission in App Setting',
+              t('permission_blocked'),
+              t('permission_blocked_ie'),
               [
                 {
-                  text: 'Cancel',
+                  text: t('cancel'),
                   style: 'cancel',
                 },
                 {
-                  text: 'OK',
+                  text: t('ok'),
                   onPress: this.handleOpenSettings,
                 },
               ],
@@ -223,6 +226,7 @@ export default class ProfileScreen extends Component {
   };
 
   handleOpenSettings = async () => {
+    const { t } = this.props;
     try {
       await openSettings();
     } catch (error) {
@@ -233,17 +237,18 @@ export default class ProfileScreen extends Component {
   confirmProfileDelete = async () => {
     // confirmation dialog
     Alert.alert(
-      'Delete Account',
-      'Are you sure, you want to delete your account?',
+      t('delete_account'),
+      t('delete_account_ie'),
       [
-        {text: 'Cancel', style: 'cancel'},
-        {text: 'Yes', onPress: this.handleDeleteProfile},
+        {text: t('cancel'), style: 'cancel'},
+        {text: t('yes'), onPress: this.handleDeleteProfile},
       ],
       {cancelable: false},
     );
   }
 
   handleDeleteProfile = async () => {
+    const { t } = this.props;
 
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
@@ -278,7 +283,7 @@ export default class ProfileScreen extends Component {
               this.setState({ showProcessingLoader: false });
 
               // showing toast
-              showToast('Profile Deleted successfully!');
+              showToast(t('profile_deleted'));
               
               // Logout the user
               this.handleLogoutOkPress()
@@ -308,6 +313,8 @@ export default class ProfileScreen extends Component {
 
   handleUpdateProfile = async () => {
     Keyboard.dismiss();
+
+    const { t } = this.props;
 
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
@@ -380,12 +387,13 @@ export default class ProfileScreen extends Component {
       // starting processing loader
       this.setState({ showProcessingLoader: false });
 
-      showToast('Something went wrong.');
+      showToast(t('went_wrong'));
     }
   };
 
   render() {
     const { isLoading } = this.state;
+    const { t } = this.props;
 
     if (isLoading) {
       return <CustomLoader />;
@@ -395,7 +403,7 @@ export default class ProfileScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title="Profile"
+          title={t("profile")}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -405,7 +413,7 @@ export default class ProfileScreen extends Component {
               source={header_image}
               resizeMode="cover"
               style={styles.headerImageStyle}>
-              <Text style={styles.titleText}>PROFILE</Text>
+              <Text style={styles.titleText}>{t('profile')}</Text>
               <View style={styles.eventHeadlineContainer}>
                 <Image
                   source={ic_header_home_icon}
@@ -414,7 +422,7 @@ export default class ProfileScreen extends Component {
                 />
 
                 <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>PROFILE</Text>
+                <Text style={styles.eventText}>{t('profile')}</Text>
               </View>
             </ImageBackground>
 
@@ -444,15 +452,15 @@ export default class ProfileScreen extends Component {
               )}
             </View>
 
-            <Text style={styles.textInputText}>Avatar*</Text>
+            <Text style={styles.textInputText}>{t('avatar')}*</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.loginFormTextInput} onPress={this.handleFilePick}>Choose Avatar</Text>
+              <Text style={styles.loginFormTextInput} onPress={this.handleFilePick}>{t('choose_avatar')}</Text>
             </View>
 
-            <Text style={styles.textInputText}>Name*</Text>
+            <Text style={styles.textInputText}>{t('name')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Name"
+                placeholder={t('name')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -462,10 +470,10 @@ export default class ProfileScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Email*</Text>
+            <Text style={styles.textInputText}>{t('email')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Email"
+                placeholder={t('email')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -475,10 +483,10 @@ export default class ProfileScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Address*</Text>
+            <Text style={styles.textInputText}>{t('address')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Address"
+                placeholder={t('address')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -488,10 +496,10 @@ export default class ProfileScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Phone*</Text>
+            <Text style={styles.textInputText}>{t('phone_number')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Phone"
+                placeholder={t('phone_number')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -501,10 +509,10 @@ export default class ProfileScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Taxpayer Number</Text>
+            <Text style={styles.textInputText}>{t('taxpayer')}</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Taxpayer Number"
+                placeholder={t('taxpayer')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 keyboardType="default"
@@ -514,10 +522,10 @@ export default class ProfileScreen extends Component {
               />
             </View>
 
-            <Text style={styles.textInputText}>Current Password*</Text>
+            <Text style={styles.textInputText}>{t('current_password')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Current Password"
+                placeholder={t('current_password')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 secureTextEntry={this.state.hideCurrentPassword}
@@ -542,10 +550,10 @@ export default class ProfileScreen extends Component {
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.textInputText}>New Password*</Text>
+            <Text style={styles.textInputText}>{t('new_password')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="New Password"
+                placeholder={t('new_password')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 secureTextEntry={this.state.hideNewPassword}
@@ -570,10 +578,10 @@ export default class ProfileScreen extends Component {
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.textInputText}>Confirm Password*</Text>
+            <Text style={styles.textInputText}>{t('confirm_password')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Confirm Password"
+                placeholder="{t('confirm_password')}"
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 secureTextEntry={this.state.hideConfirmPassword}
@@ -601,13 +609,13 @@ export default class ProfileScreen extends Component {
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={this.handleUpdateProfile}>
-              <Text style={styles.saveProfileText}>Save Profile</Text>
+              <Text style={styles.saveProfileText}>{t('save_profile')}</Text>
             </TouchableOpacity>
             
             <TouchableOpacity
               style={styles.buttonContainerDelete}
               onPress={this.confirmProfileDelete}>
-              <Text style={styles.saveProfileText}>Delete Account</Text>
+              <Text style={styles.saveProfileText}>{t('delete_account')}</Text>
             </TouchableOpacity>
 
             {/* <Text style={styles.hostText}>Want to create & host events ?</Text> */}
@@ -625,6 +633,8 @@ export default class ProfileScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(ProfileScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -719,7 +729,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     flex: 1,
     paddingLeft: wp(4),
-    // backgroundColor: '#334759',
     borderRadius: wp(1),
     color: '#000',
   },

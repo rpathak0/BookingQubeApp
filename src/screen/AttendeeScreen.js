@@ -13,11 +13,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { withTranslation } from 'react-i18next';
+
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
 
-export default class AttendeeScreen extends Component {
+class AttendeeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,6 +31,8 @@ export default class AttendeeScreen extends Component {
   }
 
   render() {
+    const { t } = this.props;
+
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
@@ -94,7 +98,7 @@ export default class AttendeeScreen extends Component {
           </View>
 
           <TouchableOpacity style={styles.buttonContainer}>
-            <Text style={styles.saveProfileText}>Continue</Text>
+            <Text style={styles.saveProfileText}>{t('continue')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -103,6 +107,8 @@ export default class AttendeeScreen extends Component {
     );
   }
 }
+
+export default withTranslation()(AttendeeScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -133,8 +139,6 @@ const styles = StyleSheet.create({
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    // marginLeft: wp(4),
-    // backgroundColor: '#334759',
     borderRadius: wp(1),
     color: '#000',
   },

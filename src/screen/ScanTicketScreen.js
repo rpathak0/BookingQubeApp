@@ -20,6 +20,7 @@ import {
 } from 'react-native-responsive-screen';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+import moment from 'moment';
 
 // Component
 import HeaderComponent from '../component/HeaderComponent';
@@ -42,7 +43,9 @@ import { BASE_URL } from '../api/ApiInfo';
 import { async_keys, getData } from '../api/UserPreference';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export default class ScanTicketScreen extends Component {
+import { withTranslation } from 'react-i18next';
+
+class ScanTicketScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,12 +59,13 @@ export default class ScanTicketScreen extends Component {
 
   onSuccess = async e => {
     const data = JSON.parse(e.data);
+    const { t } = this.props;
     console.log(data);
 
     this.setState({ scannerData: data });
 
     // showing custom toast
-    showToast('Ticket scanned.');
+    showToast(t('ticket_scanned'));
 
     // axios
     const axios = require('axios');
@@ -105,8 +109,8 @@ export default class ScanTicketScreen extends Component {
       console.log(error.response.data.message);
 
       this.setState({ showProcessingLoader: false });
-      Alert.alert('Alert', JSON.stringify(error.response.data.message), [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
+        { text: t('ok'), onPress: () => console.log('OK Pressed') },
       ]);
     }
   };
@@ -164,6 +168,7 @@ export default class ScanTicketScreen extends Component {
 
   handleCheckedIn = async () => {
     const { scannerData } = this.state;
+    const { t } = this.props;
 
     // axios
     const axios = require('axios');
@@ -204,14 +209,15 @@ export default class ScanTicketScreen extends Component {
       console.log(error.response.data.message);
 
       this.setState({ showProcessingLoader: false });
-      Alert.alert('Alert', JSON.stringify(error.response.data.message), [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
+        { text: t('ok'), onPress: () => console.log('OK Pressed') },
       ]);
     }
   };
 
   handleCheckedOut = async () => {
     const { scannerData } = this.state;
+    const { t } = this.props;
 
     // axios
     const axios = require('axios');
@@ -252,19 +258,19 @@ export default class ScanTicketScreen extends Component {
       console.log(error.response.data.message);
 
       this.setState({ showProcessingLoader: false });
-      Alert.alert('Alert', JSON.stringify(error.response.data.message), [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
+        { text: t('ok'), onPress: () => console.log('OK Pressed') },
       ]);
     }
   };
 
   render() {
     let scanner;
-
+    const  { t } = this.props;
     if (this.state.showQR === 1) {
       return (
         <SafeAreaView style={styles.container}>
-          <HeaderComponent title="Check In" nav={this.props.navigation} />
+          <HeaderComponent title={t('check_in')} nav={this.props.navigation} />
 
           <View style={styles.homeContainer}>
             {/* <ImageBackground
@@ -291,7 +297,7 @@ export default class ScanTicketScreen extends Component {
                   resizeMode="cover"
                   style={styles.categoryIconStyle}
                 />
-                <Text style={styles.scanTextStyle}>Scan Ticket</Text>
+                <Text style={styles.scanTextStyle}>{t('scan_ticket')}</Text>
               </View>
               <View style={styles.scanTicketWrapper}>
                 <View style={styles.scanTicketInner}>
@@ -314,7 +320,7 @@ export default class ScanTicketScreen extends Component {
                   <TouchableOpacity
                     style={styles.buttonContainer}
                     onPress={this.handleCheckedIn}>
-                    <Text style={styles.buttonText}>Check-In</Text>
+                    <Text style={styles.buttonText}>{t('check_in')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -341,7 +347,7 @@ export default class ScanTicketScreen extends Component {
     } else {
       return (
         <SafeAreaView style={styles.container}>
-          <HeaderComponent title="Scan Ticket" nav={this.props.navigation} />
+          <HeaderComponent title={t('scan_ticket')} nav={this.props.navigation} />
 
           <View style={styles.homeContainer}>
             <ImageBackground
@@ -356,7 +362,7 @@ export default class ScanTicketScreen extends Component {
                 />
 
                 <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>Scan Ticket</Text>
+                <Text style={styles.eventText}>{t('scan_ticket')}</Text>
               </View>
             </ImageBackground>
 
@@ -367,23 +373,23 @@ export default class ScanTicketScreen extends Component {
                 style={styles.categoryIconStyle}
               />
 
-              <Text style={styles.scanTextStyle}>Scan Ticket</Text>
+              <Text style={styles.scanTextStyle}>{t('scan_ticket')}</Text>
             </View>
 
             {this.state.ticketList.map(item => (
               <ScrollView>
                 <View style={styles.bookedTicketContainer}>
-                  <Text style={styles.orderIdText}>Order Id</Text>
+                  <Text style={styles.orderIdText}>{t('order_id')}</Text>
                   <Text style={styles.orderIdText}># {item.common_order}</Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Event</Text>
+                  <Text style={styles.eventTitleText}>{t('event')}</Text>
                   <Text style={styles.eventPlaceText}>
                     {item.event_title} ({item.event_category})
                   </Text>
 
-                  <Text style={styles.eventTitleText}>Timings</Text>
+                  <Text style={styles.eventTitleText}>{t('timings')}</Text>
                   <Text style={styles.eventTimeText}>
                     {item.event_start_date}
                     {'\n'}
@@ -393,33 +399,33 @@ export default class ScanTicketScreen extends Component {
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Ticket</Text>
+                  <Text style={styles.eventTitleText}>{t('ticket')}</Text>
                   <Text style={styles.eventTimeText}>
                     {item.ticket_title} x {item.quantity}
                   </Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Order Total</Text>
+                  <Text style={styles.eventTitleText}>{t('order_total')}</Text>
                   <Text style={styles.eventTimeText}>
                     {item.net_price} {this.state.currency}
                   </Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Promocode Reward(-)</Text>
+                  <Text style={styles.eventTitleText}>{t('promocode_reward')}</Text>
                   <Text style={styles.eventTimeText}>
                     {item.promocode} {this.state.currency}
                   </Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Booked On</Text>
-                  <Text style={styles.eventTimeText}>26 May 2022 (IST)</Text>
+                  <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
+                  <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Payment</Text>
+                  <Text style={styles.eventTitleText}>{t('payment')}</Text>
 
                   <View style={styles.paymentContainer}>
                     <Text style={styles.paymentMethodText}>
@@ -428,39 +434,39 @@ export default class ScanTicketScreen extends Component {
 
                     <View style={styles.paymentMethodLine}></View>
                     {item.is_paid === 0 ? (
-                      <Text style={styles.paymentProcessText}>Pending</Text>
+                      <Text style={styles.paymentProcessText}>{t('pending')}</Text>
                     ) : (
-                      <Text style={styles.paymentProcessText}>Paid</Text>
+                      <Text style={styles.paymentProcessText}>{t('paid')}</Text>
                     )}
                   </View>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Check-In</Text>
+                  <Text style={styles.eventTitleText}>{t('check_in')}</Text>
                   <View style={styles.checkedInContainer}>
                     {item.checked_in === 0 ? (
-                      <Text style={styles.checkedInText}>No</Text>
+                      <Text style={styles.checkedInText}>{t('no')}</Text>
                     ) : (
-                      <Text style={styles.checkedInText}>Yes</Text>
+                      <Text style={styles.checkedInText}>{t('yes')}</Text>
                     )}
                   </View>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Status</Text>
+                  <Text style={styles.eventTitleText}>{t('status')}</Text>
                   <View style={styles.statusContainer}>
                     {item.status === 1 ? (
-                      <Text style={styles.statusText}>Enabled</Text>
+                      <Text style={styles.statusText}>{t('enabled')}</Text>
                     ) : (
-                      <Text style={styles.statusText}>Disabled</Text>
+                      <Text style={styles.statusText}>{t('disabled')}</Text>
                     )}
                   </View>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>Expired</Text>
+                  <Text style={styles.eventTitleText}>{t('expired')}</Text>
                   <View style={styles.expiredContainer}>
-                    <Text style={styles.expiredText}>No</Text>
+                    <Text style={styles.expiredText}>{t('no')}</Text>
                   </View>
                 </View>
               </ScrollView>
@@ -480,7 +486,7 @@ export default class ScanTicketScreen extends Component {
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={this.handleCheckedIn}>
-              <Text style={styles.buttonText}>Check-In</Text>
+              <Text style={styles.buttonText}>{t('check_in')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -492,6 +498,8 @@ export default class ScanTicketScreen extends Component {
     }
   }
 }
+
+export default withTranslation()(ScanTicketScreen);
 
 const styles = StyleSheet.create({
   container: {

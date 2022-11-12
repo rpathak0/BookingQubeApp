@@ -10,6 +10,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { useTranslation } from 'react-i18next';
+
 // Screens
 import LoginScreen from '../screen/LoginScreen';
 import SignUpScreen from '../screen/SignUpScreen';
@@ -94,11 +96,11 @@ const drawerContentContainerInset = {
   horizontal: 'never',
 };
 
-const onLogoutYesPress = nav => async () => {
+const onLogoutYesPress = (nav, t) => async () => {
   try {
     // Clearing user preferences from local storage
     await clearData();
-    showToast('Logout Successfully');
+    showToast(t('logout_success'));
     // Resetting Navigation to initial state for login again
     nav.navigate('LoggedOut');
   } catch (error) {
@@ -107,6 +109,7 @@ const onLogoutYesPress = nav => async () => {
 };
 
 const onDrawerItemPress = props => route => {
+  const { t } = props.screenProps;
   if (route.route.routeName !== 'Logout') {
     props.onItemPress(route);
     return;
@@ -116,11 +119,11 @@ const onDrawerItemPress = props => route => {
   props.navigation.closeDrawer();
 
   Alert.alert(
-    'Logout',
-    'Are you sure, you want to logout?',
+    t('logout'),
+    t('sure_logout'),
     [
-      { text: 'NO', style: 'cancel' },
-      { text: 'YES', onPress: onLogoutYesPress(props.navigation) },
+      { text: t('no'), style: 'cancel' },
+      { text: t('yes'), onPress: onLogoutYesPress(props.navigation, t) },
     ],
     {
       cancelable: false,
@@ -128,23 +131,28 @@ const onDrawerItemPress = props => route => {
   );
 };
 
-const CustomDrawerContentComponent = props => (
-  <ScrollView showsVerticalScrollIndicator={false}>
-    <SafeAreaView
-      style={styles.drawerContentContainer}
-      forceInset={drawerContentContainerInset}>
-      <View style={styles.drawerHeader}>
-        <Image source={logo} style={styles.profileImage} />
-        <Text style={styles.drawerTitle}>Welcome to BOOKING QUBE</Text>
-      </View>
-      <DrawerItems
-        {...props}
-        onItemPress={onDrawerItemPress(props)}
-        labelStyle={styles.drawerLabel}
-      />
-    </SafeAreaView>
-  </ScrollView>
-);
+const CustomDrawerContentComponent = props => {
+  const { t } = props.screenProps;
+  console.log('props.screenPropsprops.screenProps', props.screenProps);
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView
+        style={styles.drawerContentContainer}
+        forceInset={drawerContentContainerInset}>
+        <View style={styles.drawerHeader}>
+          <Image source={logo} style={styles.profileImage} />
+          <Text style={styles.drawerTitle}>{t('welcome_to')}</Text>
+        </View>
+        <DrawerItems
+          {...props}
+          onItemPress={onDrawerItemPress(props)}
+          labelStyle={styles.drawerLabel}
+        />
+      </SafeAreaView>
+    </ScrollView>
+  );
+  
+};
 
 const AdminNavigator = createStackNavigator(
   {
@@ -258,6 +266,12 @@ const LoggedOutNavigator1 = createDrawerNavigator(
   },
 );
 
+
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
+
+
+
+
 const LoggedOutNavigator2 = createDrawerNavigator(
   {
     Home: {
@@ -282,6 +296,9 @@ const LoggedOutNavigator2 = createDrawerNavigator(
     contentComponent: CustomDrawerContentComponent,
   },
 );
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
+
+
 const AfterGuestLoginNavigator = createDrawerNavigator(
   {
     Home: {
@@ -307,24 +324,70 @@ const AfterGuestLoginNavigator = createDrawerNavigator(
   },
 );
 
-const LoggedOutNavigator = createDrawerNavigator(
+
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
+
+// Home
+const DrawerHome = createStackNavigator(
   {
     Home: {
       screen: HomeNavigator,
-    },
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('home', { order: 1 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerHome.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('home', { order: 1 }),
+});
+
+// Event
+const DrawerEvent = createStackNavigator(
+  {
     Event: {
       screen: EventListingNavigator,
-    },
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('event', { order: 2 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerEvent.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('event', { order: 2 }),
+});
+
+// Login
+const DrawerLogin = createStackNavigator(
+  {
     Login: {
       screen: AdminNavigator,
-    },
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('login', { order: 3 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerLogin.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('login', { order: 3 }),
+});
+
+
+const LoggedOutNavigator = createDrawerNavigator(
+  {
+    DrawerHome,
+    DrawerEvent,
+    DrawerLogin,
   },
   {
-    initialRouteName: 'Home',
     unmountInactiveRoutes: true,
     contentComponent: CustomDrawerContentComponent,
   },
 );
+/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
 
 export const createRootNavigator = (checkScanning, guestCheckoutSuccess,paymentFailed) => {
   let initialRouteName = 'LoggedOut';
