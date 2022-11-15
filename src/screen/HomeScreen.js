@@ -36,6 +36,8 @@ import banner from '../assets/image/banner.jpg';
 
 import { withTranslation } from 'react-i18next';
 
+import { SliderBox } from "react-native-image-slider-box";
+
 // API Info
 import { BASE_URL, STORAGE_URL } from '../api/ApiInfo';
 import axios from 'axios';
@@ -58,11 +60,16 @@ class HomeScreen extends Component {
       isLoading: true,
       imageUrlPrefix: null,
       saleExpired: false,
+      banners: [],
+      banners_images: [
+        require('../assets/image/banner.jpg'),
+      ],
     };
   }
 
   componentDidMount() {
     this.fetchEventData();
+    this.fetchBannersData();
     // this.pay();
   }
 
@@ -96,6 +103,42 @@ class HomeScreen extends Component {
       .catch(e => {
         console.log(e);
       });
+  };
+
+  fetchBannersData = async () => {
+    const axios = require('axios');
+
+    try {
+      // calling api
+      await axios
+        .get(BASE_URL + 'banners')
+
+        // processing response
+        .then(response => {
+          let newResponse = response;
+          if (newResponse) {
+            const { success } = newResponse.data;
+
+            console.log(newResponse.data);
+
+            if (success === true) {
+              let bannersImages = newResponse.data.data.banners.map(banner => {
+                return STORAGE_URL+banner.image;
+              });
+              
+              this.setState({
+                banners: newResponse.data.data.banners,
+                banners_images: bannersImages,
+                isLoading: false,
+              });
+
+              console.log('banners_images', bannersImages)
+            }
+          }
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   fetchEventData = async () => {
@@ -154,6 +197,18 @@ class HomeScreen extends Component {
     });
   };
 
+  handleBannerClick = item => {
+    const { imageUrlPrefix } = this.state;
+    const slug = item.app_event_slug;
+    console.log('banner slg', slug);
+    if(slug != null && slug != '') {
+      this.props.navigation.navigate('ViewEvent', {
+        slugTitle: { slug, imageUrlPrefix },
+      });
+    }
+    return true;
+  };
+
   handleAllEvent = () => {
     this.props.navigation.navigate('EventList');
   };
@@ -183,13 +238,18 @@ class HomeScreen extends Component {
         // contentContainerStyle={{flex: 1}}
         >
           <View style={styles.homeContainer}>
-            <View style={styles.bannerContainer}>
-              <Image
-                source={banner}
-                resizeMode="cover"
-                style={styles.bannerImageStyle}
+            
+            
+            <View>
+              <SliderBox
+                images={this.state.banners_images}
+                autoplay
+                circleLoop
+                onCurrentImagePressed={index => this.handleBannerClick(this.state.banners[index])}
               />
             </View>
+
+
             <View style={styles.searchContainer}>
               <View style={styles.inputContainer}>
                 <Image
@@ -326,10 +386,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bannerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: hp(2),
-    marginHorizontal: wp(2),
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // marginTop: hp(2),
+    // marginHorizontal: wp(2),
   },
   bannerImageStyle: {
     height: hp(18),

@@ -21,6 +21,9 @@ import { useTranslation } from 'react-i18next';
 import english_icon from '../assets/image/english.png';
 import qatar_icon from '../assets/image/qatar.png';
 
+// rtl
+import RNRestart from 'react-native-restart';
+
 // API Info
 import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
 import { LoginContext } from '../context/LoginContext';

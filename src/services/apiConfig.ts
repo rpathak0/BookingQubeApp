@@ -2,7 +2,7 @@
 // 172.20.10.2
 // 192.168.1.5
 // 192.168.1.33
-export const SERVER = 'http://192.168.1.37:19001/';
+export const SERVER = 'http://192.168.1.2:19001/';
 
 /* Staging Server */
 // export const SERVER = '';
