@@ -246,6 +246,7 @@ class HomeScreen extends Component {
                 autoplay
                 circleLoop
                 onCurrentImagePressed={index => this.handleBannerClick(this.state.banners[index])}
+                autoplayInterval={6000}
               />
             </View>
 
