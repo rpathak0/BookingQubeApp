@@ -10,7 +10,8 @@ import {
   ScrollView,
   ImageBackground,
   FlatList,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -381,16 +382,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f1f1f1',
-    marginTop:StatusBar.currentHeight,
+    marginTop: Platform.OS === 'ios' ? StatusBar.currentHeight : 0,
   },
   homeContainer: {
     flex: 1,
-  },
-  bannerContainer: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // marginTop: hp(2),
-    // marginHorizontal: wp(2),
   },
   bannerImageStyle: {
     height: hp(18),
@@ -453,10 +448,6 @@ const styles = StyleSheet.create({
     color: '#00192f',
     textAlign: 'center',
     marginVertical: hp(4),
-  },
-  gridView: {
-    // marginTop: 10,
-    // flex: 1,
   },
   featuredEventText1: {
     fontSize: wp(6),
@@ -561,18 +552,6 @@ const styles = StyleSheet.create({
   bidTextStyle: {
     fontSize: wp(2.3),
     color: '#838383',
-  },
-  eventTypeContainer: {
-    height: hp(6),
-    width: 'auto',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#838383',
-    backgroundColor: '#838383',
-    marginTop: hp(2),
-    borderBottomRightRadius: wp(4),
-    borderBottomLeftRadius: wp(4),
   },
   eventTypeText: {
     fontSize: wp(3.5),

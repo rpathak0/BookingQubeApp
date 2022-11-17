@@ -19,7 +19,7 @@ import {nsSetTopLevelNavigator} from './src/routes/NavigationService';
 import {async_keys, getData} from './src/api/UserPreference';
 import LoginContextProvider from './src/context/LoginContext';
 
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : StatusBar.currentHeight;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : 0;
 
 class App extends Component {
   constructor(props) {
@@ -75,6 +75,6 @@ export default withTranslation()(App);
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-      marginTop:STATUSBAR_HEIGHT,
+      marginTop: STATUSBAR_HEIGHT,
   }
 });

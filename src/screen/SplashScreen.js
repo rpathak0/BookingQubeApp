@@ -10,7 +10,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 // Image
 import logo from '../assets/image/logo.png';
 import splash_image from '../assets/image/spalsh_image.png';
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight;
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : 0;
 
 export default class SplashScreen extends Component {
   CText = props => <Text style={{color: props.color}}>{props.children}</Text>;
@@ -80,7 +80,7 @@ export default class SplashScreen extends Component {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    marginTop:STATUSBAR_HEIGHT,
+    marginTop: STATUSBAR_HEIGHT,
   },
   container: {
     flex: 1,
