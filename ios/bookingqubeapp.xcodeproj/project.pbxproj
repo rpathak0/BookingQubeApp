@@ -488,7 +488,7 @@
 				DEVELOPMENT_TEAM = JQS99A9N9T;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = bookingqubeapp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = bookingqubeapp;
+				INFOPLIST_KEY_CFBundleDisplayName = BookingQube;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -519,7 +519,7 @@
 				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = JQS99A9N9T;
 				INFOPLIST_FILE = bookingqubeapp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = bookingqubeapp;
+				INFOPLIST_KEY_CFBundleDisplayName = BookingQube;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
