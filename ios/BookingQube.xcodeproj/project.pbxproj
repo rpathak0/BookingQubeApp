@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* bookingqubeappTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* bookingqubeappTests.m */; };
-		09F8309D925BDE16E25ED2EE /* libPods-bookingqubeapp-bookingqubeappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0CACED650AEACEC4309B144 /* libPods-bookingqubeapp-bookingqubeappTests.a */; };
+		00E356F31AD99517003FC87E /* BookingQubeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BookingQubeTests.m */; };
+		09F8309D925BDE16E25ED2EE /* libPods-BookingQube-BookingQubeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0CACED650AEACEC4309B144 /* libPods-BookingQube-BookingQubeTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		DBD04B57D1F5BEFAF1500422 /* libPods-bookingqubeapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF783C848C20DDDAC0A9B9C /* libPods-bookingqubeapp.a */; };
+		DBD04B57D1F5BEFAF1500422 /* libPods-BookingQube.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF783C848C20DDDAC0A9B9C /* libPods-BookingQube.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -22,28 +22,28 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = bookingqubeapp;
+			remoteInfo = BookingQube;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* bookingqubeappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bookingqubeappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* BookingQubeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BookingQubeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* bookingqubeappTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bookingqubeappTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* bookingqubeapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bookingqubeapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = bookingqubeapp/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = bookingqubeapp/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = bookingqubeapp/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = bookingqubeapp/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = bookingqubeapp/main.m; sourceTree = "<group>"; };
-		1AFF594425381D6DF4086232 /* Pods-bookingqubeapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookingqubeapp.debug.xcconfig"; path = "Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp.debug.xcconfig"; sourceTree = "<group>"; };
-		4BF783C848C20DDDAC0A9B9C /* libPods-bookingqubeapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-bookingqubeapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FEEDF40E6E008268A6BA4A7 /* Pods-bookingqubeapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookingqubeapp.release.xcconfig"; path = "Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp.release.xcconfig"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = bookingqubeapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B8091D15CCADD61CAB88E48B /* Pods-bookingqubeapp-bookingqubeappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookingqubeapp-bookingqubeappTests.release.xcconfig"; path = "Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests.release.xcconfig"; sourceTree = "<group>"; };
-		E0CACED650AEACEC4309B144 /* libPods-bookingqubeapp-bookingqubeappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-bookingqubeapp-bookingqubeappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F21AD99517003FC87E /* BookingQubeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BookingQubeTests.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* BookingQube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookingQube.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BookingQube/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BookingQube/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = BookingQube/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BookingQube/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BookingQube/main.m; sourceTree = "<group>"; };
+		1AFF594425381D6DF4086232 /* Pods-BookingQube.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookingQube.debug.xcconfig"; path = "Target Support Files/Pods-BookingQube/Pods-BookingQube.debug.xcconfig"; sourceTree = "<group>"; };
+		4BF783C848C20DDDAC0A9B9C /* libPods-BookingQube.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BookingQube.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FEEDF40E6E008268A6BA4A7 /* Pods-BookingQube.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookingQube.release.xcconfig"; path = "Target Support Files/Pods-BookingQube/Pods-BookingQube.release.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BookingQube/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B8091D15CCADD61CAB88E48B /* Pods-BookingQube-BookingQubeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookingQube-BookingQubeTests.release.xcconfig"; path = "Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests.release.xcconfig"; sourceTree = "<group>"; };
+		E0CACED650AEACEC4309B144 /* libPods-BookingQube-BookingQubeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BookingQube-BookingQubeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F6E447130BCC7285EAC3BA9A /* Pods-bookingqubeapp-bookingqubeappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookingqubeapp-bookingqubeappTests.debug.xcconfig"; path = "Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F6E447130BCC7285EAC3BA9A /* Pods-BookingQube-BookingQubeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BookingQube-BookingQubeTests.debug.xcconfig"; path = "Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09F8309D925BDE16E25ED2EE /* libPods-bookingqubeapp-bookingqubeappTests.a in Frameworks */,
+				09F8309D925BDE16E25ED2EE /* libPods-BookingQube-BookingQubeTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,20 +59,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBD04B57D1F5BEFAF1500422 /* libPods-bookingqubeapp.a in Frameworks */,
+				DBD04B57D1F5BEFAF1500422 /* libPods-BookingQube.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* bookingqubeappTests */ = {
+		00E356EF1AD99517003FC87E /* BookingQubeTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* bookingqubeappTests.m */,
+				00E356F21AD99517003FC87E /* BookingQubeTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = bookingqubeappTests;
+			path = BookingQubeTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -83,7 +83,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* bookingqubeapp */ = {
+		13B07FAE1A68108700A75B9A /* BookingQube */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -93,16 +93,16 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = bookingqubeapp;
+			name = BookingQube;
 			sourceTree = "<group>";
 		};
 		23DF1A68F1F4A8C90FB0E471 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1AFF594425381D6DF4086232 /* Pods-bookingqubeapp.debug.xcconfig */,
-				4FEEDF40E6E008268A6BA4A7 /* Pods-bookingqubeapp.release.xcconfig */,
-				F6E447130BCC7285EAC3BA9A /* Pods-bookingqubeapp-bookingqubeappTests.debug.xcconfig */,
-				B8091D15CCADD61CAB88E48B /* Pods-bookingqubeapp-bookingqubeappTests.release.xcconfig */,
+				1AFF594425381D6DF4086232 /* Pods-BookingQube.debug.xcconfig */,
+				4FEEDF40E6E008268A6BA4A7 /* Pods-BookingQube.release.xcconfig */,
+				F6E447130BCC7285EAC3BA9A /* Pods-BookingQube-BookingQubeTests.debug.xcconfig */,
+				B8091D15CCADD61CAB88E48B /* Pods-BookingQube-BookingQubeTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -111,8 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				4BF783C848C20DDDAC0A9B9C /* libPods-bookingqubeapp.a */,
-				E0CACED650AEACEC4309B144 /* libPods-bookingqubeapp-bookingqubeappTests.a */,
+				4BF783C848C20DDDAC0A9B9C /* libPods-BookingQube.a */,
+				E0CACED650AEACEC4309B144 /* libPods-BookingQube-BookingQubeTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,9 +127,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* bookingqubeapp */,
+				13B07FAE1A68108700A75B9A /* BookingQube */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* bookingqubeappTests */,
+				00E356EF1AD99517003FC87E /* BookingQubeTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				23DF1A68F1F4A8C90FB0E471 /* Pods */,
@@ -142,8 +142,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* bookingqubeapp.app */,
-				00E356EE1AD99517003FC87E /* bookingqubeappTests.xctest */,
+				13B07F961A680F5B00A75B9A /* BookingQube.app */,
+				00E356EE1AD99517003FC87E /* BookingQubeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,9 +151,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* bookingqubeappTests */ = {
+		00E356ED1AD99517003FC87E /* BookingQubeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "bookingqubeappTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BookingQubeTests" */;
 			buildPhases = (
 				61C3417DDB4D419EDF0237E8 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -167,14 +167,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = bookingqubeappTests;
-			productName = bookingqubeappTests;
-			productReference = 00E356EE1AD99517003FC87E /* bookingqubeappTests.xctest */;
+			name = BookingQubeTests;
+			productName = BookingQubeTests;
+			productReference = 00E356EE1AD99517003FC87E /* BookingQubeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* bookingqubeapp */ = {
+		13B07F861A680F5B00A75B9A /* BookingQube */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "bookingqubeapp" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BookingQube" */;
 			buildPhases = (
 				32EEC29F924C8EFFFA155B1D /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -189,9 +189,9 @@
 			);
 			dependencies = (
 			);
-			name = bookingqubeapp;
-			productName = bookingqubeapp;
-			productReference = 13B07F961A680F5B00A75B9A /* bookingqubeapp.app */;
+			name = BookingQube;
+			productName = BookingQube;
+			productReference = 13B07F961A680F5B00A75B9A /* BookingQube.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -211,7 +211,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "bookingqubeapp" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BookingQube" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -224,8 +224,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* bookingqubeapp */,
-				00E356ED1AD99517003FC87E /* bookingqubeappTests */,
+				13B07F861A680F5B00A75B9A /* BookingQube */,
+				00E356ED1AD99517003FC87E /* BookingQubeTests */,
 			);
 		};
 /* End PBXProject section */
@@ -279,7 +279,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-bookingqubeapp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-BookingQube-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -301,7 +301,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-bookingqubeapp-bookingqubeappTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-BookingQube-BookingQubeTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -314,15 +314,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		97EE51893F8BD99F0DA56E27 /* [CP] Embed Pods Frameworks */ = {
@@ -331,15 +331,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A4B2A518E2B804B4EA76BDBF /* [CP] Copy Pods Resources */ = {
@@ -348,15 +348,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp-bookingqubeappTests/Pods-bookingqubeapp-bookingqubeappTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BookingQube-BookingQubeTests/Pods-BookingQube-BookingQubeTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FB68EED00AAF27197FA78C45 /* [CP] Embed Pods Frameworks */ = {
@@ -365,15 +365,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-bookingqubeapp/Pods-bookingqubeapp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BookingQube/Pods-BookingQube-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -402,7 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* bookingqubeappTests.m in Sources */,
+				00E356F31AD99517003FC87E /* BookingQubeTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,7 +420,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* bookingqubeapp */;
+			target = 13B07F861A680F5B00A75B9A /* BookingQube */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -428,14 +428,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6E447130BCC7285EAC3BA9A /* Pods-bookingqubeapp-bookingqubeappTests.debug.xcconfig */;
+			baseConfigurationReference = F6E447130BCC7285EAC3BA9A /* Pods-BookingQube-BookingQubeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = bookingqubeappTests/Info.plist;
+				INFOPLIST_FILE = BookingQubeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -449,17 +449,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bookingqubeapp.app/bookingqubeapp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BookingQube.app/BookingQube";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8091D15CCADD61CAB88E48B /* Pods-bookingqubeapp-bookingqubeappTests.release.xcconfig */;
+			baseConfigurationReference = B8091D15CCADD61CAB88E48B /* Pods-BookingQube-BookingQubeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = bookingqubeappTests/Info.plist;
+				INFOPLIST_FILE = BookingQubeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -473,13 +473,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bookingqubeapp.app/bookingqubeapp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BookingQube.app/BookingQube";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1AFF594425381D6DF4086232 /* Pods-bookingqubeapp.debug.xcconfig */;
+			baseConfigurationReference = 1AFF594425381D6DF4086232 /* Pods-BookingQube.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -487,7 +487,7 @@
 				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = JQS99A9N9T;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = bookingqubeapp/Info.plist;
+				INFOPLIST_FILE = BookingQube/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BookingQube;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -500,8 +500,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.bookingqubeapp;
-				PRODUCT_NAME = bookingqubeapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.BookingQube;
+				PRODUCT_NAME = BookingQube;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -511,14 +511,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4FEEDF40E6E008268A6BA4A7 /* Pods-bookingqubeapp.release.xcconfig */;
+			baseConfigurationReference = 4FEEDF40E6E008268A6BA4A7 /* Pods-BookingQube.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = JQS99A9N9T;
-				INFOPLIST_FILE = bookingqubeapp/Info.plist;
+				INFOPLIST_FILE = BookingQube/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = BookingQube;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -531,8 +531,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.bookingqubeapp;
-				PRODUCT_NAME = bookingqubeapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.BookingQube;
+				PRODUCT_NAME = BookingQube;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -665,7 +665,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "bookingqubeappTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BookingQubeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -674,7 +674,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "bookingqubeapp" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BookingQube" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -683,7 +683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "bookingqubeapp" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BookingQube" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
