@@ -1,4 +1,4 @@
-package com.bookingqube.bookingqube;
+package com.bookingqube.bookingqubeapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

@@ -500,7 +500,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.BookingQube;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.bookingqubeapp;
 				PRODUCT_NAME = BookingQube;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -531,7 +531,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.BookingQube;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bookingqube.bookingqubeapp;
 				PRODUCT_NAME = BookingQube;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
