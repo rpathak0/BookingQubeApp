@@ -1,12 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable quotes */
-/* eslint-disable prettier/prettier */
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable prettier/prettier */
-/* eslint-disable radix */
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/self-closing-comp */
-/* eslint-disable prettier/prettier */
 import {
   Text,
   View,
@@ -541,6 +532,7 @@ class CheckOutScreen extends Component {
   };
 
   applyPromocode = async (item) => {
+    const { t } = this.props;
     Keyboard.dismiss();
     const axios = require('axios');
     const token = await getData(async_keys.userId);
@@ -588,7 +580,7 @@ class CheckOutScreen extends Component {
                 this.handleSelectValue(currentSelectedTicket.value, ticket, '');
               }
               this.setState({ showProcessingLoader: false });
-              this.openTost('success', 'Discount', 'Promocode applied successfully.');
+              this.openTost('success', t('promocode_discount'), t('login_to_promocode'));
             }
           })
           .catch(ERR => {
@@ -604,13 +596,14 @@ class CheckOutScreen extends Component {
 
   checkPromocodeIsAppiled = (item) => {
     const { ticketList } = this.state;
+    const {t} = this.props;
     const ticket = ticketList.find(t => t.ticketId == item.id);
     if ((ticket !== undefined) && (ticket?.item?.promocode !== undefined)) {
       let promocodeText = '';
       if (ticket?.item?.promocode?.p_type === "percent") {
-        promocodeText = parseFloat(ticket?.item?.promocode?.reward).toFixed(2) + "% OFF";
+        promocodeText = parseFloat(ticket?.item?.promocode?.reward).toFixed(2) + t('off_percent');
       } else {
-        promocodeText = parseFloat(ticket?.item?.promocode.reward).toFixed(2) + " " + this.eventInfo.currency + " OFF";
+        promocodeText = parseFloat(ticket?.item?.promocode.reward).toFixed(2) + " " + this.eventInfo.currency + t('off_fixed');
       }
       return (
         <Text style={styles.promocodeAppiled}>{promocodeText}</Text>
@@ -736,7 +729,7 @@ class CheckOutScreen extends Component {
 
   getQtyText = (item) => {
     const qty = this.state.ticketList.length > 0 ? (this.state.ticketList.filter((t) => t.ticketId == item.id).reduce((pre, curr) => pre + parseInt(curr.value), 0)) : null;
-    return qty > 0 ? `${qty} x` : '';
+    return qty > 0 ? `${qty} X ` : '';
   }
 
   checkTaxesIsAvailable = (item) => {
@@ -760,6 +753,8 @@ class CheckOutScreen extends Component {
   }
 
   getTicketTaxes = (item) => {
+    const { t } = this.props;
+
     if (this.state.ticketList.length > 0) {
       let ticket = this.state.ticketList.find((t) => t.ticketId == item.id);
       if (ticket != 'undefined') {
@@ -771,7 +766,7 @@ class CheckOutScreen extends Component {
             taxAmount = parseFloat(tax.rate)
           }
           return (
-            <Text key={tax?.id}>{`${parseFloat(taxAmount * ticket.value).toFixed(2)} ${this.eventInfo.currency} ( ${tax.title} ${parseFloat(tax.rate).toFixed(2)} ${tax?.rate_type == "percent" ? "%" : this.eventInfo.currency} ${tax.net_price == "excluding" ? "exclusive" : "inclusive"} )`} </Text>
+            <Text style={styles.taxesContainerText} key={tax?.id}>{`${tax.title} ${parseFloat(taxAmount * ticket.value).toFixed(2)} ${this.eventInfo.currency} (${parseFloat(tax.rate).toFixed(2)} ${tax?.rate_type == "percent" ? "%" : this.eventInfo.currency} ${tax.net_price == "excluding" ? t("exclusive") : t("inclusive")} )`} </Text>
           )
         })
         return taxes;
@@ -886,7 +881,7 @@ class CheckOutScreen extends Component {
               return (
                 <View>
                   <CustomField
-                    title={`#${ite}`+t('attendee_details')}
+                    title={`#${ite} `+t('attendee_details')}
                     customFieldsData={this.state.customFiled}
                     ticket={item}
                     seat={this.state.currentSelectedSeat}
@@ -960,41 +955,37 @@ class CheckOutScreen extends Component {
                   <View key={i} style={styles.ticketContainer}>
                     {item?.sale_end_date != null && this.checkSaleIslive(item) && (
                       <View style={styles.eventSaleContainer}>
-                        <Text style={{ textAlignVertical: 'center', color: '#000', fontWeight: '600', fontSize: wp(3.8) }}>{t('on_sale')} </Text>
+                        <Text style={styles.eventSaleText}>{t('on_sale')} </Text>
                         <CountDown
                           until={getSaleExpirationSeconds(item?.sale_end_date)}
-                          size={15}
+                          size={12}
                           onFinish={() => this.saleFinished()}
-                          digitTxtStyle={{ color: '#fff' }}
-                          digitStyle={{ backgroundColor: '#50E0FF' }}
-                          // timeLabelStyle={{fontSize:wp(2.8),color: '#000', marginLeft:wp(3) }}
+                          digitTxtStyle={styles.digitTxtStyle}
+                          digitStyle={styles.digitStyle}
+                          timeLabelStyle={styles.timeLabelStyle}
                           timeToShow={['D', 'H', 'M', 'S']}
                           timeLabels={{ d: t('days'), h: t('hours'), m: t('minutes'), s: t('seconds') }}
                         />
-                        <Text style={{ textAlignVertical: 'center', paddingLeft: wp(4), color: '#000' }}> {t('left')}</Text>
                       </View>
                     )}
                     <View style={styles.ticketPricingContainer}>
 
                       <View style={styles.ticketNameWrapper}>
                         <Text style={styles.ticketName}>{item?.title}</Text>
-                        <Text style={item?.sale_start_date ? styles.ticketPriceOld : {}} >
-                          {/* {item?.price} {this.eventInfo.currency} */}
-                          <View style={styles.ticketQtyWrapper}>
-                            <Text style={{ marginRight: 5 }}>
-                              {!item?.sale_start_date ? this.getQtyText(item) : null}
-                            </Text>
-                            <Text style={!item?.sale_start_date ? {} : {
-                              ...styles.ticketQtyWrapper, fontSize: 10,
-                              textDecorationLine: 'line-through'
-                            }}>
-                              {(item?.price)} {this.eventInfo.currency}
-                            </Text>
-                          </View>
-                        </Text>
+                        <View style={styles.ticketQtyWrapper}>
+                          <Text>
+                            {!item?.sale_start_date ? this.getQtyText(item) : null}
+                          </Text>
+                          <Text style={!item?.sale_start_date ? {} : {
+                            ...styles.ticketQtyWrapper, fontSize: 10,
+                            textDecorationLine: 'line-through'
+                          }}>
+                            {(item?.price)} {this.eventInfo.currency}
+                          </Text>
+                        </View>
                         {item?.sale_start_date && (
                           <View style={styles.ticketQtyWrapper}>
-                            <Text style={{ marginRight: 5 }}>
+                            <Text>
                               {this.getQtyText(item)}
                             </Text>
                             <Text >
@@ -1126,7 +1117,7 @@ class CheckOutScreen extends Component {
                       </>
                     )}
                     {(this.checkTaxesIsAvailable(item) > 0) && (
-                      <View style={styles.taxesContiner}>
+                      <View style={styles.taxesContainer}>
                         {this.getTicketTaxes(item)}
                       </View>
                     )}
@@ -1140,7 +1131,7 @@ class CheckOutScreen extends Component {
                         <TextInput
                           style={styles.loginFormTextInput}
                           placeholder={t('enter_promocode')}
-                          placeholderTextColor="#000"
+                          placeholderTextColor="#999"
                           keyboardType="default"
                           underlineColorAndroid="transparent"
                           value={item?.promocode}
@@ -1170,7 +1161,6 @@ class CheckOutScreen extends Component {
                   {this.state.ticketList.reduce((pre, curr) => pre + parseInt(curr.value), 0)}
                 </Text>
               </View>
-              <View style={styles.lineContainer}></View>
             </View>
 
             <View style={styles.totalTicketMainContainer}>
@@ -1210,7 +1200,6 @@ class CheckOutScreen extends Component {
                   </View>
                 </>
               )}
-              <View style={styles.lineContainer}></View>
             </View>
             <View>
               {(this.state.ticketList.reduce((pre, curr) => pre + parseInt(curr.value), 0) > 0) && (parseFloat(this.state.netTotal) > 0.00) && (
@@ -1372,26 +1361,26 @@ const pickerStyle = StyleSheet.create({
   inputIOS: {
     height: 30,
     minWidth: 70,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '500',
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 2,
+    borderRadius: 4,
     color: 'black',
     paddingRight: 0, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     height: 30,
     minWidth: 70,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '500',
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 2,
+    borderRadius: 4,
     color: 'black',
     paddingRight: 0, // to ensure the text is never behind the icon
   },
@@ -1406,11 +1395,11 @@ const styles = StyleSheet.create({
   },
   homeContainer: {
     flex: 1,
-    marginBottom: hp(5)
+    marginBottom: hp(2)
   },
   checkoutText: {
     fontSize: wp(6),
-    color: '#1b89ef',
+    color: '#f89b15',
     textAlign: 'center',
     marginBottom: hp(6)
   },
@@ -1423,47 +1412,43 @@ const styles = StyleSheet.create({
     marginRight: hp(2)
   },
   headerContainer: {
-    height: hp(8),
-    width: 'auto',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f9f9f9',
-    paddingHorizontal: hp(3)
+    backgroundColor: '#f89b15',
+    paddingVertical: hp(.5)
   },
   headerText: {
-    fontSize: wp(5),
-    fontWeight: '700',
-    color: '#027beb',
-    textAlign: "left"
+    fontSize: wp(2.5),
+    fontWeight: '500',
+    color: '#fff',
+    textAlign: "center"
   },
   eventInformationContainer: {
-    marginVertical: wp(1),
-    paddingHorizontal: hp(3)
+    marginVertical: hp(1),
+    paddingHorizontal: wp(2)
   },
   eventCategoryText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#000',
-    marginVertical: hp(0.5),
+    fontSize: wp(2.5),
+    fontWeight: '500',
+    color: '#838383',
+    
   },
   eventCategoryTitle: {
-    fontSize: wp(4),
-    color: '#838383',
-    marginVertical: hp(0.5),
+    fontSize: wp(3.5),
+    color: '#000',
+    marginBottom: hp(1),
   },
   ticketContainer: {
     backgroundColor: '#fff',
-    marginVertical: wp(2),
     marginHorizontal: wp(2),
-    paddingHorizontal: wp(4),
-    paddingVertical: wp(4),
+    paddingVertical: wp(2),
     borderBottomWidth: 1,
     borderBottomColor: "#ddd"
   },
   lineContainer: {
-    height: hp(0.2),
+    height: hp(0.1),
     width: 'auto',
-    backgroundColor: '#838383',
+    backgroundColor: '#ddd',
     marginVertical: hp(0.5),
   },
   seatingCalculationContainer: {
@@ -1483,12 +1468,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   ticketName: {
-    fontSize: wp(4.5),
+    fontSize: wp(3.5),
     fontWeight: '500',
-
   },
   ticketNameWrapper: {
-    marginVertical: wp(2)
+    marginVertical: hp(0)
   },
   freeText: {
     fontSize: wp(4),
@@ -1541,12 +1525,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: hp(1),
-    marginBottom: hp(1),
+    marginVertical: hp(.5),
     borderWidth: 1,
-    borderColor: '#838383',
-    borderRadius: wp(2),
-    // maxHeight: 40,
+    borderColor: '#000',
+    borderRadius: wp(1),
   },
   loginFormTextInput: {
     fontSize: wp(3.5),
@@ -1556,9 +1538,9 @@ const styles = StyleSheet.create({
   },
   applyContainer: {
     width: "30%",
-    height: "100%",
-    borderTopRightRadius: wp(2),
-    borderBottomRightRadius: wp(2),
+    height: hp(5),
+    borderTopRightRadius: wp(1),
+    borderBottomRightRadius: wp(1),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#59cdb2',
@@ -1569,18 +1551,18 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   totalTicketMainContainer: {
-    marginHorizontal: hp(2),
+    // marginHorizontal: hp(2),
   },
   totalTicketContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: wp(2),
-    marginVertical: wp(2),
+    marginVertical: wp(1),
   },
   totalTicketText: {
-    fontSize: wp(4),
-    fontWeight: '700',
+    fontSize: wp(3.5),
+    fontWeight: '500',
     color: '#000',
   },
   discountOnTicketText: {
@@ -1594,26 +1576,21 @@ const styles = StyleSheet.create({
   },
   checkoutContainer: {
     flexDirection: 'row',
-    marginHorizontal: hp(2),
-    marginBottom: hp(2),
+    marginVertical: hp(2),
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkoutContainer1: {
     flexDirection: 'row',
-    // marginHorizontal: hp(2),
-    // marginBottom: hp(2),
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   registerButtonContainer: {
     height: hp(6),
-    width: wp(45),
+    width: wp(50),
     alignItems: 'center',
     justifyContent: 'center',
     borderTopLeftRadius: wp(2),
     borderBottomLeftRadius: wp(2),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   registerText: {
     fontSize: wp(3.5),
@@ -1627,7 +1604,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderTopRightRadius: wp(2),
     borderBottomRightRadius: wp(2),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   checkout: {
     height: hp(6),
@@ -1635,7 +1612,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(2),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   seatingAvailabilityContainer: {
     flexDirection: 'row',
@@ -1699,12 +1676,12 @@ const styles = StyleSheet.create({
     borderRadius: wp(2),
   },
   textInputText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#5e5f5f',
-    marginVertical: hp(1),
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#000',
     marginTop: hp(2),
-    marginHorizontal: wp(4),
+    marginBottom: hp(.5),
+    marginHorizontal: wp(2),
   },
   modalInputContainer: {
     flexDirection: 'row',
@@ -1732,7 +1709,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   saveProfileText: {
     fontSize: wp(3.5),
@@ -1759,11 +1736,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textDecorationLine: 'line-through'
   },
-  taxesContiner: {
+  taxesContainer: {
     flex: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: '#f9f9f9',
     borderRadius: wp(2),
-    padding: wp(2)
+    marginVertical: hp(1),
+    paddingHorizontal: hp(1),
+    paddingVertical: wp(2)
+  },
+  taxesContainerText: {
+    color: '#999',
+    fontSize: wp(3),
+    fontWeight: '500',
   },
   promocodeAppiled: {
     fontWeight: '700',
@@ -1771,10 +1755,8 @@ const styles = StyleSheet.create({
   },
   eventSaleContainer: {
     flexDirection: 'row',
-    flex: 1,
-    paddingBottom: wp(2),
+    flex:1,
     alignItems: 'center',
-
   },
   radioImg:{
     height:20,
@@ -1792,13 +1774,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems:"center",
     marginRight:wp(6),
-  }
-});
-
-const stylesss = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#F5FCFF',
+  },
+  
+  eventSaleText:{
+    alignItems: 'center',
+    color: '#ff0084',
+    fontWeight: '700',
+    marginRight: wp(1),
+    paddingBottom: hp(1),
+  },
+  digitTxtStyle: {
+    color: '#fff',
+  },
+  digitStyle: {
+    backgroundColor: '#ff0084'
+  },
+  timeLabelStyle: {
+    fontWeight: '700',
+    color: '#ff0084', 
   },
 });

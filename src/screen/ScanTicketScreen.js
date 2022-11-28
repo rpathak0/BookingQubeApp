@@ -32,9 +32,7 @@ import ProcessingLoader from '../component/ProcessingLoader';
 import ic_header_home_icon from '../assets/icon/ic_header_home_icon.png';
 import ic_categories from '../assets/icon/ic_categories.png';
 // import ic_camera from '../assets/icon/ic_camera.png';
-
-// Image
-import header_image from '../assets/image/header_image.png';
+import ic_reset from '../assets/icon/ic_reset.png';
 
 // API Info
 import { BASE_URL } from '../api/ApiInfo';
@@ -60,7 +58,7 @@ class ScanTicketScreen extends Component {
   onSuccess = async e => {
     const data = JSON.parse(e.data);
     const { t } = this.props;
-    console.log(data);
+    console.log('datadata', data);
 
     this.setState({ scannerData: data });
 
@@ -85,187 +83,52 @@ class ScanTicketScreen extends Component {
       this.setState({ showProcessingLoader: true });
 
       // calling api
+      data.url_route = 'eventmie.get_booking';
       await axios
         .post(BASE_URL + 'get-booking', data, axiosConfig)
         .then(response => {
           let newResponse = response.data;
 
-          console.log(newResponse);
+          console.log('newResponsenewResponsenewResponse', response);
 
           if (newResponse) {
             // console.log('here');
             const { status } = newResponse;
             if (status === true) {
-              // console.log(newResponse.booking.checked_in);
+              console.log('newResponse.booking.checked_in', newResponse.booking);
               this.setState({
-                ticketList: newResponse.booking,
+                ticketList: [newResponse.booking],
                 showQR: null,
                 showProcessingLoader: false,
               });
+
+              // autorefresh after 5 seconds
+              setTimeout(() => {
+                this.scannerRefresh();
+              }, 5000);
             }
           }
         });
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log('get-booking-error', error.response.data.message);
 
       this.setState({ showProcessingLoader: false });
       Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
         { text: t('ok'), onPress: () => console.log('OK Pressed') },
       ]);
     }
+
+
   };
 
-  // handleGetBooking = async () => {
-  //   const {scannerData} = this.state;
-
-  //   // axios
-  //   const axios = require('axios');
-
-  //   // getting token from AsyncStorage
-  //   const token = await getData(async_keys.userId);
-
-  //   // creating custom header
-  //   let axiosConfig = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + token,
-  //     },
-  //   };
-
-  //   try {
-  //     // starting processing loader
-  //     this.setState({showProcessingLoader: true});
-
-  //     // calling api
-  //     await axios
-  //       .post(BASE_URL + 'get-booking', scannerData, axiosConfig)
-  //       .then(response => {
-  //         let newResponse = response.data;
-
-  //         if (newResponse) {
-  //           const {status} = newResponse;
-  //           if (status === true) {
-  //             // console.log(newResponse.booking.checked_in);
-  //             this.setState({
-  //               checkedIn: newResponse.booking.checked_in,
-  //               showProcessingLoader: false,
-  //             });
-  //           }
-  //         }
-  //       });
-  //   } catch (error) {
-  //     console.log(error.response.data.message);
-
-  //     this.setState({showProcessingLoader: false});
-  //     Alert.alert('Alert', JSON.stringify(error.response.data.message), [
-  //       {text: 'OK', onPress: () => console.log('OK Pressed')},
-  //     ]);
-  //   }
-  // };
-
-  scanner = () => {
-    this.scanner.reactivate();
-  };
-
-  handleCheckedIn = async () => {
-    const { scannerData } = this.state;
-    const { t } = this.props;
-
-    // axios
-    const axios = require('axios');
-
-    // getting token from AsyncStorage
-    const token = await getData(async_keys.userId);
-
-    // creating custom header
-    let axiosConfig = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
-
-    try {
-      // starting processing loader
-      this.setState({ showProcessingLoader: true });
-
-      // calling api
-      await axios
-        .post(BASE_URL + 'get-booking', scannerData, axiosConfig)
-        .then(response => {
-          let newResponse = response.data;
-
-          if (newResponse) {
-            const { status } = newResponse;
-            if (status === true) {
-              // console.log(newResponse.booking.checked_in);
-              this.setState({
-                checkedIn: newResponse.booking.checked_in,
-                showQR: 1,
-                showProcessingLoader: false,
-              });
-            }
-          }
-        });
-    } catch (error) {
-      console.log(error.response.data.message);
-
-      this.setState({ showProcessingLoader: false });
-      Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
-        { text: t('ok'), onPress: () => console.log('OK Pressed') },
-      ]);
-    }
-  };
-
-  handleCheckedOut = async () => {
-    const { scannerData } = this.state;
-    const { t } = this.props;
-
-    // axios
-    const axios = require('axios');
-
-    // getting token from AsyncStorage
-    const token = await getData(async_keys.userId);
-
-    // creating custom header
-    let axiosConfig = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
-
-    try {
-      // starting processing loader
-      this.setState({ showProcessingLoader: true });
-
-      // calling api
-      await axios
-        .post(BASE_URL + 'get-booking', scannerData, axiosConfig)
-        .then(response => {
-          let newResponse = response.data;
-
-          if (newResponse) {
-            const { status } = newResponse;
-            if (status === true) {
-              // console.log(newResponse.booking.checked_in);
-              this.setState({
-                showQR: 1,
-                checkedIn: 0,
-                showProcessingLoader: false,
-              });
-            }
-          }
-        });
-    } catch (error) {
-      console.log(error.response.data.message);
-
-      this.setState({ showProcessingLoader: false });
-      Alert.alert(t('alert'), JSON.stringify(error.response.data.message), [
-        { text: t('ok'), onPress: () => console.log('OK Pressed') },
-      ]);
-    }
+  scannerRefresh = () => {
+    this.setState({
+      ticketList: [],
+      showQR: 1,
+    });
   };
 
   render() {
-    let scanner;
     const  { t } = this.props;
     if (this.state.showQR === 1) {
       return (
@@ -273,70 +136,40 @@ class ScanTicketScreen extends Component {
           <HeaderComponent title={t('check_in')} nav={this.props.navigation} />
 
           <View style={styles.homeContainer}>
-            {/* <ImageBackground
-              source={header_image}
-              resizeMode="cover"
-              style={styles.headerImageStyle}>
-              <View style={styles.eventHeadlineContainer}>
-                <Image
-                  source={ic_header_home_icon}
-                  resizeMode="cover"
-                  style={styles.IconStyle}
-                />
-
-                <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>Scan Ticket</Text>
-              </View>
-            </ImageBackground> */}
-
-
-            <View style={styles.scanTicketOuter}>
-              <View style={styles.scanTicketContainer}>
-                <Image
-                  source={ic_categories}
-                  resizeMode="cover"
-                  style={styles.categoryIconStyle}
-                />
-                <Text style={styles.scanTextStyle}>{t('scan_ticket')}</Text>
-              </View>
-              <View style={styles.scanTicketWrapper}>
-                <View style={styles.scanTicketInner}>
-                  <QRCodeScanner
-                    onRead={this.onSuccess}
-                    flashMode={RNCamera.Constants.FlashMode.auto}
-                    cameraContainerStyle={{
-                      width: '75.3%',
-                      borderWidth: 1,
-                      borderColor: '#838383',
-                      alignSelf: 'center',
-                    }}
-                    reactivate={true}
-                    reactivateTimeout={2000}
-                    cameraStyle={{ width: '90%', alignSelf: 'center' }}
-                    ref={camera => (scanner = camera)}
-                  />
-                </View>
-                <View  style={styles.scanTicketButtonWrapper}>
-                  <TouchableOpacity
-                    style={styles.buttonContainer}
-                    onPress={this.handleCheckedIn}>
-                    <Text style={styles.buttonText}>{t('check_in')}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+            <View style={styles.scanTicketContainer}>
+              <Text style={styles.scanTextStyle}>{t('check_in')}</Text>
             </View>
-
-
-
-            {/*
-            <View style={styles.cameraScanContainer}>
-              <Image
-                source={ic_camera}
-                resizeMode="cover"
-                style={styles.categoryIconStyle}
+            <View>
+              <TouchableOpacity
+                style={styles.buttonContainerRefresh}
+                onPress={() => {this.scannerRefresh()}}>
+                <Image
+                  source={ic_reset}
+                  resizeMode="cover"
+                  style={styles.ticketIconStyle}
+                />
+                <Text style={styles.buttonText}>{t('reload_scanner')}</Text>
+              </TouchableOpacity>
+            </View>    
+            <View style={styles.scanTicketInner}>
+              <QRCodeScanner
+                onRead={this.onSuccess}
+                flashMode={RNCamera.Constants.FlashMode.auto}
+                cameraContainerStyle={{
+                  width: '100%',
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  borderColor: '#838383',
+                  alignSelf: 'center',
+                }}
+                reactivate={true}
+                reactivateTimeout={3000}
+                cameraStyle={{ width: '100%', alignSelf: 'center' }}
+                ref={this.scanner}
               />
-              <Text style={styles.cameraTextStyle}>Camera not detected!</Text>
-            </View> */}
+            </View>
+              
+            
           </View>
 
           <FooterComponent nav={this.props.navigation} />
@@ -350,40 +183,25 @@ class ScanTicketScreen extends Component {
           <HeaderComponent title={t('scan_ticket')} nav={this.props.navigation} />
 
           <View style={styles.homeContainer}>
-            <ImageBackground
-              source={header_image}
-              resizeMode="cover"
-              style={styles.headerImageStyle}>
-              <View style={styles.eventHeadlineContainer}>
-                <Image
-                  source={ic_header_home_icon}
-                  resizeMode="cover"
-                  style={styles.IconStyle}
-                />
-
-                <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>{t('scan_ticket')}</Text>
-              </View>
-            </ImageBackground>
-
-            <View style={styles.scanTicketContainer}>
-              <Image
-                source={ic_categories}
-                resizeMode="cover"
-                style={styles.categoryIconStyle}
-              />
-
-              <Text style={styles.scanTextStyle}>{t('scan_ticket')}</Text>
-            </View>
-
             {this.state.ticketList.map(item => (
               <ScrollView>
+                <View>
+                  <TouchableOpacity
+                    style={styles.buttonContainerRefresh}
+                    onPress={() => {this.scannerRefresh()}}>
+                    <Image
+                      source={ic_reset}
+                      resizeMode="cover"
+                      style={styles.ticketIconStyle}
+                    />
+                    <Text style={styles.buttonText}>{t('reload_scanner')}</Text>
+                  </TouchableOpacity>
+                </View>    
                 <View style={styles.bookedTicketContainer}>
-                  <Text style={styles.orderIdText}>{t('order_id')}</Text>
-                  <Text style={styles.orderIdText}># {item.common_order}</Text>
-
-                  <View style={styles.lineContainer}></View>
-
+                  <View style={styles.orderIdWrapper}>
+                    <Text style={styles.orderIdText}>{t('order_id')} #{item.order_number}</Text>
+                  </View>
+                  
                   <Text style={styles.eventTitleText}>{t('event')}</Text>
                   <Text style={styles.eventPlaceText}>
                     {item.event_title} ({item.event_category})
@@ -391,103 +209,83 @@ class ScanTicketScreen extends Component {
 
                   <Text style={styles.eventTitleText}>{t('timings')}</Text>
                   <Text style={styles.eventTimeText}>
-                    {item.event_start_date}
-                    {'\n'}
-                    {item.event_start_time} - {item.event_end_time}
-                    {'\n'}(IST)
+                    {item.event_start_date} {item.event_start_time} - {item.event_end_time}
                   </Text>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>{t('ticket')}</Text>
-                  <Text style={styles.eventTimeText}>
-                    {item.ticket_title} x {item.quantity}
-                  </Text>
-
-                  <View style={styles.lineContainer}></View>
-
-                  <Text style={styles.eventTitleText}>{t('order_total')}</Text>
-                  <Text style={styles.eventTimeText}>
-                    {item.net_price} {this.state.currency}
-                  </Text>
-
-                  <View style={styles.lineContainer}></View>
-
-                  <Text style={styles.eventTitleText}>{t('promocode_reward')}</Text>
-                  <Text style={styles.eventTimeText}>
-                    {item.promocode} {this.state.currency}
-                  </Text>
-
-                  <View style={styles.lineContainer}></View>
-
-                  <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
-                  <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
-
-                  <View style={styles.lineContainer}></View>
-
-                  <Text style={styles.eventTitleText}>{t('payment')}</Text>
-
-                  <View style={styles.paymentContainer}>
-                    <Text style={styles.paymentMethodText}>
-                      {item.payment_type}
-                    </Text>
-
-                    <View style={styles.paymentMethodLine}></View>
-                    {item.is_paid === 0 ? (
-                      <Text style={styles.paymentProcessText}>{t('pending')}</Text>
-                    ) : (
-                      <Text style={styles.paymentProcessText}>{t('paid')}</Text>
-                    )}
+                  <View style={styles.twoColumns}>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('customer_name')}</Text>
+                      <Text style={styles.eventTimeText}>
+                        {item.customer_name}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('attendee_name')}</Text>
+                      <Text style={styles.eventTimeText}>
+                      {item.attendees[0].name}
+                      </Text>
+                    </View>
+                    
                   </View>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>{t('check_in')}</Text>
-                  <View style={styles.checkedInContainer}>
-                    {item.checked_in === 0 ? (
-                      <Text style={styles.checkedInText}>{t('no')}</Text>
-                    ) : (
-                      <Text style={styles.checkedInText}>{t('yes')}</Text>
-                    )}
+                  <View style={styles.twoColumns}>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('ticket')}</Text>
+                      <Text style={styles.eventTimeText}>
+                        {item.ticket_title} x {item.quantity}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('order_total')}</Text>
+                      <Text style={styles.eventTimeText}>
+                        {item.net_price} {this.state.currency}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
+                      <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
+                    </View>
                   </View>
 
                   <View style={styles.lineContainer}></View>
 
-                  <Text style={styles.eventTitleText}>{t('status')}</Text>
-                  <View style={styles.statusContainer}>
-                    {item.status === 1 ? (
-                      <Text style={styles.statusText}>{t('enabled')}</Text>
-                    ) : (
-                      <Text style={styles.statusText}>{t('disabled')}</Text>
-                    )}
+                  <View style={styles.twoColumns}>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('payment')}</Text>
+                      <Text style={styles.eventTimeText}>
+                        {item.payment_type} / 
+                        {item.is_paid === 0 ? (
+                          <Text style={styles.paymentProcessText}>{t('pending')}</Text>
+                        ) : (
+                          <Text style={styles.paymentProcessText}>{t('paid')}</Text>
+                        )}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('status')}</Text>
+                      {item.status === 1 ? (
+                        <Text style={styles.checkedInTextYes}>{t('enabled')}</Text>
+                      ) : (
+                        <Text style={styles.checkedInTextNo}>{t('disabled')}</Text>
+                      )}
+                    </View>
+                    <View>
+                      <Text style={styles.eventTitleText}>{t('checked_in')}</Text>
+                      {item.checked_in === 0 ? (
+                        <Text style={[styles.checkedInTextNo]}>{t('no')}</Text>
+                      ) : (
+                        <Text style={[styles.checkedInTextYes]}>{t('yes')}</Text>
+                      )}
+                    </View>
                   </View>
-
-                  <View style={styles.lineContainer}></View>
-
-                  <Text style={styles.eventTitleText}>{t('expired')}</Text>
-                  <View style={styles.expiredContainer}>
-                    <Text style={styles.expiredText}>{t('no')}</Text>
-                  </View>
+                  
                 </View>
               </ScrollView>
             ))}
-
-            {/*
-            <View style={styles.cameraScanContainer}>
-              <Image
-                source={ic_camera}
-                resizeMode="cover"
-                style={styles.categoryIconStyle}
-              />
-  
-              <Text style={styles.cameraTextStyle}>Camera not detected!</Text>
-            </View> */}
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={this.handleCheckedIn}>
-              <Text style={styles.buttonText}>{t('check_in')}</Text>
-            </TouchableOpacity>
           </View>
 
           <FooterComponent nav={this.props.navigation} />
@@ -512,7 +310,7 @@ const styles = StyleSheet.create({
   headerImageStyle: {
     height: hp(20),
     width: 'auto',
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   eventHeadlineContainer: {
     position: 'absolute',
@@ -525,7 +323,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: wp(6),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(4),
   },
   IconStyle: {
@@ -547,12 +345,10 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(0.8),
   },
   scanTicketContainer: {
-    flexDirection: 'row',
+    alignItems: 'center',
     alignContent: 'center',
-    marginVertical: hp(2),
-    marginHorizontal: wp(4),
-    backgroundColor: '#d9edf7',
     paddingVertical: hp(2),
+    backgroundColor: '#00b289',
   },
   categoryIconStyle: {
     width: wp(5),
@@ -560,11 +356,10 @@ const styles = StyleSheet.create({
     marginLeft: wp(2),
   },
   scanTextStyle: {
-    fontSize: wp(3.5),
+    fontSize: wp(4),
     fontWeight: '700',
-    color: '#3d4b62',
+    color: '#fff',
     textAlign: 'center',
-    marginLeft: wp(2),
   },
   cameraScanContainer: {
     height: hp(6),
@@ -583,15 +378,24 @@ const styles = StyleSheet.create({
     marginLeft: wp(2),
   },
   buttonContainer: {
-    width:'75%',
-    height: hp(6),
+    flexDirection: 'row',
+    height: hp(8),
+    width: '95%',
+    borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#00b289',
+  },
+  buttonContainerRefresh: {
+    height: hp(8),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: wp(2),
+    backgroundColor: '#000',
+    marginTop: hp(2),
     marginHorizontal: wp(4),
-    marginBottom: hp(1),
-    marginTop: hp(3),
-    // borderRadius: wp(4),
+    paddingVertical: hp(2.5),
   },
   buttonText: {
     fontSize: wp(3.5),
@@ -601,9 +405,8 @@ const styles = StyleSheet.create({
   bookedTicketContainer: {
     marginHorizontal: wp(2),
     marginVertical: hp(2),
-    borderWidth: 1,
-    borderColor: '#838383',
-    borderRadius: wp(1),
+    paddingBottom: hp(1),
+    borderRadius: wp(3),
     backgroundColor: '#fff',
   },
   orderIdText: {
@@ -620,15 +423,16 @@ const styles = StyleSheet.create({
     marginVertical: hp(0.5),
   },
   eventTitleText: {
-    fontSize: wp(4),
+    fontSize: wp(3.5),
     fontWeight: '700',
     color: '#838383',
     marginHorizontal: wp(2),
-    marginVertical: hp(0.5),
+    marginTop: hp(1),
+    marginBottom: hp(0),
   },
   eventPlaceText: {
     fontSize: wp(3.5),
-    color: '#1b89ef',
+    color: '#000',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
@@ -725,7 +529,7 @@ const styles = StyleSheet.create({
   expiredContainer: {
     height: hp(4),
     width: wp(10),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: wp(2),
@@ -781,14 +585,14 @@ const styles = StyleSheet.create({
     borderRadius: wp(4),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
   checkoutContainer: {
     height: hp(4),
     width: wp(15),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: wp(2),
@@ -806,22 +610,54 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   scanTicketOuter:{
-    flex: 1,
-    flexDirection: 'column',
+    // flex: 1,
+    // flexDirection: 'column',
   },
   scanTicketWrapper:{
-    flex: 1,
-    flexDirection: 'column',
+    // flex: 1,
+    // flexDirection: 'column',
   },
   scanTicketInner:{
-    flex: 8,
+    marginTop: hp(2),
+    marginHorizontal: wp(4),
   },
   scanTicketButtonWrapper:{
     flex: 1,
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'center',
-  }
+    marginTop: hp(3),
+  },
+  orderIdWrapper: {
+    backgroundColor: '#000',
+    borderTopLeftRadius: wp(3),
+    borderTopRightRadius: wp(3),
+    paddingVertical: hp(1.5),
+  },
+  twoColumns: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  checkedInTextNo: {
+    fontSize: wp(3.5),
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+    fontWeight: '700',
+    color: '#999',
+  },
+  checkedInTextYes: {
+    fontSize: wp(3.5),
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+    fontWeight: '700',
+    color: '#00b289',
+  },
+  ticketIconStyle: {
+    width: hp(2),
+    aspectRatio: 1 / 1,
+    marginRight: wp(1),
+  },
 });
 
 

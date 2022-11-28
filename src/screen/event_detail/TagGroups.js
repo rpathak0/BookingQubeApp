@@ -32,14 +32,12 @@ export default class TagGroups extends Component {
       <View >
         {tag_groups?.map((group, i) => (
           <>
-            {(i % 2 == 0) ? (
+            {(
               <ImageBackground
                 source={splash_image}
                 key={i}
                 style={styles.eventCategoryContainer}>
                 <Text style={styles.DjsText}>{group?.name}</Text>
-
-
                 <FlatList
                   itemDimension={134}
                   data={group.items}
@@ -60,29 +58,6 @@ export default class TagGroups extends Component {
                   )}
                 />
               </ImageBackground>
-            ) : (
-              <View style={styles.speakerListContainer}>
-                <Text style={styles.speakerText}>{group.name}</Text>
-                <FlatList
-                  itemDimension={134}
-                  data={group.items}
-                  horizontal={false}
-                  numColumns={2}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.speakerInfoContainer}>
-                      <ImageBackground
-                        source={{ uri: STORAGE_URL + item.image }}
-                        resizeMode="cover"
-                        style={styles.speakerImageStyle}>
-                        <Text style={styles.djNameText}>{item.title}</Text>
-                        <Text style={styles.djSubtitleText}>
-                          {item.sub_title}
-                        </Text>
-                      </ImageBackground>
-                    </TouchableOpacity>
-                  )}
-                />
-              </View>
             )}
           </>
         ))}
@@ -120,7 +95,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -136,7 +111,7 @@ const styles = StyleSheet.create({
   shareEventText: {
     fontSize: wp(4),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     // marginLeft: wp(2),
     marginHorizontal: wp(2),
   },
@@ -155,7 +130,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#ec398b',
+    backgroundColor: '#ff0084',
     marginVertical: hp(2),
     marginLeft: wp(2),
   },
@@ -167,10 +142,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#fff',
-  },
-  descriptionText: {
-    fontSize: wp(3.5),
-    color: '#1b9bf3',
   },
   eventLocationContainer: {
     flexDirection: 'row',
@@ -196,7 +167,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -211,7 +182,7 @@ const styles = StyleSheet.create({
   },
   firstTicketContainer: {
     width: wp(90),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
     alignItems: 'center',
     borderRadius: wp(3),
@@ -232,13 +203,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -252,7 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#1b97f3',
+    backgroundColor: '#f89b15',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
@@ -286,7 +257,7 @@ const styles = StyleSheet.create({
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     marginHorizontal: wp(2),
     alignItems: 'center'
   },
@@ -312,9 +283,9 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
   },
   djNameText: {
-    fontSize: wp(5),
+    fontSize: wp(4),
     fontWeight: '700',
-    color: '#efa506',
+    color: '#fff',
   },
   djSubtitleText: {
     fontSize: wp(3.5),
@@ -324,18 +295,14 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   categoryContainer: {
-    height: hp(13),
-    width: wp(40),
-    borderWidth: 4,
+    borderWidth: 3,
     borderColor: '#fff',
     borderRadius: wp(2),
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(2),
     marginVertical: hp(2),
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   categoryImageStyle: {
     width: hp(18),
@@ -363,7 +330,7 @@ const styles = StyleSheet.create({
     height: hp(20),
     width: wp(40),
     borderWidth: 4,
-    borderColor: '#ccc',
+    borderColor: '#000',
     borderRadius: wp(2),
     marginHorizontal: wp(4),
     marginVertical: hp(2),
@@ -372,9 +339,10 @@ const styles = StyleSheet.create({
     elevation: 40,
   },
   speakerImageStyle: {
-    height: hp(18),
-    aspectRatio: 1 / 1,
-    borderRadius: wp(10),
+    height: hp(19),
+    width: '100%',
+    // aspectRatio: 1 / 1,
+    borderRadius: wp(8),
     alignItems: 'center',
     justifyContent: 'flex-end',
   },

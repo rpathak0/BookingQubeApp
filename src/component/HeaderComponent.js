@@ -11,6 +11,7 @@ import ic_menu from '../assets/icon/ic_menu.png';
 import ic_back from '../assets/icon/ic_back.png';
 import ic_man from '../assets/icon/ic_man.png';
 import login_icon from '../assets/icon/login.png';
+import brand_logo from '../assets/icon/brand_logo.png';
 
 // User Preference
 import { async_keys, getData } from '../api/UserPreference';
@@ -91,26 +92,29 @@ const HeaderComponent = props => {
 
   return (
     <View style={styles.headerContainer}>
-      <TouchableOpacity
-        onPress={handleNavAction}
-        style={styles.menuIconContainer}>
-        <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
-      </TouchableOpacity>
+      <View style={styles.menuItems}>
+        <TouchableOpacity
+          onPress={handleNavAction}
+          style={styles.menuIconContainer}>
+          <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
+        </TouchableOpacity>
+        <Text
+          style={styles.headerTitle}
+          value={props.value}
+        >
+          {title}
+        </Text>
+      </View>
 
-      {/*       
-      {title == "Home" ?(
+      <View style={[styles.menuItems, styles.menuItemsCenter]}>
+        <Image
+          source={brand_logo}
+          resizeMode="cover"
+          style={styles.brandIcon}
+        />
+      </View>
 
-      <Image source={logo} style={styles.profileImage} />
-      ):( */}
-
-      <Text
-        style={styles.headerTitle}
-        value={props.value}
-      >
-        {title}
-      </Text>
-
-      <View style={styles.menuContainer}>
+      <View style={[styles.menuContainer, styles.menuItems]}>
 
         <TouchableOpacity
           onPress={() => {
@@ -165,11 +169,12 @@ export default HeaderComponent;
 
 const styles = StyleSheet.create({
   headerContainer: {
-    height: hp(6),
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    
     paddingHorizontal: wp(2),
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   menuIconContainer: {
     padding: wp(2),
@@ -179,13 +184,22 @@ const styles = StyleSheet.create({
     height: wp(5),
   },
   cartIconStyle: {
+    width: wp(6),
+    height: wp(6),
+    aspectRatio: 1 / 1,
+    borderRadius: wp(20),
+  },
+  brandIcon: {
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: wp(8),
     height: wp(8),
     aspectRatio: 1 / 1,
     borderRadius: wp(20),
   },
   headerTitle: {
-    color: '#000',
+    color: '#fff',
     fontSize: wp(4.4),
     marginLeft: wp(1.2),
   },
@@ -213,8 +227,18 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     flexDirection: 'row',
-    flex: 1,
     justifyContent: 'flex-end',
+  },
+  menuItems: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  menuItemsCenter: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    
   },
   notificationIcon: {
     width: wp(5.6),

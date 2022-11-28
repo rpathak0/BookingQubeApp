@@ -30,10 +30,7 @@ import ic_event from '../assets/icon/ic_event.png';
 import ic_search from '../assets/icon/ic_search.png';
 
 // Image
-// import featured_event_image from '../assets/image/featured_event_image.jpg';
 import splash_image from '../assets/image/spalsh_image.png';
-// import event_category_image from '../assets/image/event_category_image.jpg';
-import banner from '../assets/image/banner.jpg';
 
 import { withTranslation } from 'react-i18next';
 
@@ -247,7 +244,7 @@ class HomeScreen extends Component {
                 autoplay
                 circleLoop
                 onCurrentImagePressed={index => this.handleBannerClick(this.state.banners[index])}
-                autoplayInterval={6000}
+                autoplayInterval={9000}
               />
             </View>
 
@@ -282,25 +279,31 @@ class HomeScreen extends Component {
               />
               <Text style={styles.searchEventText}>{t('search_events')}</Text>
             </TouchableOpacity>
-
-            <Events eventList={this.state.featureEventList}
-              handleEvent={(item) => { this.handleEvent(item) }}
-              name={t('featured_events')}
-              backGroundImage={false}
-            />
+            
+            {(this.state.featureEventList.length > 0) ? (
             <View>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.handleAllEvent}>
-                <Text style={styles.buttonText}>{t('featured_events')}</Text>
-              </TouchableOpacity>
+              <Events 
+                eventList={this.state.featureEventList}
+                handleEvent={(item) => { this.handleEvent(item) }}
+                name={t('featured_events')}
+                backGroundImage={false}
+              />
+
+              <View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.handleAllEvent}>
+                  <Text style={styles.buttonText}>{t('view_all_events')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+            ): null}
 
-
-            <Text style={styles.featuredEventText}>{t('event_category')}</Text>
             <ImageBackground
               source={splash_image}
               style={styles.eventCategoryContainer}>
+              
+              <Text style={styles.featuredEventText}>{t('event_category')}</Text>
 
               <FlatList
                 data={this.state.eventCategoryList}
@@ -325,26 +328,29 @@ class HomeScreen extends Component {
 
             </ImageBackground>
 
-            <Events
-              eventList={this.state.upcomingEventList}
-              handleEvent={(item) => { this.handleEvent(item) }}
-              name={t('upcomming_events')}
-              backGroundImage={false}
-            />
+            {(this.state.upcomingEventList.length > 0) ? (
+              <Events
+                eventList={this.state.upcomingEventList}
+                handleEvent={(item) => { this.handleEvent(item) }}
+                name={t('upcomming_events')}
+                backGroundImage={false}
+              />
+            ): null}
 
-            <Events
-              eventList={this.state.topSellingEvents}
-              handleEvent={(item) => { this.handleEvent(item) }}
-              name={t('top_selling')}
-              backGroundImage={true}
-            />
-
-
-            <Text style={styles.featuredEventText}>{t('explore_cities')}</Text>
+            {(this.state.topSellingEvents.length > 0) ? (
+              <Events
+                eventList={this.state.topSellingEvents}
+                handleEvent={(item) => { this.handleEvent(item) }}
+                name={t('top_selling')}
+                backGroundImage={true}
+              />
+            ): null}
+            
             <ImageBackground
               source={splash_image}
               style={styles.eventCategoryContainer}>
 
+              <Text style={styles.featuredEventText}>{t('explore_cities')}</Text>
               <FlatList
                 keyExtractor={item => item.thumb}
                 horizontal={false}
@@ -394,7 +400,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     height: hp(8),
     borderWidth: 4,
-    borderColor: '#00192f',
+    borderColor: '#000000',
     borderRadius: wp(4),
     marginVertical: hp(2),
     marginHorizontal: wp(4),
@@ -424,9 +430,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     elevation: 30,
-    // marginVertical: hp(4),
+    marginBottom: hp(2),
     marginHorizontal: wp(4),
   },
   searchIconStyle: {
@@ -445,9 +451,9 @@ const styles = StyleSheet.create({
   featuredEventText: {
     fontSize: wp(6),
     fontWeight: '700',
-    color: '#00192f',
+    color: '#fff',
     textAlign: 'center',
-    marginVertical: hp(4),
+    marginVertical: hp(2),
   },
   featuredEventText1: {
     fontSize: wp(6),
@@ -493,7 +499,7 @@ const styles = StyleSheet.create({
   },
   featuredEventDateText: {
     fontSize: wp(2.5),
-    color: '#1b89ef',
+    color: '#f89b15',
   },
   eventTitleTextStyle: {
     fontSize: wp(3.8),
@@ -520,7 +526,7 @@ const styles = StyleSheet.create({
   },
   postedByTextStyle: {
     fontSize: wp(3.5),
-    color: '#1b89ef',
+    color: '#f89b15',
     marginVertical: hp(1),
     marginHorizontal: wp(2),
   },
@@ -566,7 +572,7 @@ const styles = StyleSheet.create({
     top: hp(2),
     height: hp(2),
 
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopLeftRadius: wp(3),
   },
   eventDaysLeftText: {
@@ -589,7 +595,7 @@ const styles = StyleSheet.create({
   eventTimeText: {
     fontSize: wp(2.5),
     fontWeight: '700',
-    color: '#1b89ef',
+    color: '#f89b15',
     marginHorizontal: wp(1),
   },
   eventWorthContainer: {
@@ -600,7 +606,7 @@ const styles = StyleSheet.create({
     width: wp(10),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopRightRadius: wp(3),
   },
   eventWorthText: {
@@ -618,7 +624,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderBottomLeftRadius: wp(3),
   },
   eventRoutineText: {
@@ -634,7 +640,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    backgroundColor: '#ec398b',
+    backgroundColor: '#000000',
     borderRadius: wp(4),
     marginBottom: hp(2),
   },
@@ -646,9 +652,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
-    // paddingLeft:20,
-    // paddingRight:20,
+    backgroundColor: '#000000',
   },
   eventCategoryContainer1: {
     // height: hp(60),
@@ -658,20 +662,16 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     alignItems: 'center',
     // flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     // marginHorizontal: wp(4),
     marginVertical: hp(2),
   },
   categoryContainer: {
-    height: hp(13),
-    width: wp(40),
-    borderWidth: 4,
+    borderWidth: 3,
     borderColor: '#fff',
     borderRadius: wp(2),
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(2),
     marginVertical: hp(2),
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   categoryImageStyle: {
     width: hp(18),

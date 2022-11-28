@@ -17,9 +17,12 @@ import { STORAGE_URL } from '../../api/ApiInfo';
 import { View } from 'react-native';
 import { Image } from 'react-native';
 
+import LayoutSize from '../../Helper/LayoutSize';
 
+import { withTranslation } from 'react-i18next';
+import splash_image from '../../assets/image/spalsh_image.png';
 
-export default class SeatChart extends Component {
+class SeatChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,6 +44,7 @@ export default class SeatChart extends Component {
   render() {
 
     const { seatingchart_image } = this.props.data.event;
+    const { t } = this.props;
 
 
     // function onImageLoaded(data) {
@@ -52,52 +56,47 @@ export default class SeatChart extends Component {
     return (
       <>
         {seatingchart_image && (
-          <View
-            style={styles.eventCategoryContainer}>
-            <Text style={styles.seatTitle}>Seating Chart </Text>
+          <ImageBackground
+              source={splash_image}
+              style={styles.eventCategoryContainer}>
+            <Text style={styles.seatTitle}>{t('seating_chart')}</Text>
             <ScrollView horizontal contentContainerStyle={{ alignItems: 'center' }}>
-
               {!this.state.loader && (
-                <View
-                  style={{
-                    height: this.state.height / 2,
-                    width: this.state.width / 2,
-                    // aspectRatio: (1679/297)
-                  }}>
-
+                <View>
                   <Image
-                    resizeMode='contain'
+                    resizeMode='center'
                     //  onLoaded={onImageLoaded}
                     style={{
-                      height: '100%',
-                      width: undefined,
-                      aspectRatio: ((this.state.width / 2) / (this.state.height / 2))
+                      height:100,
+                      width:LayoutSize.window.width/1.1,
+                      borderRadius: 6
                     }}
                     source={{ uri: STORAGE_URL + seatingchart_image }} />
                 </View>
               )}
 
             </ScrollView>
-          </View>
+          </ImageBackground>
         )}
       </>
     );
   }
 }
 
+export default withTranslation()(SeatChart);
+
 const styles = StyleSheet.create({
 
   eventCategoryContainer: {
-    // alignItems: 'center',
+    alignItems: 'center',
     flex: 1,
-    width: wp(100),
-
+    backgroundColor: '#000000',
   },
 
   seatTitle: {
     fontSize: wp(6),
     fontWeight: '700',
-    color: '#000',
+    color: '#fff',
     textAlign: 'center',
     marginVertical: hp(2),
   },

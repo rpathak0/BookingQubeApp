@@ -625,13 +625,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInputText: {
-    fontSize: wp(10),
-    fontWeight: '700',
-    color: '#5e5f5f',
-    marginVertical: hp(1),
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#000',
     marginTop: hp(2),
-    marginHorizontal: wp(4),
-    textAlign: 'center',
+    marginBottom: hp(.5),
+    marginHorizontal: wp(2),
   },
   ImageBackgroundStyle: {
     flex: 1,

@@ -63,7 +63,7 @@ class Tickets extends Component {
   }
 
   render() {
-
+    console.log('this.props.data.repititive_schedule', this.props.data.repititive_schedule);
     const {
       repetitive_type, start_time_format,
       end_time_format, start_date_format, end_date_format,
@@ -84,14 +84,14 @@ class Tickets extends Component {
 
         {tickets?.length > 0 && tickets[0]?.sale_end_date != null && this.checkSaleIslive(tickets[0]) && (
           <View style={styles.eventSaleContainer}>
-            <Text style={{ alignContent: 'center', color: '#fff' }}>{t('on_sale')}</Text>
+            <Text style={styles.eventSaleText}>{t('on_sale')}</Text>
             <CountDown
               until={getSaleExpirationSeconds(tickets[0].sale_end_date)}
-              size={15}
+              size={12}
               onFinish={() => this.saleFinished()}
-              digitTxtStyle={{ color: '#fff', marginLeft: wp(2) }}
-              digitStyle={{ color: '#fff' }}
-              timeLabelStyle={{ fontSize: wp(2.8), color: '#fff', marginLeft: wp(3) }}
+              digitTxtStyle={styles.digitTxtStyle}
+              digitStyle={styles.digitStyle}
+              timeLabelStyle={styles.timeLabelStyle}
               timeToShow={['D', 'H', 'M', 'S']}
               timeLabels={{ d: t('days'), h: t('hours'), m: t('minutes'), s: t('seconds') }}
             />
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   shareEventText: {
     fontSize: wp(4),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     // marginLeft: wp(2),
     marginHorizontal: wp(2),
   },
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#ec398b',
+    backgroundColor: '#ff0084',
     marginVertical: hp(2),
     marginLeft: wp(2),
   },
@@ -252,10 +252,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#fff',
-  },
-  descriptionText: {
-    fontSize: wp(3.5),
-    color: '#1b9bf3',
   },
   eventLocationContainer: {
     flexDirection: 'row',
@@ -281,51 +277,51 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   getYourTicketText: {
-    fontSize: wp(4),
+    fontSize: wp(6),
     fontWeight: '700',
     color: '#fff',
+    textAlign: 'center',
     marginTop: hp(2),
   },
   bookTicketText: {
     fontSize: wp(3.5),
-    color: '#fff',
-    marginTop: hp(1),
+    color: '#eee',
+    marginBottom: hp(2),
   },
   firstTicketContainer: {
     width: wp(90),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
-
+    marginBottom: hp(2),
     alignItems: 'center',
     borderRadius: wp(3),
   },
   secondTicketContainer: {
     width: wp(80),
-    // height: hp(8),
     borderRadius: wp(3),
-    marginVertical: hp(2),
-    backgroundColor: '#fff',
+    marginTop: hp(2),
+    borderColor: '#fff',
+    borderWidth: 1,
   },
   selectedsecondTicketContainer: {
     width: wp(80),
-    // height: hp(8),
     borderRadius: wp(3),
-    marginVertical: hp(2),
-    backgroundColor: '#f5f5',
+    marginTop: hp(2),
+    backgroundColor: '#fff',
   },
   dateText: {
-    fontSize: wp(3.5),
-    color: '#1b97f3',
+    fontSize: wp(4),
+    fontWeight: '700',
+    color: '#f89b15',
     textAlign: 'center',
     marginTop: hp(2),
-
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#969696',
     textAlign: 'center',
     marginBottom: hp(2),
   },
@@ -340,7 +336,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#1b97f3',
+    backgroundColor: '#f89b15',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
@@ -374,7 +370,7 @@ const styles = StyleSheet.create({
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     marginHorizontal: wp(2),
     alignItems: 'center'
   },
@@ -412,7 +408,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   categoryContainer: {
     height: hp(13),
@@ -518,11 +514,27 @@ const styles = StyleSheet.create({
   },
   eventSaleContainer: {
     flexDirection: 'row',
-    flex: 1,
-    marginLeft: wp(2),
-    paddingBottom: wp(2),
+    flex:1,
+    paddingHorizontal: wp(2),
+    marginBottom: wp(3),
     alignItems: 'center',
-    // justifyContent: 'center',
+  },
 
+  eventSaleText: {
+    alignItems: 'center',
+    color: '#fff',
+    fontWeight: '700',
+    marginRight: wp(1),
+    paddingBottom: hp(1),
+  },
+  digitTxtStyle: {
+    color: '#fff',
+  },
+  digitStyle: {
+    backgroundColor: '#ff0084'
+  },
+  timeLabelStyle: {
+    fontWeight: '700',
+    color: '#fff', 
   },
 });

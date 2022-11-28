@@ -9,3 +9,12 @@ Android: Preferences → Build, Execution, Deployment → Build Tools → Gradle
 
 Podfile has been modified, please run "pod install" inside ios directory.
 Please make sure to run "watchman watch-del-all" and "npm start --reset-cache" before running the app.
+
+
+Continue from Customer login Profile & MyBookings screen DONE
+Check-in Checkout screen  DONE
+
+Error download buttons on mybookings page
+    
+Add all languages + header dropdown
+Resolve Arabic RTL issue

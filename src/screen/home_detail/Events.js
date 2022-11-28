@@ -97,27 +97,27 @@ class Events extends Component {
     return(
         <>
         {type == "sale" && (
-            <View style={styles.eventSaleContainer}>
-                <Text style={{alignContent:'center'}}>On Sale  : </Text>
-                <CountDown
-                  until={ getSaleExpirationSeconds(tickets[0].sale_end_date)}
-                  size={15}
-                  onFinish={() => this.saleFinished()}
-                  digitTxtStyle={{color: '#000',marginLeft:wp(2)}}
-                  digitStyle={{color: '#000'}}
-                  timeLabelStyle={{fontSize:wp(2.8),color: '#000', marginLeft:wp(3) }}
-                  timeToShow={['D','H','M','S']}
-                  timeLabels={{d:t('days'),h:t('hours'),m: t('minutes'), s: t('seconds')}}
-              />
-            </View>
+          <View style={styles.eventSaleContainer}>
+              <Text style={styles.eventSaleText}>{t('on_sale')}</Text>
+              <CountDown
+                until={ getSaleExpirationSeconds(tickets[0].sale_end_date)}
+                size={12}
+                onFinish={() => this.saleFinished()}
+                digitTxtStyle={styles.digitTxtStyle}
+                digitStyle={styles.digitStyle}
+                timeLabelStyle={styles.timeLabelStyle}
+                timeToShow={['D','H','M','S']}
+                timeLabels={{d:t('days'),h:t('hours'),m: t('minutes'), s: t('seconds')}}
+            />
+          </View>
         )}
           <View style={styles.eventBidContainer}>
             {tickets?.map((ticket,index)=>(
-              <View key={`${index}-prices`}>
+              <View key={`${index}-prices`} >
                 { index <= 1  &&  (
                 <View style={styles.eventCostContainer}>
                   <Text style={styles.constTextStyle}>
-                    {ticket.title} : 
+                    {ticket.title} 
                   </Text>
                   {type == 'sale' ? (
                     <>
@@ -125,12 +125,12 @@ class Events extends Component {
                       {ticket.price} 
                       </Text>
                       <Text style={styles.constTextStyle}>
-                      {" "+ ticket.sale_price} {item?.currency} 
+                      {" "+ ticket.sale_price} {item.currency ? item.currency : 'QAR'} 
                       </Text>
                     </>
                   ): (
                     <Text style={styles.constTextStyle}>
-                      {ticket.price} {item?.currency}
+                      {ticket.price} {item.currency ? item.currency : 'QAR'}
                     </Text>
                   )}
                 </View>
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     height: hp(8),
     borderWidth: 4,
-    borderColor: '#00192f',
+    borderColor: '#000000',
     borderRadius: wp(4),
     marginVertical: hp(2),
     marginHorizontal: wp(4),
@@ -293,8 +293,6 @@ const styles = StyleSheet.create({
     height: hp(7),
     alignItems: 'center',
     justifyContent: 'center',
-    // borderBottomWidth: 1,
-    // borderColor: '#ccc',
     marginHorizontal: wp(2),
   },
   eventIconStyle: {
@@ -313,7 +311,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     elevation: 30,
     // marginVertical: hp(4),
     marginHorizontal: wp(4),
@@ -329,14 +327,14 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   featuredEventContainer: {
-    marginVertical: hp(2),
+    marginVertical: 0,
   },
   featuredEventText: {
     fontSize: wp(6),
     fontWeight: '700',
-    color: '#00192f',
+    color: '#000000',
     textAlign: 'center',
-    marginVertical: hp(4),
+    marginTop: hp(4),
   },
   gridView: {
     // marginTop: 10,
@@ -350,43 +348,30 @@ const styles = StyleSheet.create({
     marginVertical: hp(1),
   },
   featuredEventBox: {
-    // height: hp(62),
     width: 'auto',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    // alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+    backgroundColor: '#fff',
     borderRadius: wp(4),
     overflow: 'hidden',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    // elevation: 3,
-    // shadowColor: '#000',
-    // shadowOffset: {width: 1, height: 1},
-    // shadowOpacity: 0.4,
-    // shadowRadius: 3,
-    // // elevation: 5,
     marginHorizontal: wp(4),
     marginVertical: hp(2),
   },
   featuredImageStyle: {
     height: hp(30),
     width: wp(100),
-    // aspectRatio: 1 / 1,
-    borderRadius: wp(4),
   },
   eventDateAndPlaceContainer: {
     flexDirection: 'row',
     width: 'auto',
-    // alignItems: 'center',
-    justifyContent: 'space-around',
-    // marginHorizontal: hp(2),
-    marginVertical: hp(4),
+    justifyContent: 'space-between',
+    marginVertical: hp(1),
+    paddingHorizontal: wp(2),
+    backgroundColor: '#fff'
   },
   featuredEventDateText: {
-    fontSize: wp(2.5),
-    color: '#1b89ef',
+    fontSize: wp(3),
+    color: '#f89b15',
   },
   eventTitleTextStyle: {
     fontSize: wp(3.8),
@@ -413,40 +398,42 @@ const styles = StyleSheet.create({
   },
   postedByTextStyle: {
     fontSize: wp(3.5),
-    color: '#1b89ef',
+    color: '#f89b15',
     marginVertical: hp(1),
     marginHorizontal: wp(2),
   },
   eventBidContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: wp(2),
+    justifyContent: 'space-between',
   },
   eventSaleContainer: {
     flexDirection: 'row',
     flex:1,
-    marginLeft: wp(2),
-    paddingBottom: wp(2),
+    paddingHorizontal: wp(2),
+    marginBottom: wp(3),
     alignItems: 'center',
-    // justifyContent: 'center',
-
+  },
+  eventSaleText: {
+    alignItems: 'center',
+    color: '#ff0084',
+    fontWeight: '700',
+    marginRight: wp(1),
+    paddingBottom: hp(1),
   },
   eventCostContainer: {
-    height: hp(4),
-    width: wp(50),
     flex:1,
     flexDirection:'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#fff',
-    marginLeft: wp(1),
   },
   constTextStyle: {
-    fontSize: wp(2.8),
+    fontSize: wp(3.5),
+    fontWeight: '500',
     color: '#000',
+    paddingHorizontal: wp(.5),
   },
   constTextStrikeThroughStyle: {
-    fontSize: wp(1.8),
+    fontSize: wp(2),
     color: '#838383',
     textDecorationLine: 'line-through',
   },
@@ -468,8 +455,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#1b89ef',
-    backgroundColor: '#1b89ef',
+    borderColor: '#f89b15',
+    backgroundColor: '#f89b15',
     marginTop: hp(2),
     borderBottomRightRadius: wp(4),
     borderBottomLeftRadius: wp(4),
@@ -487,7 +474,7 @@ const styles = StyleSheet.create({
     top: hp(2),
     height: hp(2),
 
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopLeftRadius: wp(3),
   },
   onlineLeftContainer: {
@@ -545,7 +532,7 @@ const styles = StyleSheet.create({
     width: wp(10),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopRightRadius: wp(3),
   },
   eventWorthText: {
@@ -563,7 +550,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderBottomLeftRadius: wp(3),
   },
   eventRoutineText: {
@@ -579,7 +566,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    backgroundColor: '#ec398b',
+    backgroundColor: '#ff0084',
     borderRadius: wp(4),
     marginBottom: hp(2),
   },
@@ -591,7 +578,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     // paddingLeft:20,
     // paddingRight:20,
   },
@@ -603,7 +590,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     alignItems: 'center',
     // flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     // marginHorizontal: wp(4),
     marginVertical: hp(2),
   },
@@ -630,5 +617,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-
+  
+  digitTxtStyle: {
+    color: '#fff',
+  },
+  digitStyle: {
+    backgroundColor: '#ff0084'
+  },
+  timeLabelStyle: {
+    fontWeight: '700',
+    color: '#ff0084', 
+  },
 });

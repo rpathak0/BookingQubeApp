@@ -235,6 +235,7 @@ class ProfileScreen extends Component {
   };
 
   confirmProfileDelete = async () => {
+    const { t } = this.props;
     // confirmation dialog
     Alert.alert(
       t('delete_account'),
@@ -409,23 +410,6 @@ class ProfileScreen extends Component {
         />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <ImageBackground
-              source={header_image}
-              resizeMode="cover"
-              style={styles.headerImageStyle}>
-              <Text style={styles.titleText}>{t('profile')}</Text>
-              <View style={styles.eventHeadlineContainer}>
-                <Image
-                  source={ic_header_home_icon}
-                  resizeMode="cover"
-                  style={styles.IconStyle}
-                />
-
-                <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>{t('profile')}</Text>
-              </View>
-            </ImageBackground>
-
             <View style={styles.profileAvatarContainer}>
               {this.state.selectedFile === null ? (
                 <Image
@@ -581,7 +565,7 @@ class ProfileScreen extends Component {
             <Text style={styles.textInputText}>{t('confirm_password')}*</Text>
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="{t('confirm_password')}"
+                placeholder={t('confirm_password')}
                 placeholderTextColor="#000"
                 style={styles.loginFormTextInput}
                 secureTextEntry={this.state.hideConfirmPassword}
@@ -611,6 +595,8 @@ class ProfileScreen extends Component {
               onPress={this.handleUpdateProfile}>
               <Text style={styles.saveProfileText}>{t('save_profile')}</Text>
             </TouchableOpacity>
+
+            <View style={styles.lineContainer}></View>
             
             <TouchableOpacity
               style={styles.buttonContainerDelete}
@@ -647,7 +633,7 @@ const styles = StyleSheet.create({
   headerImageStyle: {
     height: hp(20),
     width: 'auto',
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   titleText: {
     position: 'absolute',
@@ -671,7 +657,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: wp(6),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(4),
   },
   IconStyle: {
@@ -708,27 +694,27 @@ const styles = StyleSheet.create({
     borderRadius: wp(20),
   },
   textInputText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#5e5f5f',
-    marginVertical: hp(1),
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#000',
     marginTop: hp(2),
-    marginHorizontal: wp(4),
+    marginBottom: hp(.5),
+    marginHorizontal: wp(2),
   },
   inputContainer: {
     flexDirection: 'row',
     height: hp(7),
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: '#000',
     borderRadius: wp(2),
-    // marginVertical: hp(1),
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(2),
+    paddingLeft: wp(2),
+    paddingRight: wp(2),
   },
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    paddingLeft: wp(4),
     borderRadius: wp(1),
     color: '#000',
   },
@@ -740,7 +726,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   buttonContainerDelete: {
     height: hp(6),
@@ -772,7 +758,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   touchAbleButton: {
     position: 'absolute',
@@ -785,5 +771,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: '100%',
     width: '100%',
+  },
+  lineContainer: {
+    height: hp(0.2),
+    width: 'auto',
+    backgroundColor: '#ddd',
+    marginVertical: hp(0.5),
   },
 });

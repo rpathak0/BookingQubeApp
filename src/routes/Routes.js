@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
   },
   drawerContentContainer: {
     flex: 1,
+    // backgroundColor: '#000000',
   },
   drawerHeader: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#2c9ed8',
-    paddingTop: 20,
+    backgroundColor: '#000000',
     paddingBottom: 20,
   },
   profileImage: {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   drawerTitle: {
-    color: '#333',
+    color: '#fff',
     marginLeft: wp(2),
     fontWeight: '700',
     textAlign: 'center'
@@ -136,7 +136,7 @@ const CustomDrawerContentComponent = props => {
   console.log('props.screenPropsprops.screenProps', props.screenProps);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <SafeAreaView
+      <View
         style={styles.drawerContentContainer}
         forceInset={drawerContentContainerInset}>
         <View style={styles.drawerHeader}>
@@ -148,7 +148,7 @@ const CustomDrawerContentComponent = props => {
           onItemPress={onDrawerItemPress(props)}
           labelStyle={styles.drawerLabel}
         />
-      </SafeAreaView>
+      </View>
     </ScrollView>
   );
   
@@ -373,7 +373,6 @@ const LoggedOutNavigator1 = createDrawerNavigator(
   {
     DrawerHome,
     DrawerEvent,
-    DrawerMyBookings,
     DrawerProfile,
     DrawerCheckIn,
     DrawerCheckOut,

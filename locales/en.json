@@ -17,6 +17,7 @@
       "when"                   : "When",
       "till"                   : "Till",
       "rating_review"          : "Ratings & Reviews",
+      "reviews"                : "Reviews",
       "rating_5"               : "Out of 5.0",
       "get_tickets"            : "Get your tickets now",
       "book_ticket"            : "Click on a date to book tickets",
@@ -78,7 +79,7 @@
       "search_events"          : "Search Events",
       "search_events_ie"       : "Type Event Name/Venue/City/State",
       "date"                   : "Date",
-      "date_filter"            : "Date Filter",
+      "date_filter"            : "Select date",
       "price"                  : "Price",
       "country"                : "Country",
       "city"                   : "City",
@@ -115,7 +116,7 @@
       "enabled"                : "Enabled",
       "disabled"               : "Disabled",
       "cancellation"           : "Cancellation",
-      "cancellation_pending"   : "Cancellation pending",
+      "cancellation_pending"   : "Pending",
       "approved"               : "Approved",
       "refunded"               : "Refunded",
       "expired"                : "Expired",
@@ -154,6 +155,24 @@
       "payment_cancelled"      : "You have cancelled the payment, Please complete the payment.",
       "payment_success"        : "Your ticket has been booked successfully.",
       "welcome_to"             : "Welcome to BookingQube",
+      "inclusive"             : "Inclusive",
+      "exclusive"             : "Exclusive",
+      "login_to_promocode"             : "Please login first to apply promocode!",
+      "off_percent"             : "% OFF!",
+      "off_fixed"             : " OFF!",
+      
+      "submit"             : "Submit",
+      "discount"             : "Discount",
+      "cancel_booking"         : "Cancel Booking",
+      "cancel_booking_ie"      : "Are you sure, you want to cancel the booking?",
+      "all_qrcodes"      : "All QR Codes",
+      "checked_out"             : "Checked out",
+      "n/a"             : "N/A",
+      "reload_scanner"             : "Reload Scanner",
+      "customer_name"             : "Customer Name",
+      "attendee_name"             : "Attendee Name",
+      
+
       "test"                   : "test"
     }
 }

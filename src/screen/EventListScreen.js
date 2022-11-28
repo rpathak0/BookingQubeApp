@@ -32,7 +32,6 @@ import ic_reset from '../assets/icon/ic_reset.png';
 
 // Image
 import header_image from '../assets/image/header_image.png';
-// import featured_event_image from '../assets/image/featured_event_image.jpg';
 
 // APi Info
 import { BASE_URL } from '../api/ApiInfo';
@@ -433,28 +432,23 @@ class EventListScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title={t('event')}
+          title={t('events')}
           navAction="back"
           nav={this.props.navigation}
         />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <ImageBackground
-              source={header_image}
-              resizeMode="cover"
-              style={styles.headerImageStyle}>
-              <Text style={styles.titleText}>{t('events')}</Text>
-              <View style={styles.eventHeadlineContainer}>
-                <Image
-                  source={ic_header_home_icon}
-                  resizeMode="cover"
-                  style={styles.IconStyle}
-                />
 
-                <Text style={styles.slashText}>/</Text>
-                <Text style={styles.eventText}>{t('events')}</Text>
-              </View>
-            </ImageBackground>
+            <TouchableOpacity
+              style={styles.resetFilterContainer}
+              onPress={this.handleReset}>
+              <Image
+                source={ic_reset}
+                resizeMode="cover"
+                style={styles.resetIconStyle}
+              />
+              <Text style={styles.resetText}>{t('reset_filters')}</Text>
+            </TouchableOpacity>
 
             <Text style={styles.textInputText}>{t('search_events')}</Text>
             <View style={styles.inputContainer}>
@@ -470,7 +464,6 @@ class EventListScreen extends Component {
             </View>
 
             <Text style={styles.textInputText}>{t('category')}</Text>
-
             <View style={styles.inputContainer}>
               {this.searchData === null ? (
                 <RNPickerSelect
@@ -555,21 +548,10 @@ class EventListScreen extends Component {
               />
             </View>
 
-            <TouchableOpacity
-              style={styles.resetFilterContainer}
-              onPress={this.handleReset}>
-              <Image
-                source={ic_reset}
-                resizeMode="cover"
-                style={styles.resetIconStyle}
-              />
-              <Text style={styles.resetText}>{t('reset_filters')}</Text>
-            </TouchableOpacity>
-
             <Events
               eventList={this.state.featureEventList}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name={t('all_events')}
+              name={t('events')}
               backGroundImage={false}
             />
           </View>
@@ -584,25 +566,20 @@ class EventListScreen extends Component {
 export default withTranslation()(EventListScreen);
 
 const pickerStyle = {
-  // inputIOS: {
-  //   color: 'white',
-  //   paddingHorizontal: 10,
-  //   backgroundColor: 'red',
-  //   borderRadius: 5,
-  // },
-  placeholder: {
-    color: '#000',
+  inputIOS: {
+    color: '#c4c3cb',
     fontSize: wp(3.5),
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginVertical: wp(4),
+  },
+  placeholder: {
+    color: '#c4c3cb',
+    fontSize: wp(3.5),
+    marginVertical: wp(4),
   },
   inputAndroid: {
-    color: '#000',
+    color: '#c4c3cb',
     fontSize: wp(3.5),
-    // paddingHorizontal: 10,
-    backgroundColor: '#f1f1f1',
-    // borderRadius: wp(4),
-    // borderWidth: 1,
+    marginVertical: wp(4),
   },
 };
 
@@ -617,7 +594,7 @@ const styles = StyleSheet.create({
   headerImageStyle: {
     height: hp(20),
     width: 'auto',
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   titleText: {
     position: 'absolute',
@@ -641,7 +618,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: wp(6),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(4),
   },
   IconStyle: {
@@ -667,27 +644,24 @@ const styles = StyleSheet.create({
     height: hp(7),
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: '#000',
     borderRadius: wp(2),
-    // marginVertical: hp(1),
     marginHorizontal: wp(2),
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: wp(2),
+    paddingRight: wp(2),
   },
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    // marginLeft: wp(4),
-    // backgroundColor: '#fff',
     borderRadius: wp(1),
     color: '#000',
   },
   textInputText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#5e5f5f',
-    marginVertical: hp(1),
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#000',
     marginTop: hp(2),
+    marginBottom: hp(.5),
     marginHorizontal: wp(2),
   },
   dropdownStyle: {
@@ -698,11 +672,8 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     fontSize: wp(3.5),
-    // alignItems: 'center',
-    alignSelf: 'center',
-    marginHorizontal: wp(2),
+    color: '#c9c9c9',
     marginVertical: hp(2),
-    
   },
   dateFilterPadding:{
     paddingLeft:10,
@@ -712,7 +683,7 @@ const styles = StyleSheet.create({
     height: hp(6),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#333',
     borderRadius: wp(3),
     marginHorizontal: wp(2),
     marginTop: hp(3),
@@ -770,7 +741,7 @@ const styles = StyleSheet.create({
   },
   featuredEventDateText: {
     fontSize: wp(2.5),
-    color: '#1b89ef',
+    color: '#f89b15',
   },
   eventTitleTextStyle: {
     fontSize: wp(3.8),
@@ -785,7 +756,7 @@ const styles = StyleSheet.create({
   },
   postedByTextStyle: {
     fontSize: wp(3.5),
-    color: '#1b89ef',
+    color: '#f89b15',
     marginVertical: hp(1),
     marginHorizontal: wp(2),
   },
@@ -842,7 +813,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: hp(2),
     height: hp(2),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopLeftRadius: wp(3),
   },
   eventDaysLeftText: {
@@ -863,7 +834,7 @@ const styles = StyleSheet.create({
   eventTimeText: {
     fontSize: wp(2.5),
     fontWeight: '700',
-    color: '#1b89ef',
+    color: '#f89b15',
     marginHorizontal: wp(1),
   },
   eventWorthContainer: {
@@ -874,7 +845,7 @@ const styles = StyleSheet.create({
     width: wp(10),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderTopRightRadius: wp(3),
   },
   eventWorthText: {
@@ -891,7 +862,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderBottomLeftRadius: wp(3),
   },
   eventRoutineText: {

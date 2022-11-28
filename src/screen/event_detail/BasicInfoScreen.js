@@ -170,13 +170,6 @@ class BasicInfoScreen extends Component {
     return (
       <View style={item.title === 'Online event' ? styles.eventOnlineContainer : styles.eventCategory}>
         <View style={item.title === 'Online event' ? styles.onlineInnerContainer : {}}>
-          {item.title === 'Online event' && (
-
-            <Image
-              source={onlineBar}
-              style={styles.onlineIconStyle}
-            />
-          )}
           <Text style={styles.categoryText}>
             {item.title}
           </Text>
@@ -223,8 +216,6 @@ class BasicInfoScreen extends Component {
               this.getRenderView(item)
             )}
           />
-
-
         </View>
 
         <View style={styles.shareEventContainer}>
@@ -306,23 +297,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   eventImageStyle: {
-    // height: hp(30),
     aspectRatio: 16 / 9,
   },
   eventTitleTextStyle: {
-    fontSize: wp(5),
-    fontWeight: '700',
+    fontSize: wp(6),
+    fontWeight: '500',
     color: '#000',
     marginHorizontal: wp(2),
-    marginVertical:wp(2),
+    marginTop:wp(2),
     paddingLeft:wp(2)
   },
   eventOrganiserTextStyle: {
-    fontSize: wp(3.7),
-    fontWeight: '600',
-    color: 'blue',
+    fontSize: wp(4),
+    fontWeight: '500',
+    color: '#444',
     marginHorizontal: wp(2),
-    marginVertical:wp(1),
     paddingLeft:wp(2)
   },
   eventTypeContainer: {
@@ -333,27 +322,22 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
   },
   eventCategory: {
-    height: hp(5),
+    height: hp(4),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
-    borderRadius: wp(6),
+    backgroundColor: '#f89b15',
+    borderRadius: wp(2),
     marginHorizontal: wp(1),
-    paddingLeft: hp(1),
-    paddingRight: hp(1),
-    marginBottom: hp(1)
+    marginBottom: wp(1),
   },
   eventOnlineContainer: {
-    height: hp(5),
+    height: hp(4),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#1de9b6',
-    borderRadius: wp(6),
+    borderRadius: wp(2),
     marginHorizontal: wp(1),
-    paddingLeft: hp(2),
-    paddingRight: hp(2),
-    marginBottom: hp(1)
-
+    marginBottom: wp(1),
   },
   onlineInnerContainer: {
     flex: 1,
@@ -378,15 +362,15 @@ const styles = StyleSheet.create({
   },
   shareEventText: {
     fontSize: wp(4),
-    fontWeight: '700',
-    color: '#ec398b',
+    fontWeight: '600',
+    color: '#f89b15',
     marginHorizontal: wp(4),
   },
   iconOnPress: {
     flexDirection: 'row',
   },
   shareIconStyle: {
-    width: hp(2),
+    width: hp(3),
     aspectRatio: 1 / 1,
     marginHorizontal: wp(2),
   },
@@ -402,7 +386,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#ec398b',
+    backgroundColor: '#ff0084',
     marginVertical: hp(2),
     marginLeft: wp(2),
   },
@@ -414,10 +398,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#fff',
-  },
-  descriptionText: {
-    fontSize: wp(3.5),
-    color: '#1b9bf3',
   },
   eventLocationContainer: {
     flexDirection: 'row',
@@ -443,7 +423,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -458,7 +438,7 @@ const styles = StyleSheet.create({
   },
   firstTicketContainer: {
     width: wp(90),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
     alignItems: 'center',
     borderRadius: wp(3),
@@ -479,13 +459,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -499,7 +479,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#1b97f3',
+    backgroundColor: '#f89b15',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
@@ -533,7 +513,7 @@ const styles = StyleSheet.create({
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     marginHorizontal: wp(2),
     alignItems: 'center'
   },
@@ -571,7 +551,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   categoryContainer: {
     height: hp(13),

@@ -17,6 +17,7 @@
     "when"                   : "متي",
     "till"                   : "حتى",
     "rating_review"          : "التقييمات والمراجعات",
+    "reviews"                : "إعادة النظر",
     "rating_5"               : "من 5.0",
     "get_tickets"            : "احصل على تذاكرك الآن" ,
     "book_ticket"            : "انقر على تاريخ لحجز التذاكر" ,
@@ -115,7 +116,7 @@
     "enabled"                : "ممكّن",
     "disabled"               : "عاجز",
     "cancellation"           : "إلغاء",
-    "cancellation_pending"   : "الإلغاء معلق" ,
+    "cancellation_pending"   : "ريثما",
     "approved"               : "وافق",
     "refunded"               : "معاد",
     "expired"                : "منتهي الصلاحية",
@@ -154,6 +155,12 @@
     "payment_cancelled"      : "لقد ألغيت الدفع , يرجى إكمال الدفع.",
     "payment_success"        : "تم حجز تذكرتك بنجاح.",
     "welcome_to"             : "مرحبًا بك في BookingQube" ,
-    "test"                   : "اختبار",
+    "inclusive"             : "شاملة",
+    "exclusive"             : "حصرية",
+    "login_to_promocode"             : "الرجاء تسجيل الدخول أولا لتطبيق الرمز الترويجي!",
+    "off_percent"             : "٪ إيقاف!",
+    "off_fixed"             : " إيقاف!",
+    "submit"             : "يُقدِّم",
+    "test"                   : "اختبار"
   }
 }

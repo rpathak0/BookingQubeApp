@@ -82,11 +82,16 @@ class CustomField extends Component {
         </Text>
         <TextInput
           style={{
+            fontSize: wp(3.5),
+            flex: 1,
             borderWidth: 2,
-            borderColor: 'rgb(220,220,220)',
-            borderRadius: 5,
-            marginBottom: 20,
+            borderRadius: wp(1),
             color: '#000',
+            borderColor: '#000',
+            height: hp(7),
+            paddingLeft: wp(2),
+            paddingRight: wp(2),
+            marginBottom: hp(1),
           }}
           placeholder={item.label + (item.is_required ? ' *' : '')}
           value={item?.value || ''}
@@ -117,13 +122,17 @@ class CustomField extends Component {
           multiline={true}
           value={item?.value || ''}
           style={{
-            borderWidth: 2,
-            borderColor: 'rgb(220,220,220)',
-            borderRadius: 5,
-            height: 150,
             textAlignVertical: 'top',
-            marginBottom: 20,
+            fontSize: wp(3.5),
+            flex: 1,
+            borderWidth: 2,
+            borderRadius: wp(1),
             color: '#000',
+            borderColor: '#000',
+            height: hp(10),
+            paddingLeft: wp(2),
+            paddingRight: wp(2),
+            marginBottom: hp(1),
           }}
           placeholder={item.label + (item.is_required ? ' *' : '')}
           onChangeText={value => {
@@ -274,7 +283,7 @@ class CustomField extends Component {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 5,
-              padding: 40,
+              padding: 10,
             }}>
             <Text style={{fontWeight: 'bold', color: 'black'}}>{t('choose_file')}</Text>
           </TouchableOpacity>
@@ -313,26 +322,27 @@ class CustomField extends Component {
     );
   };
   render() {
-    
+    const { t } = this.props;
     return (
       <View>
+        <TouchableOpacity onPress={() => {
+              this.setState({isVisible: true});
+            }}>
         <View
           style={{
-            backgroundColor: 'black',
+            backgroundColor: '#000',
             padding: 10,
             borderRadius: 5,
-            marginBottom: 5,
+            marginBottom: 4,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-          }}>
+          }} 
+          >
           <Text
             style={{
               backgroundColor: 'black',
               color: 'white',
-            }}
-            onPress={() => {
-              this.setState({isVisible: true});
             }}>
             {this?.props?.title}
           </Text>
@@ -345,6 +355,7 @@ class CustomField extends Component {
             />
           )}
         </View>
+        </TouchableOpacity>
         <Modal visible={this.state.isVisible} transparent={true}>
           <View
             style={{
@@ -359,36 +370,33 @@ class CustomField extends Component {
                 height: 80 + '%',
                 backgroundColor: 'white',
                 borderRadius:wp(2),
-                // position:'relative',
               }}>
                 <TouchableOpacity
                  onPress={()=>{this.setState({isVisible: false})}}
-                 style={{alignItems:'flex-end', paddingHorizontal:wp(2),paddingVertical:wp(2) }}
+                 style={{alignItems:'flex-end', paddingRight:wp(2),paddingTop:wp(2) }}
                  >
-
-                <Image 
-                  source={close_image}
-                  
-                />
+                <Image source={close_image} />
                 </TouchableOpacity>
-              <ScrollView contentContainerStyle={{padding: 20}}>
+              <ScrollView contentContainerStyle={{padding: 15}}>
                 {this.renderInputBoxes()}
                 <TouchableOpacity
-                  // disabled={()=>this.checkIfDataFilled() ? true : false}
                   onPress={() => {
                     if (this.checkIfDataFilled()) {
                       return;
                     }
                     this.onConfirm();
-                    // console.log('dt',JSON.stringify(this.state.custom_fields,null,4));
                   }}
                   style={[
                     {
-                      width: 100 + '%',
-                      alignSelf: 'center',
-                      alignItems: 'center',
-                      backgroundColor: 'gray',
-                      borderRadius: 10,
+                      height: hp(6),
+                    width: wp(40),
+                    marginTop: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    backgroundColor: '#000000',
+                    borderRadius: wp(4),
+                    marginBottom: hp(2),
                     },
                     this.checkIfDataFilled()
                       ? Styles.inactiveButton
@@ -403,21 +411,9 @@ class CustomField extends Component {
                         ? 'rgb(70,70,70)'
                         : 'white',
                     }}>
-                    Confirm
+                    {t('submit')}
                   </Text>
                 </TouchableOpacity>
-                {/* {
-                                this.renderTextInput()
-                            }
-                            {
-                                this.renderRadioInput()
-                            }
-                            {
-                                this.renderDropdown()
-                            }
-                            {
-                                this.renderTextArea()
-                            } */}
               </ScrollView>
             </View>
           </View>
@@ -444,7 +440,7 @@ const Styles = StyleSheet.create({
     width: 100 + '%',
     alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor: '#1B89EF',
+    backgroundColor: '#000',
     borderRadius: 10,
   },
   inactiveButton: {

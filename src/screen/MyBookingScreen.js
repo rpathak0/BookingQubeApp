@@ -13,7 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ToastAndroid,
+  Alert,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -33,6 +33,10 @@ import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
 import {showToast} from '../component/CustomToast';
 import ProcessingLoader from '../component/ProcessingLoader';
+
+import LayoutSize from '../Helper/LayoutSize';
+import CountDown from 'react-native-countdown-component';
+import { checkoutCountDown } from '../Helper/dateConverter';
 
 // Icon
 import ic_header_home_icon from '../assets/icon/ic_header_home_icon.png';
@@ -314,6 +318,21 @@ class MyBookingScreen extends Component {
     this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
+  confirmCancelBooking = async (item) => {
+    const {t} = this.props;
+    
+    // confirmation dialog
+    Alert.alert(
+      t('cancel_booking'),
+      t('cancel_booking_ie'),
+      [
+        {text: t('cancel'), style: 'cancel'},
+        {text: t('yes'), onPress: this.handleCancelTicket(item)},
+      ],
+      {cancelable: false},
+    );
+  }
+
   handleCancelTicket = async item => {
     let booking_id = [];
     item.attendees.map(i => {
@@ -437,13 +456,12 @@ class MyBookingScreen extends Component {
 
           } else {
             console.log(response?.data,'////');
-            // ToastAndroid.show(response?.data,ToastAndroid.SHORT);
           }
         });
     } catch (error) {
       this.setState({showProcessingLoader: false});
       if(error?.response?.data?.data){
-        ToastAndroid.show(error?.response?.data?.data,ToastAndroid.SHORT);
+        showToast(error?.response?.data?.data);
       }
     }
   }
@@ -483,7 +501,7 @@ class MyBookingScreen extends Component {
       this.setState({showProcessingLoader: false});
       if(error?.response?.data?.data) {
         console.log(error?.response?.data);
-        ToastAndroid.show(error?.response?.data?.data,ToastAndroid.SHORT);
+        showToast(error?.response?.data?.data);
       }
     }
   }
@@ -508,23 +526,6 @@ class MyBookingScreen extends Component {
           />
           <ScrollView>
             <View style={styles.homeContainer}>
-              <ImageBackground
-                source={header_image}
-                resizeMode="cover"
-                style={styles.headerImageStyle}>
-                <Text style={styles.titleText}>{t('my_bookings')}</Text>
-                <View style={styles.eventHeadlineContainer}>
-                  <Image
-                    source={ic_header_home_icon}
-                    resizeMode="cover"
-                    style={styles.IconStyle}
-                  />
-
-                  <Text style={styles.slashText}>/</Text>
-                  <Text style={styles.eventText}>{t('my_bookings')}</Text>
-                </View>
-              </ImageBackground>
-
               <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
@@ -600,12 +601,9 @@ class MyBookingScreen extends Component {
               {this.state.ticketList.map(item => {
                 return (
                   <View style={styles.bookedTicketContainer}>
-                    <Text style={styles.orderIdText}>{t('order_id')}</Text>
-                    <Text style={styles.orderIdText}>
-                      # {item.order_number}
-                    </Text>
-
-                    <View style={styles.lineContainer}></View>
+                    <View style={styles.orderIdWrapper}>
+                      <Text style={styles.orderIdText}>{t('order_id')} #{item.order_number}</Text>
+                    </View>
 
                     <Text style={styles.eventTitleText}>{t('event')}</Text>
                     <Text
@@ -614,144 +612,136 @@ class MyBookingScreen extends Component {
                       {item.event_title} ({item.event_category})
                     </Text>
 
-                    <Text style={styles.eventTitleText}>{t('timings')}</Text>
                     <Text style={styles.eventTimeText}>
-                      {item.event_start_date}
-                      {'\n'}
-                      {item.event_start_time} - {item.event_end_time}
-                      {'\n'}(IST)
+                      @{item.event_start_date} ({item.event_start_time.split(':').slice(0, 2).join(':')} - {item.event_end_time.split(':').slice(0, 2).join(':')})
                     </Text>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>{t('ticket')}</Text>
-                    <Text style={styles.eventTimeText}>
-                      {item.ticket_title} x {item.quantity}
-                    </Text>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('order_total')}</Text>
-                    <Text style={styles.eventTimeText}>
-                      {item.net_price} {this.state.currency}
-                    </Text>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>
-                      {t('promocode_reward')}
-                    </Text>
-                    <Text style={styles.eventTimeText}>
-                      {item.promocode} {this.state.currency}
-                    </Text>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
-                    <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('payment')}</Text>
-
-                    <View style={styles.paymentContainer}>
-                      <Text style={styles.paymentMethodText}>
-                        {item.payment_type}
-                      </Text>
-
-                      <View style={styles.paymentMethodLine}></View>
-                      {item.is_paid === 0 ? (
-                        <Text style={styles.paymentProcessText}>{t('pending')}</Text>
-                      ) : (
-                        <Text style={styles.paymentProcessText}>{t('paid')}</Text>
-                      )}
-                    </View>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('checked_in')}</Text>
-                    <View style={styles.checkedInContainer}>
-                      {item.checked_in === 0 ? (
-                        <Text style={styles.checkedInText}>{t('no')}</Text>
-                      ) : (
-                        <Text style={styles.checkedInText}>{t('yes')}</Text>
-                      )}
-                    </View>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('status')}</Text>
-                    <View style={styles.statusContainer}>
-                      {item.status === 1 ? (
-                        <Text style={styles.statusText}>{t('enabled')}</Text>
-                      ) : (
-                        <Text style={styles.statusText}>{t('disabled')}</Text>
-                      )}
-                    </View>
-
-                    <View style={styles.lineContainer}></View>
-
-                    <Text style={styles.eventTitleText}>{t('cancellation')}</Text>
-                    {item.booking_cancel === 0 ? (
-                      <TouchableOpacity
-                        style={styles.cancellationContainer}
-                        onPress={() => this.handleCancelTicket(item)}>
-                        <Image
-                          source={ic_cancellation}
-                          resizeMode="cover"
-                          style={styles.cancelIconStyle}
-                        />
-                        <Text style={styles.cancelText}>{t('cancel')}</Text>
-                      </TouchableOpacity>
-                    ) : item.booking_cancel === 1 ? (
-                      <View style={styles.cancellationContainer}>
-                        {/* <Image
-                          source={ic_cancellation}
-                          resizeMode="cover"
-                          style={styles.cancelIconStyle}
-                        /> */}
-                        <Text style={styles.cancelText}>
-                          {t('cancellation_pending')}
+                    <View style={styles.twoColumns}>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('ticket')}</Text>
+                        <Text style={styles.eventTimeText}>
+                          {item.ticket_title} x {item.quantity}
                         </Text>
                       </View>
-                    ) : item.booking_cancel === 2 ? (
-                      <View style={styles.cancellationContainer}>
-                        {/* <Image
-                          source={ic_cancellation}
-                          resizeMode="cover"
-                          style={styles.cancelIconStyle}
-                        /> */}
-                        <Text style={styles.cancelText}>{t('approved')}</Text>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('order_total')}</Text>
+                        <Text style={styles.eventTimeText}>
+                          {item.net_price} {this.state.currency}
+                        </Text>
                       </View>
-                    ) : item.booking_cancel === 3 ? (
-                      <View style={styles.cancellationContainer}>
-                        {/* <Image
-                          source={ic_cancellation}
-                          resizeMode="cover"
-                          style={styles.cancelIconStyle}
-                        /> */}
-                        <Text style={styles.cancelText}>{t('refunded')}</Text>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('payment')}</Text>
+                        <Text style={styles.eventTimeText}>
+                          {item.payment_type} / 
+                          {item.is_paid === 0 ? (
+                            <Text style={styles.paymentProcessText}>{t('pending')}</Text>
+                          ) : (
+                            <Text style={styles.paymentProcessText}>{t('paid')}</Text>
+                          )}
+                        </Text>
                       </View>
-                    ) : null}
+                    </View>
+                    
+                    <View style={styles.lineContainer}></View>
+
+                    <View style={styles.twoColumns}>
+                      <View>
+                        <Text style={styles.eventTitleText}>
+                          {t('discount')}
+                        </Text>
+                        <Text style={styles.eventTimeText}>
+                            {item.promocode != null && item.promocode != '' ? item.promocode : 0} {this.state.currency}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
+                        <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('checked_in')}</Text>
+                        {item.checked_in === 0 ? (
+                          <Text style={[styles.checkedInTextNo]}>{t('no')}</Text>
+                        ) : (
+                          <Text style={[styles.checkedInTextYes]}>{t('yes')}</Text>
+                        )}
+                      </View>
+                    </View>
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>{t('expired')}</Text>
-                    <View style={styles.expiredContainer}>
-                      <Text style={styles.expiredText}>{t('no')}</Text>
+                    <View style={styles.twoColumns}>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('status')}</Text>
+                        {item.status === 1 ? (
+                          <Text style={styles.checkedInTextYes}>{t('enabled')}</Text>
+                        ) : (
+                          <Text style={styles.checkedInTextNo}>{t('disabled')}</Text>
+                        )}
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('expired')}</Text>
+                        
+                        {(moment(item.event_end_date+' '+item.event_end_time, 'YYYY-MM-DD HH:mm:ss') <= moment()) ? (
+                          <Text style={styles.checkedInTextNo}>{t('yes')}</Text>
+                        ) : (
+                          <Text style={styles.checkedInTextYes}>{t('no')}</Text>
+                        )}
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('cancellation')}</Text>
+                        {item.booking_cancel === 0 ? (
+                          <TouchableOpacity
+                            style={styles.cancellationContainer}
+                            onPress={() => this.confirmCancelBooking(item)}>
+                            <Image
+                              source={ic_cancellation}
+                              resizeMode="cover"
+                              style={styles.cancelIconStyle}
+                            />
+                            <Text style={styles.cancelTextWhite}>{t('cancel')}</Text>
+                          </TouchableOpacity>
+                        ) : item.booking_cancel === 1 ? (
+                          <View>
+                            <Text style={styles.cancelText}>
+                              {t('cancellation_pending')}
+                            </Text>
+                          </View>
+                        ) : item.booking_cancel === 2 ? (
+                          <View>
+                            <Text style={styles.cancelText}>{t('approved')}</Text>
+                          </View>
+                        ) : item.booking_cancel === 3 ? (
+                          <View>
+                            <Text style={styles.cancelText}>{t('refunded')}</Text>
+                          </View>
+                        ) : null}
+                      </View>
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
                     {item.is_paid != 1 ? null : (
-                      <Text style={styles.eventTitleText}>{t('actions')}</Text>
-                    )}
-                    {item.is_paid != 1 ? null : (
-                      <View style={styles.ticketActionContainer}>
-                        <TouchableOpacity onPress={()=>{
-                        this.DownloadTicketfile(item)
-
-                      }} style={styles.ticketContainer}>
+                    <View style={styles.twoColumns}>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('check_in')}</Text>
+                        <TouchableOpacity
+                          onPress={()=>{
+                            this.getQr(item.id)
+                          }}
+                          style={styles.checkInButtonContainer}>
+                          <Image
+                            source={ic_check_in}
+                            resizeMode="cover"
+                            style={styles.downloadIconStyle}
+                          />
+                          <Text style={styles.ticketText}>{t('check_in')}</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('download')}</Text>
+                        <TouchableOpacity onPress={()=>{ this.DownloadTicketfile(item) }} style={styles.ticketContainerBtn}>
                           <Image
                             source={ic_download}
                             resizeMode="cover"
@@ -759,10 +749,10 @@ class MyBookingScreen extends Component {
                           />
                           <Text style={styles.ticketText}>{t('ticket')}</Text>
                         </TouchableOpacity>
-
-                        <TouchableOpacity onPress={()=>{
-                        this.fetchDownloadfile(item.id)
-                      }} style={styles.ticketContainer}>
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('download')}</Text>
+                        <TouchableOpacity onPress={()=>{ this.fetchDownloadfile(item.id) }} style={styles.ticketContainerBtn}>
                           <Image
                             source={ic_download}
                             resizeMode="cover"
@@ -771,49 +761,50 @@ class MyBookingScreen extends Component {
                           <Text style={styles.ticketText}>{t('invoice')}</Text>
                         </TouchableOpacity>
                       </View>
-                    )}
-
-                    {item.is_paid != 1 ? null : (
-                      <TouchableOpacity
-                      onPress={()=>{
-                        this.fetchDownloadfile(item.id,'qr')
-                      }}
-                        style={styles.downloadBookingQRcodeContainer}>
-                        <Image
-                          source={ic_download}
-                          resizeMode="cover"
-                          style={styles.downloadIconStyle}
-                        />
-                        <Text style={styles.ticketText}>
-                          {t('download_qrcode')}
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-
-                    {item.is_paid != 1 ? null : (
-                      <TouchableOpacity
-                        onPress={()=>{
-                          this.getQr(item.id)
-                        }}
-                       style={styles.checkInButtonContainer}>
-                        <Image
-                          source={ic_check_in}
-                          resizeMode="cover"
-                          style={styles.downloadIconStyle}
-                        />
-                        <Text style={styles.ticketText}>{t('check_in')}</Text>
-                      </TouchableOpacity>
+                    </View>
                     )}
 
                     <View style={styles.lineContainer}></View>
 
-                    <Text style={styles.eventTitleText}>
-                      {t('checkout_countdown')}
-                    </Text>
+                    {item.is_paid != 1 ? null : (
+                    <View style={styles.twoColumns}>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('checkout_countdown')}</Text>
+                        
+                        {(checkoutCountDown(item.attendees[0]) > 0 && checkoutCountDown(item.attendees[0]) != 'checkout') ? (
+                          <CountDown
+                          until={ checkoutCountDown(item.attendees[0])}
+                          size={12}
+                          digitTxtStyle={styles.digitTxtStyle}
+                          digitStyle={styles.digitStyle}
+                          timeLabelStyle={styles.timeLabelStyle}
+                          timeToShow={['H','M','S']}
+                          timeLabels={{h:t('hours'),m: t('minutes'), s: t('seconds')}}
+                        />  
+                        ) : null}
 
-                    <View style={styles.checkoutContainer}>
-                      <Text style={styles.expiredText}>{t('na')}</Text>
+                        {(checkoutCountDown(item.attendees[0]) == 'checkout') ? (
+                          <Text style={styles.checkedInTextNo}>{t('checked_out')}</Text>
+                        ) : null}
+
+                        {(checkoutCountDown(item.attendees[0]) != 'checkout' && checkoutCountDown(item.attendees[0]) <= 0) ? (
+                          <Text style={styles.checkedInTextNo}>{t('n/a')}</Text>
+                        ) : null}
+                        
+                      </View>
+                      <View>
+                        <Text style={styles.eventTitleText}>{t('download')}</Text>
+                        <TouchableOpacity onPress={()=>{ this.fetchDownloadfile(item.id) }} style={styles.ticketContainerBtn2}>
+                          <Image
+                            source={ic_download}
+                            resizeMode="cover"
+                            style={styles.downloadIconStyle}
+                          />
+                          <Text style={styles.ticketText}>{t('all_qrcodes')}</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
+                    )}
                   </View>
                 );
               })}
@@ -832,33 +823,17 @@ class MyBookingScreen extends Component {
           />
           <ScrollView>
             <View style={styles.homeContainer}>
-              <ImageBackground
-                source={header_image}
-                resizeMode="cover"
-                style={styles.headerImageStyle}>
-                <Text style={styles.titleText}>{t('my_bookings')}</Text>
-                <View style={styles.eventHeadlineContainer}>
-                  <Image
-                    source={ic_header_home_icon}
-                    resizeMode="cover"
-                    style={styles.IconStyle}
-                  />
 
-                  <Text style={styles.slashText}>/</Text>
-                  <Text style={styles.eventText}>{t('my_bookings')}</Text>
-                </View>
-              </ImageBackground>
-
-              <Text style={styles.textInputText}>Events</Text>
+              <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
                 <RNPickerSelect
-                  onValueChange={this.handleSelectedEvent}
+                  onValueChange={this.handleSelectedShow}
                   items={[{label: t('all_events'), value: t('all_events')}]}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
                 />
               </View>
-
+              
               <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
@@ -892,16 +867,6 @@ class MyBookingScreen extends Component {
                   underlineColorAndroid="transparent"
                   value={this.state.searchText}
                   onChangeText={this.handleSearchChange}
-                />
-              </View>
-
-              <Text style={styles.textInputText}>{t('events')}</Text>
-              <View style={styles.inputContainer}>
-                <RNPickerSelect
-                  onValueChange={this.handleSelectedShow}
-                  items={[{label: t('all_events'), value: t('all_events')}]}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
                 />
               </View>
 
@@ -945,23 +910,20 @@ class MyBookingScreen extends Component {
 export default withTranslation()(MyBookingScreen);
 
 const pickerStyle = {
-  // inputIOS: {
-  //   color: 'white',
-  //   paddingHorizontal: 10,
-  //   backgroundColor: 'red',
-  //   borderRadius: 5,
-  // },
-  // placeholder: {
-  //   color: 'white',
-  // },
+  inputIOS: {
+    color: '#c4c3cb',
+    fontSize: wp(3.5),
+    marginVertical: wp(4),
+  },
+  placeholder: {
+    color: '#c4c3cb',
+    fontSize: wp(3.5),
+    marginVertical: wp(4),
+  },
   inputAndroid: {
-    height: hp(6),
-    width: wp(90),
-    color: '#000',
-    // paddingHorizontal: 10,
-    backgroundColor: '#f1f1f1',
-    // borderRadius: wp(4),
-    // borderWidth: 1,
+    color: '#c4c3cb',
+    fontSize: wp(3.5),
+    marginVertical: wp(4),
   },
 };
 
@@ -976,7 +938,7 @@ const styles = StyleSheet.create({
   headerImageStyle: {
     height: hp(20),
     width: 'auto',
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   titleText: {
     position: 'absolute',
@@ -1000,7 +962,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: wp(6),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(4),
   },
   IconStyle: {
@@ -1022,28 +984,27 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(0.8),
   },
   textInputText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#5e5f5f',
-    marginVertical: hp(1),
-    marginTop: hp(2),
-    marginHorizontal: wp(4),
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#000',
+    marginTop: hp(1),
+    marginBottom: hp(.5),
+    marginHorizontal: wp(2),
   },
   inputContainer: {
     flexDirection: 'row',
     height: hp(7),
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: '#000',
     borderRadius: wp(2),
-    // marginVertical: hp(1),
-    marginHorizontal: wp(4),
+    marginHorizontal: wp(2),
+    paddingLeft: wp(2),
+    paddingRight: wp(2),
   },
   loginFormTextInput: {
     fontSize: wp(3.5),
     flex: 1,
-    // marginLeft: wp(4),
-    backgroundColor: '#f1f1f1',
     borderRadius: wp(1),
     color: '#000',
   },
@@ -1057,40 +1018,46 @@ const styles = StyleSheet.create({
   bookedTicketContainer: {
     marginHorizontal: wp(2),
     marginVertical: hp(2),
-    borderWidth: 1,
-    borderColor: '#838383',
-    borderRadius: wp(1),
+    paddingBottom: hp(1),
+    borderRadius: wp(3),
     backgroundColor: '#fff',
   },
   orderIdText: {
-    fontSize: wp(4),
-    fontWeight: '700',
-    color: '#838383',
+    fontSize: wp(3.5),
+    fontWeight: '500',
+    color: '#fff',
     marginHorizontal: wp(2),
-    marginVertical: hp(0.5),
+    marginTop: hp(0.5),
+  },
+  orderIdWrapper: {
+    backgroundColor: '#000',
+    borderTopLeftRadius: wp(3),
+    borderTopRightRadius: wp(3),
+    paddingVertical: hp(1.5),
   },
   lineContainer: {
     height: hp(0.2),
     width: 'auto',
-    backgroundColor: '#838383',
+    backgroundColor: '#ddd',
     marginVertical: hp(0.5),
   },
   eventTitleText: {
-    fontSize: wp(4),
+    fontSize: wp(3.5),
     fontWeight: '700',
     color: '#838383',
     marginHorizontal: wp(2),
-    marginVertical: hp(0.5),
+    marginTop: hp(1),
+    marginBottom: hp(0),
   },
   eventPlaceText: {
     fontSize: wp(3.5),
-    color: '#1b89ef',
+    color: '#000',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
   eventTimeText: {
     fontSize: wp(3.5),
-    color: '#838383',
+    color: '#000',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
@@ -1134,12 +1101,19 @@ const styles = StyleSheet.create({
     marginVertical: hp(0.5),
     borderRadius: wp(4),
   },
-  checkedInText: {
+  checkedInTextNo: {
     fontSize: wp(3.5),
-    fontWeight: '700',
-    color: '#fff',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
+    fontWeight: '700',
+    color: '#999',
+  },
+  checkedInTextYes: {
+    fontSize: wp(3.5),
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+    fontWeight: '700',
+    color: '#00b289',
   },
   statusContainer: {
     height: hp(4),
@@ -1161,13 +1135,13 @@ const styles = StyleSheet.create({
   cancellationContainer: {
     flexDirection: 'row',
     height: hp(6),
-    width: wp(25),
+    width: LayoutSize.window.width/4,
+    borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ff7273',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
-    borderRadius: wp(4),
-    backgroundColor: '#ff7273',
   },
   cancelIconStyle: {
     width: hp(2),
@@ -1176,12 +1150,22 @@ const styles = StyleSheet.create({
   },
   cancelText: {
     fontSize: wp(3.5),
+    color: '#ff7273',
+    fontWeight: '700',
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+  },
+  cancelTextWhite: {
+    fontSize: wp(3.5),
     color: '#fff',
+    fontWeight: '700',
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
   },
   expiredContainer: {
     height: hp(4),
     width: wp(10),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: wp(2),
@@ -1200,19 +1184,11 @@ const styles = StyleSheet.create({
     // marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
-  ticketContainer: {
-    flexDirection: 'row',
-    height: hp(6),
-    width: wp(30),
-    borderRadius: wp(4),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#00b289',
-    marginHorizontal: wp(2),
-  },
+  
   downloadIconStyle: {
     width: hp(2),
     aspectRatio: 1 / 1,
+    marginRight: wp(1),
   },
   ticketText: {
     fontSize: wp(3.5),
@@ -1230,21 +1206,43 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
+  ticketContainerBtn2: {
+    flexDirection: 'row',
+    height: hp(6),
+    width: LayoutSize.window.width/3,
+    borderRadius: wp(2),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00b289',
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+  },
+  ticketContainerBtn: {
+    flexDirection: 'row',
+    height: hp(6),
+    width: LayoutSize.window.width/4,
+    borderRadius: wp(2),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00b289',
+    marginHorizontal: wp(2),
+    marginVertical: hp(0.5),
+  },
   checkInButtonContainer: {
     flexDirection: 'row',
     height: hp(6),
-    width: wp(30),
-    borderRadius: wp(4),
+    width: LayoutSize.window.width/4,
+    borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
   checkoutContainer: {
     height: hp(4),
     width: wp(15),
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: wp(2),
@@ -1260,5 +1258,20 @@ const styles = StyleSheet.create({
     fontSize: wp(4),
     fontWeight: '700',
     color: '#000',
+  },
+  twoColumns: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  digitTxtStyle: {
+    color: '#fff',
+  },
+  digitStyle: {
+    backgroundColor: '#ff0084'
+  },
+  timeLabelStyle: {
+    fontWeight: '700',
+    color: '#ff0084', 
   },
 });

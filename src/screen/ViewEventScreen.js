@@ -80,7 +80,8 @@ class ViewEventScreen extends Component {
             if (success === true) {
               this.setState({
                 data: newResponse.data.data,
-                eventSchedulesDatesForMonth: newResponse.data.data.repititive_schedule.lenght > 0 ? newResponse.data.data.repititive_schedule[0].schedule_dates.formatted_schedule_dates : [],
+                eventSchedulesDatesForMonth: newResponse.data.data.repititive_schedule.length > 0 ? newResponse.data.data.repititive_schedule[0].schedule_dates.formatted_schedule_dates : [],
+                selectedSchdeuleMonthId: newResponse.data.data.repititive_schedule.length > 0 ? newResponse.data.data.repititive_schedule[0].id : 0, // show repetitive schedule selectedf
                 showSheatChart: newResponse.data.data.tickets[0].show_sheat_chart,
                 isLoading: false,
               });
@@ -93,6 +94,7 @@ class ViewEventScreen extends Component {
   };
 
   handleGetTicket = async date => {
+    console.log('this.state.data?.event?.faq', this.state.data?.event?.faq);
     const { t } = this.props;
 
     const organizer = await getData(async_keys.userInfo);
@@ -136,7 +138,7 @@ class ViewEventScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title={t('event_info')}
+          title={t('event')}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -145,6 +147,7 @@ class ViewEventScreen extends Component {
           <View style={styles.homeContainer}>
             {/* Basic Info */}
             <BasicInfoScreen data={this.state.data} />
+            
             <TouchableOpacity
               style={styles.getTicketButtonContainer}
               onPress={this.scrollToGetTicket}>
@@ -155,6 +158,7 @@ class ViewEventScreen extends Component {
               />
               <Text style={styles.getTicketText}>{t('get_tickets')}</Text>
             </TouchableOpacity>
+            
             <View style={{ marginHorizontal: wp(4) }}>
               <RenderHtml tagsStyles={{ p: { fontSize: wp(3.5) } }}
                 contentWidth={width}
@@ -168,8 +172,10 @@ class ViewEventScreen extends Component {
             {this.state.data.event?.seatingchart_image && (
               <SeatChart data={this.state.data} />
             )}
+
             <TouchableOpacity
               style={styles.bookTicketContainer}
+              activeOpacity={1}
               onLayout={event => {
                 const { layout } = event.nativeEvent;
                 this.setState({ ...this.state, scrollYPos: (layout.height) });
@@ -184,16 +190,19 @@ class ViewEventScreen extends Component {
               />
             </TouchableOpacity>
             {/* Event Info */}
-            <View style={styles.eventInfoContainer}>
-              <Text style={styles.eventInfoText}>{t('event_info')}</Text>
-              <View style={{ marginHorizontal: wp(4) }}>
+            { (this.state.data?.event?.faq != null && this.state.data?.event?.faq != '') ? (
+              <View style={styles.eventInfoContainer}>
+                <Text style={styles.eventInfoText}>{t('event_info')}</Text>
+                <View style={{ marginHorizontal: wp(4) }}>
 
-                <RenderHtml tagsStyles={{ p: { fontSize: wp(2.5) } }}
-                  contentWidth={width}
-                  source={{ html: this.state.data?.event?.faq }}
-                />
+                  <RenderHtml tagsStyles={{ p: { fontSize: wp(2.5) } }}
+                    contentWidth={width}
+                    source={{ html: this.state.data?.event?.faq }}
+                  />
+                </View>
               </View>
-            </View>
+            ) : null}
+            
             {/* Tage Grops (HOST,DANCER,etc)  */}
             <TagGroups
               data={this.state.data}
@@ -217,7 +226,7 @@ export default withTranslation()(ViewEventScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#fff',
   },
   homeContainer: {
     flex: 1,
@@ -243,7 +252,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -259,7 +268,7 @@ const styles = StyleSheet.create({
   shareEventText: {
     fontSize: wp(4),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     // marginLeft: wp(2),
     marginHorizontal: wp(2),
   },
@@ -273,15 +282,13 @@ const styles = StyleSheet.create({
   },
   getTicketButtonContainer: {
     flexDirection: 'row',
-    // height: hp(6),
-    // width: hp(20),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: wp(3),
-    backgroundColor: '#ec398b',
+    borderRadius: wp(2),
+    backgroundColor: '#ff0084',
     marginVertical: hp(2),
-    marginLeft: wp(3),
-    marginRight: wp(3),
+    marginHorizontal: hp(3),
+    paddingVertical: wp(2),
   },
   ticketIconStyle: {
     width: hp(5),
@@ -291,10 +298,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#fff',
-  },
-  descriptionText: {
-    fontSize: wp(3.5),
-    color: '#1b9bf3',
   },
   eventLocationContainer: {
     flexDirection: 'row',
@@ -320,8 +323,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#1b89ef',
-    // marginHorizontal:wp(4)
+    backgroundColor: '#f89b15',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -336,7 +338,7 @@ const styles = StyleSheet.create({
   },
   firstTicketContainer: {
     width: wp(90),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
     alignItems: 'center',
     borderRadius: wp(3),
@@ -357,13 +359,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -377,7 +379,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#1b97f3',
+    backgroundColor: '#f89b15',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
@@ -411,7 +413,7 @@ const styles = StyleSheet.create({
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     marginHorizontal: wp(2),
     alignItems: 'center'
   },
@@ -449,7 +451,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   categoryContainer: {
     height: hp(13),

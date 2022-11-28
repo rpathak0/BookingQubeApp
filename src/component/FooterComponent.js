@@ -30,16 +30,20 @@ class FooterComponent extends PureComponent {
     this.state = {
       appState: AppState.currentState,
       checkUserActivity: null,
+      userRoleId: null,
     };
   }
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleCheckLogin);
+    this.setUserInfo();
   }
 
   componentWillUnmount() {
     AppState.addEventListener('change', this.handleCheckLogin);
   }
+
+
 
   handleCheckLogin = async nextAppState => {
     // getting token from AsyncStorage
@@ -60,6 +64,11 @@ class FooterComponent extends PureComponent {
   handleEvent = async () => {
     this.props.nav.navigate('EventList');
   };
+  
+  setUserInfo = async () => {
+    const organizer = await getData(async_keys.userInfo);
+    this.setState({userRoleId: organizer});
+  };
 
   handleCategory = async () => {
     // getting token from AsyncStorage
@@ -76,7 +85,7 @@ class FooterComponent extends PureComponent {
     const {tab} = this.props;
     const { t } = this.props;
     const selectedTabStyle = [styles.footerMenu, {backgroundColor: '#ECEFFF'}];
-
+    
     return (
       <SafeAreaView
         style={[
@@ -101,6 +110,7 @@ class FooterComponent extends PureComponent {
           </View>
         </TouchableHighlight>
 
+        {(this.state.userRoleId == 2) ? (
         <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleCategory}
@@ -120,7 +130,8 @@ class FooterComponent extends PureComponent {
             </Text>
           </View>
         </TouchableHighlight>
-
+        ) : null}
+        
         <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleEvent}
@@ -136,7 +147,7 @@ class FooterComponent extends PureComponent {
                   ? styles.footerMenuTextBlack
                   : styles.footerMenuText,
               ]}>
-              {t('event')}
+              {t('events')}
             </Text>
           </View>
         </TouchableHighlight>
@@ -152,11 +163,11 @@ export default withTranslation()(FooterComponent);
 const styles = StyleSheet.create({
   footerContainer: {
     height: hp(8),
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderTopWidth: 1,
-    borderTopColor: '#f2f1f1',
+    borderTopColor: '#000000',
   },
   footerContainerBlack: {
     height: hp(8),
@@ -181,8 +192,8 @@ const styles = StyleSheet.create({
   },
   footerMenuText: {
     fontSize: wp(3),
-    color: '#000',
-    fontWeight: '700',
+    color: '#ffffff',
+    fontWeight: '500',
   },
   footerMenuTextBlack: {
     fontSize: wp(3),

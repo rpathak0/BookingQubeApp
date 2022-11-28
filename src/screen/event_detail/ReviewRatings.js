@@ -38,7 +38,7 @@ class ReviewRatings extends Component {
               {t('rating_review')}
             </Text>
             <Text style={styles.totalReviewsText}>
-              {reviews?.length} Review(s)
+              {reviews?.length} {t('reviews')}
             </Text>
             {reviews.map((item, i) =>
               <View key={i} style={styles.reviewListContainer}>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   shareEventText: {
     fontSize: wp(4),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     // marginLeft: wp(2),
     marginHorizontal: wp(2),
   },
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: wp(3),
-    backgroundColor: '#ec398b',
+    backgroundColor: '#ff0084',
     marginVertical: hp(2),
     marginLeft: wp(2),
   },
@@ -146,10 +146,6 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#fff',
-  },
-  descriptionText: {
-    fontSize: wp(3.5),
-    color: '#1b9bf3',
   },
   eventLocationContainer: {
     flexDirection: 'row',
@@ -175,7 +171,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#1b89ef',
+    backgroundColor: '#f89b15',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -190,7 +186,7 @@ const styles = StyleSheet.create({
   },
   firstTicketContainer: {
     width: wp(90),
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
     alignItems: 'center',
     borderRadius: wp(3),
@@ -211,13 +207,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#1b97f3',
+    color: '#f89b15',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -231,7 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#1b97f3',
+    backgroundColor: '#f89b15',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
@@ -265,7 +261,7 @@ const styles = StyleSheet.create({
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#ec398b',
+    color: '#ff0084',
     marginHorizontal: wp(2),
     alignItems: 'center'
   },
@@ -303,7 +299,7 @@ const styles = StyleSheet.create({
   eventCategoryContainer: {
     alignItems: 'center',
     flex: 1,
-    backgroundColor: '#00192f',
+    backgroundColor: '#000000',
   },
   categoryContainer: {
     height: hp(13),
@@ -374,22 +370,22 @@ const styles = StyleSheet.create({
     // backgroundColor: '#fff',
     marginHorizontal: wp(4),
     marginVertical: hp(1),
+    marginBottom: hp(2),
   },
   ratingsAndReviewsTitleText: {
     fontSize: wp(6),
     fontWeight: '700',
     color: '#000',
     textAlign: 'center',
+    marginTop:hp(2),
     marginBottom:hp(1)
   },
   totalReviewsText: {
-    fontSize: wp(5),
+    fontSize: wp(3),
     fontWeight: '700',
     color: '#000',
   },
   reviewListContainer: {
-    // alignItems: 'center',
-   
     marginVertical: hp(1),
   },
   ratingIconAndTextContainer: {
