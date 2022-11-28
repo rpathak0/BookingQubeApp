@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
   Platform,
+  I18nManager,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -289,6 +290,7 @@ const styles = StyleSheet.create({
     paddingLeft: wp(2),
     color: '#fff',
     borderRadius: wp(1),
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   touchAbleButton: {
     position: 'absolute',

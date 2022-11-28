@@ -161,7 +161,6 @@
       "off_percent"             : "% OFF!",
       "off_fixed"             : " OFF!",
       "submit"             : "Submit",
-      
       "discount"             : "Discount",
       "cancel_booking"         : "Cancel Booking",
       "cancel_booking_ie"      : "Are you sure, you want to cancel the booking?",
@@ -172,6 +171,8 @@
       "customer_name"             : "Customer Name",
       "attendee_name"             : "Attendee Name",
       "select_language"             : "Select Language",
+
+      "select_item"             : "Select an item",
       
 
       "test"                   : "test"

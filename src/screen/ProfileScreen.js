@@ -12,6 +12,7 @@ import {
   Platform,
   Alert,
   Keyboard,
+  I18nManager,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -717,6 +718,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   buttonContainer: {
     height: hp(6),

@@ -7,7 +7,8 @@ import {
   TextInput,
   Keyboard,
   Alert,
-  Image
+  Image,
+  I18nManager,
 } from 'react-native';
 import React, { Component } from 'react';
 import SafeAreaView from 'react-native-safe-area-view';
@@ -1498,6 +1499,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     width: wp(40),
     color: '#fff',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   priceText: {
     fontSize: wp(4),
@@ -1534,7 +1536,8 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     color: '#000',
     width: "70%",
-    paddingHorizontal: wp(3)
+    paddingHorizontal: wp(3),
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   applyContainer: {
     width: "30%",
@@ -1699,6 +1702,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(1),
     paddingStart: wp(2),
     color: '#000',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   buttonContainer: {
     height: hp(6),

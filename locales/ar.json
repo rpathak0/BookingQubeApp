@@ -171,6 +171,7 @@
     "customer_name"             : "اسم الزبون",
     "attendee_name"             : "اسم الحاضر",
     "select_language"             : "اختار اللغة",
+    "select_item"             : "حدد عنصر",
     "test"                   : "اختبار"
   }
 }

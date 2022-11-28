@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  I18nManager
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -475,6 +476,7 @@ class EventListScreen extends Component {
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
                   value={this.state.selectedCategory}
+                  placeholder={{label: t('select_item'),value: null}}
                 />
               ) : (
                 <Text onPress={this.handleChangeToCategory}>
@@ -516,6 +518,7 @@ class EventListScreen extends Component {
                 }))}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false}
+                placeholder={{label: t('select_item'),value: null}}
               />
             </View>
 
@@ -530,6 +533,7 @@ class EventListScreen extends Component {
                 style={pickerStyle}
                 value={this.state.selectedCountry}
                 useNativeAndroidPickerStyle={false}
+                placeholder={{label: t('select_item'),value: null}}
               />
             </View>
 
@@ -545,6 +549,7 @@ class EventListScreen extends Component {
                 value={this.state.city}
                 useNativeAndroidPickerStyle={false}
                 disabled={this.state.cityCheck}
+                placeholder={{label: t('select_item'),value: null}}
               />
             </View>
 
@@ -572,7 +577,6 @@ const pickerStyle = {
     marginVertical: wp(4),
   },
   placeholder: {
-    color: '#c4c3cb',
     fontSize: wp(3.5),
     marginVertical: wp(4),
   },
@@ -655,6 +659,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   textInputText: {
     fontSize: wp(3.5),
@@ -663,6 +668,9 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
     marginBottom: hp(.5),
     marginHorizontal: wp(2),
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr',
+    
   },
   dropdownStyle: {
     fontSize: wp(3.5),

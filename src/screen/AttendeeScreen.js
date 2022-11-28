@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  I18nManager,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   textAreaContainer: {
     borderWidth: 2,
@@ -150,12 +152,14 @@ const styles = StyleSheet.create({
     borderRadius: wp(2),
     // marginVertical: hp(1),
     marginHorizontal: wp(4),
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   textArea: {
     height: hp(20),
     textAlignVertical: 'top',
     fontSize: wp(3.5),
     color: '#333',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   buttonContainer: {
     height: hp(6),

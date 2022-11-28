@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  I18nManager,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -572,6 +573,7 @@ class MyBookingScreen extends Component {
                   }))}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
+                  placeholder={{label: t('select_item'),value: null}}
                 />
               </View>
 
@@ -831,6 +833,7 @@ class MyBookingScreen extends Component {
                   items={[{label: t('all_events'), value: t('all_events')}]}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
+                  placeholder={{label: t('select_item'),value: null}}
                 />
               </View>
               
@@ -1007,6 +1010,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
+    textAlign :  I18nManager.isRTL ? 'right' : 'left',
   },
   descriptionText: {
     fontSize: wp(3.5),

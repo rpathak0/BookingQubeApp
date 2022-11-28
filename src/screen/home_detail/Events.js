@@ -299,12 +299,6 @@ const styles = StyleSheet.create({
     width: hp(3),
     aspectRatio: 1 / 1,
   },
-  loginFormTextInput: {
-    fontSize: wp(3.5),
-    flex: 1,
-    borderRadius: wp(1),
-    color: '#000',
-  },
   searchButtonContainer: {
     flexDirection: 'row',
     height: hp(6),

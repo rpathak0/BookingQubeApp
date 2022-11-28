@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  I18nManager
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import DocumentPicker from 'react-native-document-picker';
@@ -92,6 +93,7 @@ class CustomField extends Component {
             paddingLeft: wp(2),
             paddingRight: wp(2),
             marginBottom: hp(1),
+            textAlign :  I18nManager.isRTL ? 'right' : 'left',
           }}
           placeholder={item.label + (item.is_required ? ' *' : '')}
           value={item?.value || ''}
@@ -133,6 +135,7 @@ class CustomField extends Component {
             paddingLeft: wp(2),
             paddingRight: wp(2),
             marginBottom: hp(1),
+            textAlign :  I18nManager.isRTL ? 'right' : 'left',
           }}
           placeholder={item.label + (item.is_required ? ' *' : '')}
           onChangeText={value => {
@@ -152,6 +155,7 @@ class CustomField extends Component {
     );
   };
   renderDropdown = item => {
+    const {t} = this.props;
     return (
       <View style={{marginBottom: 20}}>
         <Text style={{padding: 5, paddingLeft: 0}}>
@@ -187,7 +191,7 @@ class CustomField extends Component {
             });
             this.setState({custom_fields: newDt});
           }}
-         
+          placeholder={{label: t('select_item'),value: null}}
           useNativeAndroidPickerStyle={false}
         />
       </View>
