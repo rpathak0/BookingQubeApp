@@ -14,23 +14,24 @@ import login_icon from '../assets/icon/login.png';
 import brand_logo from '../assets/icon/brand_logo.png';
 
 // User Preference
-import { async_keys, getData } from '../api/UserPreference';
+import { async_keys, getData, storeData } from '../api/UserPreference';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import logo from '../assets/image/logo.png';
 
 import { useTranslation } from 'react-i18next';
 import english_icon from '../assets/image/english.png';
 import qatar_icon from '../assets/image/qatar.png';
 
+import DropDownPicker from 'react-native-dropdown-picker';
+
 // rtl
 import RNRestart from 'react-native-restart';
 
 // API Info
-import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
-import { LoginContext } from '../context/LoginContext';
+import { STORAGE_URL } from '../api/ApiInfo';
+import { t } from 'i18next';
 const HeaderComponent = props => {
 
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const [img, setImg] = useState('');
   const [defualtAvatar, setDefaultAvatar] = useState(login_icon);
@@ -39,6 +40,24 @@ const HeaderComponent = props => {
   const toggleDrawer = () => {
     nav.openDrawer();
   };
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(i18n.language);
+  const [items, setItems] = useState([
+    {label: 'en', value: "en"},
+    {label: 'ar', value: "ar"},
+    {label: 'de', value: "de"},
+    {label: 'fr', value: "fr"},
+    {label: 'es', value: "es"},
+    {label: 'hi', value: "hi"},
+    {label: 'it', value: "it"},
+    {label: 'ja', value: "ja"},
+    {label: 'nl', value: "nl"},
+    {label: 'pt', value: "pt"},
+    {label: 'ru', value: "ru"},
+    {label: 'zh_CN', value: "zh_CN"},
+    {label: 'zh_TW', value: "zh_TW"},
+  ]);
 
   useEffect(() => {
 
@@ -88,6 +107,18 @@ const HeaderComponent = props => {
       nav.navigate('Profile');
     }
   };
+  
+  const changeLanguage = async (value) => {
+    console.log('changeLanguage', value);
+    await storeData(async_keys.userLang, value);
+
+    i18n
+    .changeLanguage(value)
+    .then(() => {
+      I18nManager.forceRTL(value == 'ar');
+      RNRestart.Restart();
+    });
+  };
 
 
   return (
@@ -115,31 +146,22 @@ const HeaderComponent = props => {
       </View>
 
       <View style={[styles.menuContainer, styles.menuItems]}>
-
-        <TouchableOpacity
-          onPress={() => {
-            i18n
-              .changeLanguage(i18n.language === 'ar' ? 'en' : 'ar')
-              .then(() => {
-                I18nManager.forceRTL(i18n.language === 'ar');
-                RNRestart.Restart();
-              });
-          }}
-          activeOpacity={1}
-          style={styles.languageSwitch}>
-          {(i18n.language === 'en') ?
-            <Image
-              source={english_icon}
-              resizeMode="cover"
-              style={styles.cartIconStyle}
-            /> : 
-            <Image
-              source={qatar_icon}
-              resizeMode="cover"
-              style={styles.cartIconStyle}
-            />
-          }
-        </TouchableOpacity>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          onChangeValue={(value) => {changeLanguage(value)}}
+          zIndex={99999}
+          containerStyle={styles.languageSwitch}
+          theme="DARK"
+          listMode='MODAL'
+          modalProps={{animationType: "fade"}}
+          modalTitle={t('select_language')}
+          modalTitleStyle={{fontWeight: "bold"}}
+        />
 
         <TouchableOpacity
           onPress={handleProfile}
@@ -223,7 +245,30 @@ const styles = StyleSheet.create({
     padding: wp(2),
   },
   languageSwitch: {
-    padding: wp(2),
+    width: 70,
+    backgroundColor: '#000',
+    // position: 'absolute',
+    // left: 0,
+    // right: 100,
+  },
+  languageDropdown: {
+    backgroundColor:'#000',
+    // color: '#fff',
+    // width: 70,
+    // alignContent: 'flex-end',
+    // alignSelf: 'center',
+    // zIndex: 99999,
+  },
+  languageDropdownContainer: {
+    zIndex: 999999999999,
+    // position: 'absolute',
+    // top: 1,
+  },
+  languageDropdownListContainer: {
+    zIndex: 999999999999,
+    position: 'absolute',
+    top: 0,
+    left: 10,
   },
   menuContainer: {
     flexDirection: 'row',

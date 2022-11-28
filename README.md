@@ -14,7 +14,8 @@ Please make sure to run "watchman watch-del-all" and "npm start --reset-cache" b
 Continue from Customer login Profile & MyBookings screen DONE
 Check-in Checkout screen  DONE
 
+Add all languages + header dropdown DONE
+Resolve Arabic RTL issue
+
 Error download buttons on mybookings page
     
-Add all languages + header dropdown
-Resolve Arabic RTL issue

@@ -161,6 +161,16 @@
     "off_percent"             : "٪ إيقاف!",
     "off_fixed"             : " إيقاف!",
     "submit"             : "يُقدِّم",
+    "discount"             : "تخفيض",
+    "cancel_booking"         : "إلغاء الحجز",
+    "cancel_booking_ie"      : "هل أنت متأكد أنك تريد إلغاء الحجز؟",
+    "all_qrcodes"      : "جميع رموز QR",
+    "checked_out"             : "فحصت",
+    "n/a"             : "غير متوفر",
+    "reload_scanner"             : "إعادة تحميل الماسح",
+    "customer_name"             : "اسم الزبون",
+    "attendee_name"             : "اسم الحاضر",
+    "select_language"             : "اختار اللغة",
     "test"                   : "اختبار"
   }
 }

@@ -8,6 +8,7 @@ export const async_keys = {
   userId: 'userId',
   loggedInUserId: 'loggedInUserId',
   userInfo: 'userInfo',
+  userLang: 'userLang',
 };
 
 // User Preferences Methods

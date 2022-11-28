@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {StyleSheet, StatusBar, Platform} from 'react-native';
+import {StyleSheet, I18nManager, Platform} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -34,6 +34,7 @@ class App extends Component {
   componentDidMount() {
     // Initial setup
     setTimeout(this.initialSetup, 2000);
+    this.setUserLang();
   }
 
   initialSetup = async () => {
@@ -45,6 +46,18 @@ class App extends Component {
 
     }
   };
+  
+  setUserLang = async () => {
+    const { t, i18n } = this.props;
+    const userLang = await getData(async_keys.userLang);
+    i18n
+    .changeLanguage(userLang)
+    .then(() => {
+      I18nManager.forceRTL(userLang == 'ar');
+    });
+  };
+
+  
 
   setNavigatorRef = ref => {
     nsSetTopLevelNavigator(ref);

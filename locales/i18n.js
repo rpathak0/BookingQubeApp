@@ -1,24 +1,47 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { I18nManager } from "react-native";
+import { async_keys, getData, storeData } from '../api/UserPreference';
 
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
 import en from './en.json';
 import ar from './ar.json';
-
+import de from './de.json';
+import fr from './fr.json';
+import es from './es.json';
+import hi from './hi.json';
+import it from './it.json';
+import ja from './ja.json';
+import nl from './nl.json';
+import pt from './pt.json';
+import ru from './ru.json';
+import zh_CN from './zh_CN.json';
+import zh_TW from './zh_TW.json';
 
 const resources = {
   en: en,
-  ar: ar
+  ar: ar,
+  de: de,
+  fr: fr,
+  es: es,
+  hi: hi,
+  it: it,
+  ja: ja,
+  nl: nl,
+  pt: pt,
+  ru: ru,
+  zh_CN: zh_CN,
+  zh_TW: zh_TW,
 };
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: I18nManager.isRTL ? 'ar' : 'en', 
+    fallbackLng: "en",
+    // lng: I18nManager.isRTL ? 'ar' : 'en', 
     // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option
