@@ -2,6 +2,13 @@ npm install
 npx pod-install
 npx jetify
 
+1. Run ios from Xcode
+2. Run android Android Studio
+4. Set the Debug server host & port for device
+5. Change bundle location  192.168.1.5:8081
+6. Run php server
+
+
 Android: Preferences → Build, Execution, Deployment → Build Tools → Gradle → *Gradle JDK.-> Java 11
 
 <!-- import com.facebook.react.BuildConfig; never include that -->
@@ -13,9 +20,9 @@ Please make sure to run "watchman watch-del-all" and "npm start --reset-cache" b
 
 Continue from Customer login Profile & MyBookings screen DONE
 Check-in Checkout screen  DONE
-
 Add all languages + header dropdown DONE
-Resolve Arabic RTL issue
+Resolve Arabic RTL issue DONE
+Error download buttons on mybookings page npm install --save rn-fetch-blob DONE
 
-Error download buttons on mybookings page
-    
+hide expired schedules
+check why logged in not showing in sidebar drawer 

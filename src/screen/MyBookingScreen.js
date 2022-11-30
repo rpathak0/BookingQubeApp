@@ -15,8 +15,11 @@ import {
   ScrollView,
   Alert,
   I18nManager,
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
+import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -28,6 +31,7 @@ import moment from 'moment';
 import { withTranslation } from 'react-i18next';
 
 import {Download} from './Download';
+import { STORAGE_URL } from '../api/ApiInfo';
 // Component
 import CustomLoader from '../component/CustomLoader';
 import HeaderComponent from '../component/HeaderComponent';
@@ -79,6 +83,10 @@ class MyBookingScreen extends Component {
       attendEventData: [],
       isLoading: true,
       showProcessingLoader: false,
+
+      checkModal: false,
+      qrCodeFile: null,
+      qrCodeOrderNumber: null,
     };
   }
 
@@ -399,68 +407,83 @@ class MyBookingScreen extends Component {
   };
 
 
-  fetchDownloadfile = async(id,type) =>{
+  DownloadInvoicefile = async(id, type) =>{
+    const { t } = this.props;
     try {
-    const axios = require('axios');
-    const token = await getData(async_keys.userId);
+      
+      const axios = require('axios');
+      const token = await getData(async_keys.userId);
 
-    // creating custom header
-    let axiosConfig = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
+      // creating custom header
+      let axiosConfig = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      };
       // starting loader
       this.setState({showProcessingLoader: true});
       // calling api
       let url = `invoice-download/${id}`;
-      if(type=='qr') {
+      if(type == 'qrcodes') {
         url = `qrcode-download/${id}`;
       }
+      
       console.log(BASE_URL + url);
       
       await axios
-        .get(BASE_URL + url,axiosConfig)
-        .then(response => {
-          this.setState({showProcessingLoader: false});
-         if(response.status && response?.data?.file) {
-          Download(response?.data?.file);
-         }
-        });
+      .get(BASE_URL + url,axiosConfig)
+      .then(response => {
+        this.setState({showProcessingLoader: false});
+        if(response.status && response?.data?.data) {
+          console.log('hello download invoice please', response?.data);
+          Download(response?.data?.data, t);
+        }
+      });
     } catch (error) {
       this.setState({showProcessingLoader: false});
       console.log(error?.response?.data);
+      if(error?.response?.data?.message) {
+        console.log(error?.response?.data);
+        showToast(error?.response?.data?.message);
+      }
     }
   }
 
   getQr = async(id) =>{
+    console.log('getQr', id);
     try {
-    const axios = require('axios');
-    const token = await getData(async_keys.userId);
+      const axios = require('axios');
+      const token = await getData(async_keys.userId);
 
-    // creating custom header
-    let axiosConfig = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
+      // creating custom header
+      let axiosConfig = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      };
       // starting loader
       this.setState({showProcessingLoader: true});
       // calling api
-      let url = `get-qrcode/${id}`;
+      let url = `get-qrcode`;
+      let data = {
+        "booking_id": id,
+      }
       
       await axios
-        .get(BASE_URL + url,axiosConfig)
-        .then(response => {
-          this.setState({showProcessingLoader: false});
-          if(response.status && response?.data?.file) {
-
-          } else {
-            console.log(response?.data,'////');
-          }
-        });
+      .post(BASE_URL + url, data,axiosConfig)
+      .then(response => {
+        console.log('get-qrcode', response);
+        this.setState({showProcessingLoader: false});
+        if(response.status && response?.data?.qrcode_file) {
+          this.setState({ checkModal: true, qrCodeFile: response.data.qrcode_file, qrCodeOrderNumber: response.data.qrcode_data.order_number });
+        } else {
+          console.log(response?.data,'////');
+          showToast();
+        }
+      });
     } catch (error) {
       this.setState({showProcessingLoader: false});
+      console.log('get-qrcode error', error);
       if(error?.response?.data?.data){
         showToast(error?.response?.data?.data);
       }
@@ -469,6 +492,9 @@ class MyBookingScreen extends Component {
 
   
   DownloadTicketfile = async({order_number,attendees}) =>{
+    console.log('dwnlaoda alciet', attendees?.[0].booking_id+'odrrrr-->'+order_number);
+    const { t } = this.props;
+
     try {
     this.setState({showProcessingLoader: true});
     const axios = require('axios');
@@ -492,20 +518,26 @@ class MyBookingScreen extends Component {
       await axios
         .post(BASE_URL + url, data,axiosConfig)
         .then(response => {
+          console.log('downloadticket', response);
           this.setState({showProcessingLoader: false});
-         if(response.status && response?.data?.data) {
-          console.log(response?.data);
-            Download(response?.data?.data);
+          if(response.status && response?.data?.data) {
+            console.log('hello download please', response?.data);
+            Download(response?.data?.data, t);
           }
         });
     } catch (error) {
       this.setState({showProcessingLoader: false});
-      if(error?.response?.data?.data) {
+      console.log('downloadticket error', error);
+      if(error?.response?.data?.message) {
         console.log(error?.response?.data);
-        showToast(error?.response?.data?.data);
+        showToast(error?.response?.data?.message);
       }
     }
   }
+
+  handleClosePopUp = () => {
+    this.setState({ checkModal: false, qrCodeFile: null, qrCodeOrderNumber: null });
+  };
 
 
   render() {
@@ -598,6 +630,14 @@ class MyBookingScreen extends Component {
                     place
                   />
                 </TouchableOpacity>
+              </View>
+
+              <View style={styles.downloadNotificationContainer}>
+                <View style={styles.downloadNotification}>
+                  <Text style={styles.orderIdText}>
+                    { (Platform.OS === 'ios') ? t('download_ios') : t('download_android')}
+                  </Text>
+                </View>
               </View>
 
               {this.state.ticketList.map(item => {
@@ -696,7 +736,7 @@ class MyBookingScreen extends Component {
                         {item.booking_cancel === 0 ? (
                           <TouchableOpacity
                             style={styles.cancellationContainer}
-                            onPress={() => this.confirmCancelBooking(item)}>
+                            onPress={() => {(!this.state.showProcessingLoader) ? this.confirmCancelBooking(item) : true;}}>
                             <Image
                               source={ic_cancellation}
                               resizeMode="cover"
@@ -729,10 +769,9 @@ class MyBookingScreen extends Component {
                       <View>
                         <Text style={styles.eventTitleText}>{t('check_in')}</Text>
                         <TouchableOpacity
-                          onPress={()=>{
-                            this.getQr(item.id)
-                          }}
+                          onPress={() => {(!this.state.showProcessingLoader) ? this.getQr(item.id) : true;}}
                           style={styles.checkInButtonContainer}>
+                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
                           <Image
                             source={ic_check_in}
                             resizeMode="cover"
@@ -743,7 +782,11 @@ class MyBookingScreen extends Component {
                       </View>
                       <View>
                         <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity onPress={()=>{ this.DownloadTicketfile(item) }} style={styles.ticketContainerBtn}>
+                        <TouchableOpacity 
+                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadTicketfile(item) : true;}}
+                          style={styles.ticketContainerBtn}
+                        >
+                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
                           <Image
                             source={ic_download}
                             resizeMode="cover"
@@ -754,7 +797,10 @@ class MyBookingScreen extends Component {
                       </View>
                       <View>
                         <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity onPress={()=>{ this.fetchDownloadfile(item.id) }} style={styles.ticketContainerBtn}>
+                        <TouchableOpacity 
+                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadInvoicefile(item.id, 'invoice') : true;}}
+                          style={styles.ticketContainerBtn}>
+                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
                           <Image
                             source={ic_download}
                             resizeMode="cover"
@@ -796,7 +842,11 @@ class MyBookingScreen extends Component {
                       </View>
                       <View>
                         <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity onPress={()=>{ this.fetchDownloadfile(item.id) }} style={styles.ticketContainerBtn2}>
+                        <TouchableOpacity 
+                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadInvoicefile(item.id, 'qrcodes') : true;}}
+                          style={styles.ticketContainerBtn2}
+                        >
+                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
                           <Image
                             source={ic_download}
                             resizeMode="cover"
@@ -812,6 +862,22 @@ class MyBookingScreen extends Component {
               })}
             </View>
           </ScrollView>
+          <Modal
+            style={styles.modalStyle}
+            isVisible={this.state.checkModal}
+            onBackdropPress={this.handleClosePopUp}>
+            
+            <View style={styles.qrCodeModalContainer}>
+              <Text style={styles.qrCodeModalText}>#{this.state.qrCodeOrderNumber}</Text>
+              <Image
+                source={{ uri: STORAGE_URL + this.state.qrCodeFile }}
+                resizeMode="contain"
+                style={styles.qrCodeModalImage}
+              />
+            </View>
+
+            {this.state.showModalProcessingLoader && <ProcessingLoader />}
+          </Modal>
           <FooterComponent nav={this.props.navigation} />
         </SafeAreaView>
       );
@@ -1019,6 +1085,11 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(2),
     marginVertical: hp(2),
   },
+  downloadNotificationContainer: {
+    marginHorizontal: wp(2),
+    marginTop: hp(2),
+    borderRadius: wp(3),
+  },
   bookedTicketContainer: {
     marginHorizontal: wp(2),
     marginVertical: hp(2),
@@ -1038,6 +1109,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(3),
     borderTopRightRadius: wp(3),
     paddingVertical: hp(1.5),
+  },
+  downloadNotification: {
+    backgroundColor: '#14caf0',
+    borderRadius: wp(2),
+    paddingVertical: hp(2),
   },
   lineContainer: {
     height: hp(0.2),
@@ -1278,4 +1354,34 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#ff0084', 
   },
+  modalStyle: {
+    flex: 1,
+    width: 'auto',
+    maxHeight: hp(60),
+    overflow: "scroll",
+    // alignItems: 'center',
+    justifyContent: 'center',
+    top: hp(10),
+    marginVertical: wp(2),
+    backgroundColor: '#fff',
+    borderRadius: wp(2),
+  },
+  qrCodeModalImage: {
+    height: hp(64),
+    width: wp(64),
+    alignSelf: 'center',
+  },
+  qrCodeModalContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    alignItems: 'center',
+  },  
+  qrCodeModalText: {
+    fontSize: wp(5),
+    fontWeight: '500',
+    alignSelf: 'center',
+    textAlign: 'center',
+    marginTop: hp(2),
+  },  
 });
