@@ -23,6 +23,6 @@ Check-in Checkout screen  DONE
 Add all languages + header dropdown DONE
 Resolve Arabic RTL issue DONE
 Error download buttons on mybookings page npm install --save rn-fetch-blob DONE
+hide expired schedules DONE
 
-hide expired schedules
 check why logged in not showing in sidebar drawer 

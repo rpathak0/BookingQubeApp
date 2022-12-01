@@ -118,14 +118,14 @@ class Tickets extends Component {
               {this.state.eventSchedulesDatesForMonth.map((date, i) => {
                 let canBookTicket = this.CanBookTicket(date.date_value.start_date);
                 return (
-                  <TouchableOpacity
-                    key={i}
-                    style={canBookTicket ? styles.listCountingContainer : { ...styles.listCountingContainer, backgroundColor: '#ddd' }}
-                    onPress={() => canBookTicket ? this.handleGetTicket(date.date_value) : false}>
-                    <View style={styles.listDateContainer} >
-                      <Text style={styles.listDateText} >{date.date_format_text}</Text>
-                    </View>
-                    {canBookTicket ? (
+                  canBookTicket ? (
+                    <TouchableOpacity
+                      key={i}
+                      style={styles.listCountingContainer}
+                      onPress={() => this.handleGetTicket(date.date_value)}>
+                      <View style={styles.listDateContainer} >
+                        <Text style={styles.listDateText} >{date.date_format_text}</Text>
+                      </View>
                       <View style={styles.listTimeContainer}>
                         <Text style={styles.listTimeText}>
                           {convertTimeZone(`${date?.date_value?.start_date} ${date?.date_value?.start_time}`).formattedTime}
@@ -133,16 +133,8 @@ class Tickets extends Component {
                           {convertTimeZone(`${date?.date_value?.end_date} ${date?.date_value?.end_time}`).formattedTime}
                         </Text>
                       </View>
-                    ) : (
-                      <View style={styles.listTimeContainer}>
-                        <Text style={styles.listTimeText}>
-                          {t('ended')}
-                        </Text>
-                      </View>
-                    )}
-
-                  </TouchableOpacity>
-
+                    </TouchableOpacity>
+                  ) : null
                 );
               })}
             </View>
