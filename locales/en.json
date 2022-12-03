@@ -176,6 +176,12 @@
       "download_android"             : "NOTE: Find downloaded tickets in Downloads/Notifications",
       "download_ios"             : "NOTE: Find downloaded tickets in Files > Browse > On My iPhone > BookingQube",
       
+      "select_gender"             : "Select Gender",
+      "male"             : "Male",
+      "female"             : "Female",
+      "select_country"             : "Select Your Country",
+      
+      
 
       "test"                   : "test"
     }

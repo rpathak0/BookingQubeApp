@@ -22,6 +22,11 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import DropDownPicker from 'react-native-dropdown-picker';
+
+import { async_keys, getData } from '../api/UserPreference';
+const axios = require('axios');
+
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import ProcessingLoader from '../component/ProcessingLoader';
@@ -53,7 +58,23 @@ class SignUpScreen extends Component {
       password: '',
       hidePassword: true,
       showProcessingLoader: false,
+      
+      OpenGender: false,
+      ValueGender: '',
+      ItemsGender: [
+        {label: 'Male', value: "male"},
+        {label: 'Female', value: "female"},
+      ],
+      
+      OpenCountry: false,
+      ValueCountry: '',
+      LodingCountry: false,
+      ItemsCountry: [],
     };
+  }
+
+  componentDidMount() {
+    setTimeout(this.getCountries, 2000);
   }
 
   handleNameChange = name => {
@@ -72,11 +93,87 @@ class SignUpScreen extends Component {
     this.setState({hidePassword: !this.state.hidePassword});
   };
 
+  setOpenGender = (OpenGender) => {
+    this.setState({
+      OpenGender
+    });
+  }
+
+  setValueGender = (callback) => {
+    this.setState(state => ({
+      ValueGender: callback(state.ValueGender)
+    }));
+  }
+
+  setItemsGender = (callback) => {
+    console.log('setItemsGender', callback);
+    this.setState(state => ({
+      ItemsGender: callback(state.ItemsGender)
+    }));
+  }
+
+  setOpenCountry = (OpenCountry) => {
+    this.setState({
+      OpenCountry
+    });
+  }
+  
+  setLodingCountry = (LodingCountry) => {
+    this.setState({
+      LodingCountry
+    });
+  }
+
+  setValueCountry = (callback) => {
+    this.setState(state => ({
+      ValueCountry: callback(state.ValueCountry)
+    }));
+  }
+
+  setItemsCountry = (countries) => {
+    console.log('setItemsCountry-----', countries);
+    this.setState(state => ({
+      ItemsCountry: countries
+    }));
+  }
+
+  getCountries = async () => {
+    // getting userId from asyncStorage
+    try {
+      this.setLodingCountry(true);
+      // calling api
+      await axios
+        .get(BASE_URL + 'get-countries')
+        .then(response => {
+          let newResponse = response;
+          console.log('newResponsenewResponse',newResponse);
+          if (newResponse) {
+            const { status, countries } = newResponse.data;
+            let ItemsCountry = [];
+            console.log('countries', newResponse);
+            console.log('status', status);
+            if (status === true) {
+              countries.map(item => {
+                ItemsCountry.push({label: item.country_name, value: item.id});
+              });
+              console.log('ItemsCountry', ItemsCountry);
+              this.setItemsCountry(ItemsCountry);
+              this.setLodingCountry(false);
+            }
+          }
+        });
+
+    } catch (error) {
+      console.log(error.message);
+      this.setLodingCountry(false);
+    }
+  };
+
   handleRegister = async () => {
     const { t } = this.props;
     Keyboard.dismiss();
 
-    const {name, email, password} = this.state;
+    const {name, email, password, ValueGender, ValueCountry} = this.state;
     console.log('handleregis', this.state);
 
     // validation
@@ -100,6 +197,20 @@ class SignUpScreen extends Component {
       });
       return;
     }
+    
+    if (ValueGender == '' || ValueGender == null) {
+      Alert.alert('', t('select_gender'), [{text: t('ok')}], {
+        cancelable: false,
+      });
+      return;
+    }
+    
+    if (ValueCountry == '' || ValueCountry == null) {
+      Alert.alert('', t('select_country'), [{text: t('ok')}], {
+        cancelable: false,
+      });
+      return;
+    }
 
     try {
       // starting processing loader
@@ -110,12 +221,16 @@ class SignUpScreen extends Component {
         name: name,
         email: email,
         password: password,
+        gender: ValueGender,
+        country_id: ValueCountry,
         accept: 'true',
       };
 
+      console.log('paramspost', params);
+
       // calling api
       const response = await makeRequest(BASE_URL + 'register', params, true);
-
+      
       // processing response
       if (response) {
         const {status, message, errors} = response;
@@ -223,6 +338,45 @@ class SignUpScreen extends Component {
               </TouchableOpacity>
             </View>
             
+            <View style={styles.inputContainerDropdown}>
+              <DropDownPicker
+                open={this.state.OpenGender}
+                value={this.state.ValueGender}
+                items={this.state.ItemsGender}
+                setOpen={this.setOpenGender}
+                setValue={this.setValueGender}
+                setItems={this.setItemsGender}
+                zIndex={99999}
+                theme="DARK"
+                listMode='MODAL'
+                modalProps={{animationType: "fade"}}
+                modalTitle={t('select_gender')}
+                placeholder={t('select_gender')}
+                modalTitleStyle={{fontWeight: "bold"}}
+              />
+            </View>
+            
+            <View style={styles.inputContainerDropdown}>
+              <DropDownPicker
+                open={this.state.OpenCountry}
+                value={this.state.ValueCountry}
+                items={this.state.ItemsCountry}
+                setOpen={this.setOpenCountry}
+                setValue={this.setValueCountry}
+                setItems={this.setItemsCountry}
+                loading={this.setLodingCountry}
+                searchable={true}
+                zIndex={99999}
+                theme="DARK"
+                listMode='MODAL'
+                modalProps={{animationType: "fade"}}
+                modalTitle={t('select_country')}
+                placeholder={t('select_country')}
+                searchPlaceholder={t('search_country')}
+                modalTitleStyle={{fontWeight: "bold"}}
+              />
+            </View>
+            
             <Text style={styles.agreeTextStyle}>
               By clicking "Register", I accept the{' '}
               <Text style={{color: '#f89b15'}}>Terms of Service</Text> and have
@@ -320,6 +474,16 @@ const styles = StyleSheet.create({
     marginVertical: wp(2),
     paddingLeft: wp(2),
     paddingRight: wp(2),
+  },
+  inputContainerDropdown: {
+    flexDirection: 'row',
+    height: hp(7.5),
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+    borderRadius: wp(2),
+    marginHorizontal: wp(2),
+    marginVertical: wp(2),
   },
   loginFormTextInput: {
     fontSize: wp(3.5),
