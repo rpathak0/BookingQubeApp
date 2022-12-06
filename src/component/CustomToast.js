@@ -4,7 +4,7 @@ export const showToast = message => {
   Toast.show({
     type: 'info',
     text1: message,
-    position: 'bottom'
+    position: 'top'
   });
 
 };

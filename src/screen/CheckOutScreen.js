@@ -129,7 +129,9 @@ class CheckOutScreen extends Component {
                         value:8,
                         image:Mastercard,
                       }],
-      checked: 0
+      checked: 0,
+      timeslots: [],
+      timeslot_id: 0,
     };
     this.eventInfo = this.props.navigation.getParam('eventInfo', null);
   }
@@ -162,6 +164,11 @@ class CheckOutScreen extends Component {
     this.setState({ phone });
   };
 
+  yearMonth = (date) => {
+    let dateArray = date.split('-');
+    return dateArray[0]+'-'+dateArray[1];
+  }
+
   initialSetup = async () => {
     // getting userId from asyncStorage
     const userId = await getData(async_keys.userInfo);
@@ -186,11 +193,27 @@ class CheckOutScreen extends Component {
           if (newResponse) {
             const { success } = newResponse.data;
             console.log(newResponse)
+            let timeslots = [];
             if (success === true) {
+              newResponse.data.data.event.slots.map(item => {
+                if(newResponse.data.data.event.repetitive <= 0) {
+                  // Non-Repetitive event
+                // take all timeslots
+                  timeslots.push(item);
+                } else {
+                  // Repetitive event
+                  // take timeslots date-wise
+                  if(this.yearMonth(this.eventInfo.startDate) == this.yearMonth(item.from_date)) {
+                    timeslots.push(item);
+                  }
+                }
+              });
+
               this.setState({
                 tickets: newResponse.data.data.tickets,
                 isLoading: false,
                 userId: userId,
+                timeslots: timeslots,
               });
             }
           }
@@ -217,6 +240,7 @@ class CheckOutScreen extends Component {
           if (findCFData !== undefined) {
 
             const fillable = {
+              field_name: findCFData?.field_name,
               label: findCFData?.label,
               event_id: findCFData?.event_id,
               input_value: cf[1],
@@ -235,27 +259,6 @@ class CheckOutScreen extends Component {
     });
 
     return custom_feilds;
-    // if (dd?.length > 0) {
-    //   var c_field = {};
-    //   var customFiled = this.state.customFiled;
-    //   for (let i = 0; i < this.state.customFiled?.length; i++) {
-    //     console.log(customFiled[i].field_name);
-    //     c_field[`${customFiled[i].field_name}`] = [];
-    //   }
-    //   console.log("asdasdasd===>>>>>>>>>>",c_field);
-    //   let keys = Object.keys(c_field); 
-    //   keys.forEach((item, ind) => {
-    //     // console.log('item', item, ind);
-    //     for (let j = 0; j < dd?.length; j++) {
-    //       if (item in dd[j]) {
-    //         console.log("HERE===>",dd[j][item]);
-    //         c_field[item].push(dd[j][item]);
-    //       }
-    //     }
-    //   });
-    //   return c_field;
-    // }
-
   };
 
   getCustomField = async () => {
@@ -299,11 +302,13 @@ class CheckOutScreen extends Component {
     Toast.show({
       type: type,
       text1: title,
-      text2: message
+      text2: message,
+      position: 'top'
     });
   }
 
   handleSelectValue = async (value, item, seat) => {
+    const {t} = this.props;
     try {
       var { ticketList } = this.state;
 
@@ -344,7 +349,7 @@ class CheckOutScreen extends Component {
               }
               ticketList = ticketList.map(t => t.ticketId == ticketId ? newTikcetList : t);
             } else {
-              this.openTost('error', 'Limit Over', 'Max limit for one person to book ticket is over');
+              this.openTost('error', t('limit_over'), t('limit_over_ie'));
               return false;
             }
           }
@@ -393,6 +398,12 @@ class CheckOutScreen extends Component {
 
   };
 
+  handleTimeslotSelectValue = async (value) => {
+    this.setState({
+      timeslot_id: value,
+    });
+  };
+
   calculatePromocodeDiscounts = (ticketPrice, ticket) => {
 
     let promocode_discount = 0.00;
@@ -428,9 +439,30 @@ class CheckOutScreen extends Component {
   }
 
   handleCheckout = async () => {
+    const { t } = this.props;
+    if(this.state.timeslots.length > 0) {
+      if(this.state.timeslot_id <= 0 ) {
+        showToast(t('select_timeslot'));
+        return false;
+      }
+    }
 
+    // ticket quantity validation
+    if(this.state.ticketList <= 0) {
+      showToast(t('select_ticket_qty'));
+      return false;
+    }
 
     let c_fields = this.manageData();
+
+    // custom field validation
+    if(this.state.customFiled.length > 0 ) {
+      if(c_fields.length <= 0) {
+        showToast(t('attendee_details'));
+        return false;
+      }
+    }
+
     const token = await getData(async_keys.userId);
     const { tickets, userId, ticketList, payment_method } = this.state;
     let ticketID = [];
@@ -468,6 +500,7 @@ class CheckOutScreen extends Component {
         promocode: promocodes,
         is_subscribe: 1,
         c_fields: c_fields,
+        slots: this.state.timeslot_id,
       };
 
       const seleactedSeats = ticketList.filter(t => t.seat_ids !== undefined);
@@ -510,13 +543,13 @@ class CheckOutScreen extends Component {
         })
         .catch(ERR => {
           // stopping loader
-          console.log(ERR.response.data);
+          console.log('booktickets ERR', ERR);
           this.setState({ showProcessingLoader: false });
           this.openTost('error', 'Booking Cancelled', ERR.response.data?.message ? ERR.response.data.message : (ERR.response.data.errors ? ERR.response.data.errors.error[0] : 'server error'));
 
         });
     } catch (error) {
-      this.openTost('error', 'Booking Cancelled', error.message);
+      this.openTost('error', t('booking_cancelled'), error.message);
     }
 
   };
@@ -540,7 +573,7 @@ class CheckOutScreen extends Component {
 
 
     if (token == 'null') {
-      showToast('Please Login to use promocode');
+      showToast(t('login_to_promocode'));
       return false;
     }
 
@@ -552,6 +585,7 @@ class CheckOutScreen extends Component {
         const params = {
           promocode: item.promocodeText,
           ticket_id: item.id,
+          customer_id: this.state.userId,
         };
 
         // creating custom header
@@ -944,6 +978,37 @@ class CheckOutScreen extends Component {
               </Text>
             </View>
 
+            {(this.state.timeslots.length > 0) ? (
+              <View>
+                <View style={styles.headerContainer}>
+                  <Text style={styles.headerText}>{t('timeslots')}</Text>
+                </View>
+                <View style={styles.ticketContainer}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: t('select_timeslot'),
+                      value: 0,
+                    }}
+                    onValueChange={value => { this.handleTimeslotSelectValue(value) }}
+                    fixAndroidTouchableBug={true}
+                    items={this.state.timeslots.map((list, i) => ({
+                      label: list.ts_start_time + ' - '+list.ts_end_time,
+                      value: list.id,
+                      key: i,
+                    }))}
+                    style={{
+                      ...pickerStyle,
+                      iconContainer: {
+                        top: 8,
+                        right: 8,
+                      },
+                      
+                    }}
+                    useNativeAndroidPickerStyle={false}
+                  />
+                </View>
+              </View>
+            ) : null}
 
             {/* Tickets */}
             <View>

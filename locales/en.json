@@ -180,6 +180,14 @@
       "male"             : "Male",
       "female"             : "Female",
       "select_country"             : "Select Your Country",
+      "timeslot"             : "Timeslot",
+      "timeslots"             : "Timeslots",
+      "select_timeslot"             : "Select Timeslot",
+      "all_fields_required"             : "All fields are required!",
+      "limit_over"             : "Limit Over",
+      "limit_over_ie"             : "Max limit for one person to book ticket is over",
+      "select_ticket_qty"             : "Select a ticket quantity",
+      "booking_cancelled"             : "Booking Cancelled",
       
       
 

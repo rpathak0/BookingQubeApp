@@ -24,5 +24,16 @@ Add all languages + header dropdown DONE
 Resolve Arabic RTL issue DONE
 Error download buttons on mybookings page npm install --save rn-fetch-blob DONE
 hide expired schedules DONE
+Sign up form add Gender + Nationality on Signup DONE
 
+Update BookingsController by timeslots update -- PENDING
+Add Timeslot dropdown in Chekout popup - DONE
+Hide ended Timeslot from dropown -- PENDING
+Set Custom field request data same as website - general_validation CheckoutScreen
+
+Barcode scanner Honeywell
+
+
+
+Clear cache when returning back to Event page after successful booking
 check why logged in not showing in sidebar drawer 

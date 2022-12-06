@@ -22,6 +22,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import { withTranslation } from 'react-i18next';
+import Toast from 'react-native-toast-message';
 
 import close_image from '../assets/icon/close.png';
 
@@ -272,6 +273,81 @@ class CustomField extends Component {
       </View>
     );
   };
+  renderCheckboxInput = item => {
+    let dt = {
+      id: 5,
+      label: 'Cost',
+      field_type: 'radio',
+      field_options: [
+        '$695 *Weekdays',
+        '$895 *Weekends',
+        '$100 per hours (additional hours)',
+      ],
+      field_opt:
+        '["$695 *Weekdays","$895 *Weekends","$100 per hours (additional hours)"]',
+      is_required: 1,
+      event_id: 3,
+      status: 1,
+      show_on_ticket: 1,
+      created_at: '2022-05-25T11:27:49.000000Z',
+      updated_at: '2022-05-25T11:27:49.000000Z',
+      field_name: 'nWG6GbAgtaK4PQeceD1B',
+      file_size: '0',
+      file_type: null,
+    };
+    return (
+      <View style={{marginBottom: 20}}>
+        <Text style={{padding: 5, paddingLeft: 0}}>
+          {item.label + (item.is_required ? ' *' : '')}
+        </Text>
+        {JSON.parse(item.field_options).map(ite => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                let newDt = this.state.custom_fields.map(it => {
+                  if (it.id === item.id) {
+                    return {
+                      ...it,
+                      value: ite,
+                    };
+                  }
+                  return it;
+                });
+                this.setState({custom_fields: newDt});
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 5,
+              }}>
+              <View
+                style={[
+                  {
+                    width: 20,
+                    height: 20,
+                    borderRadius: 20,
+                    borderWidth: 1.5,
+                    borderColor: 'black',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}>
+                <View
+                  style={[
+                    {width: 12, height: 12, borderRadius: 15},
+                    item.value === ite
+                      ? Styles.activeRadio
+                      : Styles.inactiveRadio,
+                  ]}
+                />
+              </View>
+              <Text style={{color: '#000'}}> {ite}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
   renderFileInput = item => {
     const { t } = this.props;
     return (
@@ -312,6 +388,9 @@ class CustomField extends Component {
           if (item.field_type === 'radio') {
             return this.renderRadioInput(item);
           }
+          if (item.field_type === 'checkbox') {
+            return this.renderCheckboxInput(item);
+          }
           if (item.field_type === 'textarea') {
             return this.renderTextArea(item);
           }
@@ -351,7 +430,10 @@ class CustomField extends Component {
             {this?.props?.title}
           </Text>
           {this.checkIfDataFilled() ? (
-            <View></View>
+            <Image
+              source={require('../assets/icon/info.png')}
+              style={{width: 30, height: 30}}
+            />
           ) : (
             <Image
               source={require('../assets/icon/check.png')}
@@ -375,6 +457,7 @@ class CustomField extends Component {
                 backgroundColor: 'white',
                 borderRadius:wp(2),
               }}>
+              <Toast position='bottom' />
                 <TouchableOpacity
                  onPress={()=>{this.setState({isVisible: false})}}
                  style={{alignItems:'flex-end', paddingRight:wp(2),paddingTop:wp(2) }}
@@ -386,6 +469,9 @@ class CustomField extends Component {
                 <TouchableOpacity
                   onPress={() => {
                     if (this.checkIfDataFilled()) {
+                      Toast.show({
+                        text1: t('all_fields_required'),
+                      });
                       return;
                     }
                     this.onConfirm();
