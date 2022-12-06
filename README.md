@@ -25,12 +25,11 @@ Resolve Arabic RTL issue DONE
 Error download buttons on mybookings page npm install --save rn-fetch-blob DONE
 hide expired schedules DONE
 Sign up form add Gender + Nationality on Signup DONE
-
-Update BookingsController by timeslots update -- PENDING
+Update BookingsController by timeslots update DONE
 Add Timeslot dropdown in Chekout popup - DONE
-Hide ended Timeslot from dropown -- PENDING
-Set Custom field request data same as website - general_validation CheckoutScreen
+Set Custom field request data same as website - general_validation CheckoutScreen - DONE
 
+Hide ended Timeslot from dropown -- PENDING
 Barcode scanner Honeywell
 
 

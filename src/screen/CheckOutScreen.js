@@ -168,6 +168,11 @@ class CheckOutScreen extends Component {
     let dateArray = date.split('-');
     return dateArray[0]+'-'+dateArray[1];
   }
+  
+  hourMinute = (time) => {
+    let timeArray = time.split(':');
+    return timeArray[0]+':'+timeArray[1];
+  }
 
   initialSetup = async () => {
     // getting userId from asyncStorage
@@ -196,17 +201,26 @@ class CheckOutScreen extends Component {
             let timeslots = [];
             if (success === true) {
               newResponse.data.data.event.slots.map(item => {
-                if(newResponse.data.data.event.repetitive <= 0) {
-                  // Non-Repetitive event
-                // take all timeslots
-                  timeslots.push(item);
-                } else {
-                  // Repetitive event
-                  // take timeslots date-wise
-                  if(this.yearMonth(this.eventInfo.startDate) == this.yearMonth(item.from_date)) {
+                let startdatetime = null;
+                let currentdatetime = null;
+                startdatetime = moment(params.startDate+' '+item.ts_start_time);
+                currentdatetime = moment();
+                // skip expired/ended timeslot
+                // check event start datetime <= current datetime
+                if(currentdatetime.isSameOrBefore(startdatetime) == true) {
+                  if(newResponse.data.data.event.repetitive <= 0) {
+                    // Non-Repetitive event
+                    // take all timeslots
                     timeslots.push(item);
+                  } else {
+                    // Repetitive event
+                    // take timeslots date-wise
+                    if(this.yearMonth(this.eventInfo.startDate) == this.yearMonth(item.from_date)) {
+                        timeslots.push(item);
+                    }
                   }
                 }
+
               });
 
               this.setState({
@@ -992,7 +1006,7 @@ class CheckOutScreen extends Component {
                     onValueChange={value => { this.handleTimeslotSelectValue(value) }}
                     fixAndroidTouchableBug={true}
                     items={this.state.timeslots.map((list, i) => ({
-                      label: list.ts_start_time + ' - '+list.ts_end_time,
+                      label: this.hourMinute(list.ts_start_time) + ' - '+this.hourMinute(list.ts_end_time),
                       value: list.id,
                       key: i,
                     }))}
