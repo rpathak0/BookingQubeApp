@@ -19,6 +19,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import HoneywellScanner from 'react-native-honeywell-scanner';
+
 import { RNCamera } from 'react-native-camera';
 import moment from 'moment';
 
@@ -54,6 +56,74 @@ class ScanTicketScreen extends Component {
       showQR: 1,
     };
   }
+
+  componentDidMount() {
+    console.log('component mounted');
+    this.scanHoneywell();
+
+    // testing only
+    // let barcodedata = "48-1670401550218".split('-');
+    // this.honeywellCheckIn({
+    //   id: barcodedata[0],
+    //   order_number: barcodedata[1],
+    //   url_route: "eventmie.get_booking",
+    // });
+
+  }
+
+  scanHoneywell = async e => {
+    if( HoneywellScanner.isCompatible ) {
+      HoneywellScanner.startReader().then((claimed) => {
+          console.log(claimed ? 'Barcode reader is claimed' : 'Barcode reader is busy');
+          HoneywellScanner.onBarcodeReadSuccess(event => {
+              console.log('Received data', event.data);
+              let barcodedata = event.data.split('-');
+              let data        = {
+                id: barcodedata[0],
+                order_number: barcodedata[1],
+                url_route: "eventmie.get_booking",
+              }
+              this.honeywellCheckIn(data);
+              
+          });
+      });
+
+      return(
+        () => {
+            HoneywellScanner.stopReader().then(() => {
+                console.log("Freedom!!");
+                HoneywellScanner.offBarcodeReadSuccess();
+            });
+        }
+      )
+    }
+  };
+
+
+  honeywellCheckIn = async (data) => {
+    // axios
+    const axios = require('axios');
+
+    // getting token from AsyncStorage
+    const token = await getData(async_keys.userId);
+
+    // creating custom header
+    let axiosConfig = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    };
+
+    try {
+      // calling api
+      data.url_route = 'eventmie.get_booking';
+      await axios
+        .post(BASE_URL + 'get-booking', data, axiosConfig)
+        .then(response => {});
+    } catch (error) {}
+  };
+
+  
 
   onSuccess = async e => {
     const data = JSON.parse(e.data);

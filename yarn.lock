@@ -7558,6 +7558,11 @@
     "invariant" "^2.2.4"
     "prop-types" "^15.7.2"
 
+"react-native-honeywell-scanner@^2.0.0":
+  "integrity" "sha512-GxHb33my6jdJSA1IuyjoW9qxok/uid1A//j99an/LOTD8agwCd0oF+nmvKo4eEr8MA/UkCJYCozaPpjtT5ZAVQ=="
+  "resolved" "https://registry.npmjs.org/react-native-honeywell-scanner/-/react-native-honeywell-scanner-2.0.0.tgz"
+  "version" "2.0.0"
+
 "react-native-image-slider-box@^2.0.7":
   "integrity" "sha512-opZ0a5HYkK9Ofb5ihcdFJ+CqH2GSsEdyV75TOnZqs3PVsP8p8LWaWyf/Qj8qNdt2Jdv2qpiogqwH6gDwf75ZMg=="
   "resolved" "https://registry.npmjs.org/react-native-image-slider-box/-/react-native-image-slider-box-2.0.7.tgz"
