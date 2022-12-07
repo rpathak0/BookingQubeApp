@@ -28,11 +28,11 @@ Sign up form add Gender + Nationality on Signup DONE
 Update BookingsController by timeslots update DONE
 Add Timeslot dropdown in Chekout popup - DONE
 Set Custom field request data same as website - general_validation CheckoutScreen - DONE
+Hide ended Timeslot from dropown -- DONE
 
-Hide ended Timeslot from dropown -- PENDING
+Resolve Repetitive Dail event error -- DONE
+
+check the other controllers for timeslot update like Downloads controller etc. DONE
+
 Barcode scanner Honeywell
-
-
-
-Clear cache when returning back to Event page after successful booking
-check why logged in not showing in sidebar drawer 
+Translate the pending langs

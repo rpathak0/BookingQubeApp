@@ -86,6 +86,7 @@ class MyBookingScreen extends Component {
 
       checkModal: false,
       qrCodeFile: null,
+      barCodeFile: null,
       qrCodeOrderNumber: null,
     };
   }
@@ -475,7 +476,7 @@ class MyBookingScreen extends Component {
         console.log('get-qrcode', response);
         this.setState({showProcessingLoader: false});
         if(response.status && response?.data?.qrcode_file) {
-          this.setState({ checkModal: true, qrCodeFile: response.data.qrcode_file, qrCodeOrderNumber: response.data.qrcode_data.order_number });
+          this.setState({ checkModal: true, qrCodeFile: response.data.qrcode_file, barCodeFile: response.data.barcode_file, qrCodeOrderNumber: response.data.qrcode_data.order_number });
         } else {
           console.log(response?.data,'////');
           showToast();
@@ -536,7 +537,7 @@ class MyBookingScreen extends Component {
   }
 
   handleClosePopUp = () => {
-    this.setState({ checkModal: false, qrCodeFile: null, qrCodeOrderNumber: null });
+    this.setState({ checkModal: false, qrCodeFile: null, barCodeFile: null, qrCodeOrderNumber: null });
   };
 
 
@@ -873,6 +874,11 @@ class MyBookingScreen extends Component {
                 source={{ uri: STORAGE_URL + this.state.qrCodeFile }}
                 resizeMode="contain"
                 style={styles.qrCodeModalImage}
+              />
+              <Image
+                source={{ uri: STORAGE_URL + this.state.barCodeFile }}
+                resizeMode="contain"
+                style={styles.barCodeModalImage}
               />
             </View>
 
@@ -1357,7 +1363,7 @@ const styles = StyleSheet.create({
   modalStyle: {
     flex: 1,
     width: 'auto',
-    maxHeight: hp(60),
+    maxHeight: hp(80),
     overflow: "scroll",
     // alignItems: 'center',
     justifyContent: 'center',
@@ -1367,8 +1373,16 @@ const styles = StyleSheet.create({
     borderRadius: wp(2),
   },
   qrCodeModalImage: {
+    flex: 1,
     height: hp(64),
     width: wp(64),
+    alignSelf: 'center',
+  },
+  barCodeModalImage: {
+    flex: 1,
+    marginTop: hp(10),
+    height: hp(80),
+    width: wp(80),
     alignSelf: 'center',
   },
   qrCodeModalContainer: {
@@ -1378,6 +1392,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },  
   qrCodeModalText: {
+    flex: .2,
     fontSize: wp(5),
     fontWeight: '500',
     alignSelf: 'center',
