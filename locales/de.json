@@ -171,6 +171,23 @@
         "customer_name"          : "Kundenname",
         "attendee_name"          : "Name des Teilnehmers",
         "select_language"        : "Sprache auswählen",
+
+        "select_item"           : "Wähle einen Artikel aus",
+        "download_android"      : "HINWEIS – Finden Sie heruntergeladene Tickets unter Downloads/Benachrichtigungen",
+        "download_ios"          : "HINWEIS – Finden Sie heruntergeladene Tickets unter Dateien > Durchsuchen > Auf meinem iPhone > BookingQube",
+        "select_gender"         : "Wähle Geschlecht",
+        "male"                  : "Männlich",
+        "female"                : "Weiblich",
+        "select_country"        : "Wähle dein Land",
+        "timeslot"              : "Zeitfenster",
+        "timeslots"             : "Zeitfenster",
+        "select_timeslot"       : "Zeitfenster auswählen",
+        "all_fields_required"   : "Alle Felder sind erforderlich!",
+        "limit_over"            : "Grenze über",
+        "limit_over_ie"         : "Maximale Begrenzung für eine Person zum Buchen von Tickets ist abgelaufen",
+        "select_ticket_qty"     : "Wählen Sie eine Ticketmenge aus",
+        "booking_cancelled"     : "Buchung storniert",
+
         "test"                   : "Prüfung"
     }
 }

@@ -171,6 +171,23 @@
         "customer_name"          : "ग्राहक का नाम",
         "attendee_name"          : "प्रतिभागी का नाम",
         "select_language"        : "भाषा चुने",
+
+        "select_item"           : "कोई वस्तु चुनें",
+        "download_android"      : "नोट- डाउनलोड/अधिसूचनाओं में डाउनलोड किए गए टिकट ढूंढें",
+        "download_ios"          : "ध्यान दें- फाइलों में डाउनलोड किए गए टिकटों का पता लगाएं > ब्राउज़ करें > मेरे आईफोन पर > BookingQube",
+        "select_gender"         : "लिंग चुनें",
+        "male"                  : "पुरुष",
+        "female"                : "मादा",
+        "select_country"        : "अपने देश का चयन करें",
+        "timeslot"              : "टाइम स्लॉट",
+        "timeslots"             : "समय स्थान",
+        "select_timeslot"       : "समयावधि चुनें",
+        "all_fields_required"   : "सभी फ़ील्ड आवश्यक हैं!",
+        "limit_over"            : "सीमा समाप्त",
+        "limit_over_ie"         : "एक व्यक्ति के लिए टिकट बुक करने की अधिकतम सीमा खत्म हो गई",
+        "select_ticket_qty"     : "एक टिकट मात्रा का चयन करें",
+        "booking_cancelled"     : "बुकिंग रद्द",
+
         "test"                   : "परीक्षण"
     }
 }

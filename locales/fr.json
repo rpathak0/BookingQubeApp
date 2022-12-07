@@ -171,6 +171,23 @@
         "customer_name"          : "Nom du client",
         "attendee_name"          : "Nom du participant",
         "select_language"        : "Choisir la langue",
+        
+        "select_item"           : "Sélectionnez un élément",
+        "download_android"      : "REMARQUE - Trouvez les tickets téléchargés dans Téléchargements/Notifications",
+        "download_ios"          : "REMARQUE - Trouvez les billets téléchargés dans Fichiers > Parcourir > Sur mon iPhone > BookingQube",
+        "select_gender"         : "Sélectionnez le sexe",
+        "male"                  : "Homme",
+        "female"                : "Femelle",
+        "select_country"        : "Sélectionnez votre pays",
+        "timeslot"              : "Créneau horaire",
+        "timeslots"             : "Tranches de temps",
+        "select_timeslot"       : "Sélectionner un créneau horaire",
+        "all_fields_required"   : "Tous les champs sont requis!",
+        "limit_over"            : "Limite dépassée",
+        "limit_over_ie"         : "La limite maximale pour qu'une personne puisse réserver un billet est dépassée",
+        "select_ticket_qty"     : "Sélectionnez une quantité de billets",
+        "booking_cancelled"     : "Réservation annulée",
+
         "test"                   : "test"
     }
 }

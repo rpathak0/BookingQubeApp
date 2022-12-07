@@ -171,7 +171,23 @@
     "customer_name"             : "اسم الزبون",
     "attendee_name"             : "اسم الحاضر",
     "select_language"             : "اختار اللغة",
-    "select_item"             : "حدد عنصر",
+    
+    "select_item"           : "حدد عنصر",
+    "download_android"      : "ملاحظة- ابحث عن التذاكر التي تم تنزيلها في التنزيلات / الإخطارات" ,
+    "download_ios"          : "ملاحظة- ابحث عن التذاكر التي تم تنزيلها في الملفات > استعراض > على iPhone الخاص بي> BookingQube" ,
+    "select_gender"         : "حدد نوع الجنس",
+    "male"                  : "ذكر",
+    "female"                : "أنثى",
+    "select_country"        : "اختر بلدك",
+    "timeslot"              : "فسحة زمنية",
+    "timeslots"             : "فتحات الوقت",
+    "select_timeslot"       : "حدد فترة زمنية" ,
+    "all_fields_required"   : "جميع الحقول مطلوبة!" ,
+    "limit_over"            : "تجاوز الحد",
+    "limit_over_ie"         : "تجاوز الحد الأقصى المسموح به لحجز تذكرة لشخص واحد" ,
+    "select_ticket_qty"     : "حدد كمية التذكرة" ,
+    "booking_cancelled"     : "تم إلغاء الحجز",
+
     "test"                   : "اختبار"
   }
 }

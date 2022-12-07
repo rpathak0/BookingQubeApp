@@ -171,6 +171,23 @@
         "customer_name"          : "Klantnaam",
         "attendee_name"          : "Naam deelnemer",
         "select_language"        : "Selecteer taal",
+
+        "select_item"           : "Selecteer een item",
+        "download_android"      : "OPMERKING - Vind gedownloade tickets in Downloads/Meldingen",
+        "download_ios"          : "OPMERKING - Vind gedownloade tickets in Bestanden > Bladeren > Op mijn iPhone > BookingQube",
+        "select_gender"         : "Selecteer geslacht",
+        "male"                  : "Mannelijk",
+        "female"                : "Vrouw",
+        "select_country"        : "Kies je land",
+        "timeslot"              : "Tijdslot",
+        "timeslots"             : "Tijdslots",
+        "select_timeslot"       : "Selecteer tijdslot",
+        "all_fields_required"   : "Alle velden zijn verplicht!",
+        "limit_over"            : "Beperk over",
+        "limit_over_ie"         : "Max limiet voor één persoon om ticket te boeken is voorbij",
+        "select_ticket_qty"     : "Selecteer een aantal tickets",
+        "booking_cancelled"     : "Boeking geannuleerd",
+
         "test"                   : "testen"
     }
 }

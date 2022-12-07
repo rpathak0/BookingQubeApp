@@ -171,6 +171,23 @@
         "customer_name"          : "Nome del cliente",
         "attendee_name"          : "Nome partecipante",
         "select_language"        : "Seleziona la lingua",
+
+        "select_item"           : "Seleziona un oggetto",
+        "download_android"      : "NOTA: trova i biglietti scaricati in Download/Notifiche",
+        "download_ios"          : "NOTA: trova i biglietti scaricati in File > Sfoglia > Sul mio iPhone > BookingQube",
+        "select_gender"         : "Selezionare genere",
+        "male"                  : "Maschio",
+        "female"                : "Femmina",
+        "select_country"        : "Seleziona il tuo paese",
+        "timeslot"              : "Fascia oraria",
+        "timeslots"             : "Fasce orarie",
+        "select_timeslot"       : "Seleziona fascia oraria",
+        "all_fields_required"   : "Tutti i campi sono obbligatori!",
+        "limit_over"            : "Limite oltre",
+        "limit_over_ie"         : "Il limite massimo per la prenotazione di un biglietto da parte di una persona è scaduto",
+        "select_ticket_qty"     : "Seleziona una quantità di biglietto",
+        "booking_cancelled"     : "Prenotazione annullata",
+
         "test"                   : "test"
     }
 }

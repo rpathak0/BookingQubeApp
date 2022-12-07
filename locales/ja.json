@@ -171,6 +171,23 @@
         "customer_name"          : "顧客名",
         "attendee_name"          : "出席者名",
         "select_language"        : "言語を選択する",
+
+        "select_item"           : "アイテムを一つ選べ",
+        "download_android"      : "注 - ダウンロード/通知でダウンロードしたチケットを検索",
+        "download_ios"          : "注 - ダウンロードしたチケットは,[ファイル] > [ブラウズ] > [iPhone 内] > [BookingQube] で検索してください",
+        "select_gender"         : "性別を選択して下さい",
+        "male"                  : "男",
+        "female"                : "女性",
+        "select_country"        : "あなたの国を選択",
+        "timeslot"              : "タイムスロット",
+        "timeslots"             : "タイムスロット",
+        "select_timeslot"       : "タイムスロットを選択",
+        "all_fields_required"   : "全て必須項目です！",
+        "limit_over"            : "リミットオーバー",
+        "limit_over_ie"         : "1 人がチケットを予約できる上限を超えています",
+        "select_ticket_qty"     : "チケット枚数を選択",
+        "booking_cancelled"     : "予約がキャンセルされました",
+
         "test"                   : "テスト"
     }
 }

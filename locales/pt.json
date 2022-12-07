@@ -171,6 +171,23 @@
         "customer_name"          : "Nome do cliente",
         "attendee_name"          : "Nome do participante",
         "select_language"        : "Selecione o idioma",
+
+        "select_item"           : "Selecione um item",
+        "download_android"      : "NOTA- Encontre tickets baixados em Downloads/Notificações",
+        "download_ios"          : "NOTA- Encontre bilhetes baixados em Arquivos > Navegar > No meu iPhone > BookingQube",
+        "select_gender"         : "Selecione o gênero",
+        "male"                  : "Macho",
+        "female"                : "Fêmea",
+        "select_country"        : "Escolha o seu país",
+        "timeslot"              : "Horário",
+        "timeslots"             : "Intervalos de tempo",
+        "select_timeslot"       : "Selecionar intervalo de tempo",
+        "all_fields_required"   : "Todos os campos são necessários!",
+        "limit_over"            : "Limite acima",
+        "limit_over_ie"         : "O limite máximo para uma pessoa reservar passagem acabou",
+        "select_ticket_qty"     : "Selecione uma quantidade de bilhetes",
+        "booking_cancelled"     : "Reserva cancelada",
+
         "test"                   : "teste"
     }
 }

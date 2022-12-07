@@ -173,9 +173,9 @@
       "select_language"             : "Select Language",
 
       "select_item"             : "Select an item",
+      
       "download_android"             : "NOTE: Find downloaded tickets in Downloads/Notifications",
       "download_ios"             : "NOTE: Find downloaded tickets in Files > Browse > On My iPhone > BookingQube",
-      
       "select_gender"             : "Select Gender",
       "male"             : "Male",
       "female"             : "Female",

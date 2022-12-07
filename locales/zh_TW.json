@@ -171,6 +171,23 @@
         "customer_name"          : "顧客姓名",
         "attendee_name"          : "與會者姓名",
         "select_language"        : "選擇語言",
+
+        "select_item"           : "選擇一個項目",
+        "download_android"      : "注意 - 在下載/通知中查找已下載的門票",
+        "download_ios"          : "注意 - 在文件 > 瀏覽 > 在我的 iPhone > BookingQube 中查找下載的門票",
+        "select_gender"         : "選擇性別",
+        "male"                  : "男性",
+        "female"                : "女性",
+        "select_country"        : "選擇你的國家",
+        "timeslot"              : "時隙",
+        "timeslots"             : "時隙",
+        "select_timeslot"       : "選擇時間段",
+        "all_fields_required"   : "各個領域都需要！",
+        "limit_over"            : "超過限制",
+        "limit_over_ie"         : "一個人訂票的最大限制已經結束",
+        "select_ticket_qty"     : "選擇門票數量",
+        "booking_cancelled"     : "預訂已取消",
+
         "test"                   : "測試"
     }
 }

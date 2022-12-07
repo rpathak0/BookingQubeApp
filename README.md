@@ -34,5 +34,5 @@ Resolve Repetitive Dail event error -- DONE
 
 check the other controllers for timeslot update like Downloads controller etc. DONE
 
-Barcode scanner Honeywell
-Translate the pending langs
+Barcode scanner Honeywell DONE
+Translate the pending langs DONE
