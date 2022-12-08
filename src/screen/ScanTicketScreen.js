@@ -12,6 +12,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {
@@ -72,7 +73,9 @@ class ScanTicketScreen extends Component {
   }
 
   scanHoneywell = async e => {
+    console.log('call honewell function')
     if( HoneywellScanner.isCompatible ) {
+      console.log('honewell compatible')
       HoneywellScanner.startReader().then((claimed) => {
           console.log(claimed ? 'Barcode reader is claimed' : 'Barcode reader is busy');
           HoneywellScanner.onBarcodeReadSuccess(event => {
@@ -688,7 +691,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'column',
   },
   scanTicketInner:{
-    marginTop: hp(2),
+    marginTop: Platform.OS === 'ios' ? hp(2) : hp(6),
     marginHorizontal: wp(4),
   },
   scanTicketButtonWrapper:{

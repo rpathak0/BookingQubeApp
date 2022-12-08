@@ -446,13 +446,14 @@ const LoggedOutNavigator = createDrawerNavigator(
 /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
 
 export const createRootNavigator = (checkScanning, guestCheckoutSuccess,paymentFailed) => {
+  console.log('createRootNavigator checkScanning', checkScanning);
   let initialRouteName = 'LoggedOut';
   if(guestCheckoutSuccess =='yes'){
     initialRouteName = 'AfterGuestLoginNavigator';
   }else{
-    if (checkScanning === 3) {
+    if (checkScanning == 3) {
       initialRouteName = 'LoggedOutNavigator1';
-    } else if (checkScanning === 2) {
+    } else if (checkScanning == 2) {
       initialRouteName = 'LoggedOutNavigator2';
     } else {
       initialRouteName = 'LoggedOut';

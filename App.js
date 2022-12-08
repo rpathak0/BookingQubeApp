@@ -66,6 +66,7 @@ class App extends Component {
   render() {
     const { t, i18n } = this.props;
     const {isLoading, checkScanning,guestCheckoutSuccess} = this.state;
+    console.log('this.state', this.state);
     if (isLoading) {
       return <SplashScreen />;
     }
