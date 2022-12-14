@@ -12,6 +12,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Platform
 } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import {

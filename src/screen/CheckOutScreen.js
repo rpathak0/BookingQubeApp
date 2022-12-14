@@ -531,8 +531,34 @@ class CheckOutScreen extends Component {
       let axiosConfig = {
         headers: {
           Authorization: 'Bearer ' + token,
+          // 'Content-Type': 'multipart/form-data',
+          // we need to upload file and to upload file we need to use multipart
+          // so need to find a way to make the below formdata work
+          // formdata is not working for now fix it
+          // continue from here
         },
       };
+
+      // var dataPost = new FormData();
+      // dataPost.append('event_id', params.event_id);
+      // dataPost.append('booking_date', params.booking_date);
+      // dataPost.append('booking_end_date', params.booking_end_date);
+      // dataPost.append('start_time', params.start_time);
+      // dataPost.append('end_time', params.end_time);
+      // dataPost.append('merge_schedule', params.merge_schedule);
+      // dataPost.append('customer_id', params.customer_id);
+      // dataPost.append('phone_t', params.phone_t);
+      // dataPost.append('ticket_id', params.ticket_id);
+      // dataPost.append('ticket_title', params.ticket_title);
+      // dataPost.append('quantity', params.quantity);
+      // dataPost.append('is_donation', params.is_donation);
+      // dataPost.append('attendee', params.attendee);
+      // dataPost.append('payment_method', params.payment_method);
+      // dataPost.append('free_order', params.free_order);
+      // dataPost.append('promocode', params.promocode);
+      // dataPost.append('is_subscribe', params.is_subscribe);
+      // dataPost.append('c_fields', params.c_fields);
+      // dataPost.append('slots', params.slots);
       
       axios
         .post(BASE_URL + 'book-tickets',

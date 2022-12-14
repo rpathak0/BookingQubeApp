@@ -7522,13 +7522,6 @@
     "prop-types" "^15.5.8"
     "sprintf-js" "^1.1.1"
 
-"react-native-document-picker@^8.1.0":
-  "integrity" "sha512-mH0oghd7ndgU9/1meVJdqts1sAkOfUQW1qbrqTTsvR5f2K9r0BAj/X02dve5IBMOMZvlGd7qWrNVuIFg5AUXWg=="
-  "resolved" "https://registry.npmjs.org/react-native-document-picker/-/react-native-document-picker-8.1.1.tgz"
-  "version" "8.1.1"
-  dependencies:
-    "invariant" "^2.2.4"
-
 "react-native-dropdown-picker@^5.4.3":
   "integrity" "sha512-cwZzFcpyx/Stw3lZH2bvXxcsgwkR8c3rRZtOnlvyuN5pAplzA/9AiAxYlnJuspP9VvyU1XMePKOpgcHce6iyhA=="
   "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.3.tgz"
@@ -7562,6 +7555,11 @@
   "integrity" "sha512-GxHb33my6jdJSA1IuyjoW9qxok/uid1A//j99an/LOTD8agwCd0oF+nmvKo4eEr8MA/UkCJYCozaPpjtT5ZAVQ=="
   "resolved" "https://registry.npmjs.org/react-native-honeywell-scanner/-/react-native-honeywell-scanner-2.0.0.tgz"
   "version" "2.0.0"
+
+"react-native-image-crop-picker@^0.38.1":
+  "integrity" "sha512-cF5UQnWplzHCeiCO+aiGS/0VomWaLmFf3nSsgTMPfY+8+99h8N/eHQvVdSF7RsGw50B8394wGeGyqHjjp8YRWw=="
+  "resolved" "https://registry.npmjs.org/react-native-image-crop-picker/-/react-native-image-crop-picker-0.38.1.tgz"
+  "version" "0.38.1"
 
 "react-native-image-slider-box@^2.0.7":
   "integrity" "sha512-opZ0a5HYkK9Ofb5ihcdFJ+CqH2GSsEdyV75TOnZqs3PVsP8p8LWaWyf/Qj8qNdt2Jdv2qpiogqwH6gDwf75ZMg=="
@@ -7793,7 +7791,7 @@
     "escape-string-regexp" "2.0.0"
     "invariant" "2.2.4"
 
-"react-native@*", "react-native@^*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.55.x", "react-native@>=0.35", "react-native@>=0.42.0", "react-native@>=0.46", "react-native@>=0.50.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.61", "react-native@>=0.63.3", "react-native@>=0.63.4", "react-native@>=0.65.0", "react-native@0.65.1":
+"react-native@*", "react-native@^*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>= 0.55.x", "react-native@>=0.35", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.46", "react-native@>=0.50.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@>=0.59", "react-native@>=0.59.0", "react-native@>=0.60.0", "react-native@>=0.61", "react-native@>=0.63.3", "react-native@>=0.63.4", "react-native@>=0.65.0", "react-native@0.65.1":
   "integrity" "sha512-0UOVSnlssweQZjuaUtzViCifE/4tXm8oRbxwakopc8GavPu9vLulde145GOw6QVYiOy4iL50f+2XXRdX9NmMeQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.65.1.tgz"
   "version" "0.65.1"

@@ -45,6 +45,8 @@
 	<string>This lets you play music.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This lets you scan Ticket QrCode from the app</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This lets you upload/take video.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

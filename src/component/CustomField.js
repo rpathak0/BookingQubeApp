@@ -12,10 +12,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  I18nManager
+  I18nManager, 
+  Platform
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import DocumentPicker from 'react-native-document-picker';
+import ImageCropPicker from 'react-native-image-crop-picker';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -56,6 +57,88 @@ class CustomField extends Component {
     this.props?.onChange?.(obj);
     this.setState({isVisible: false});
   };
+
+  handlePermissions = async (item) => {
+    const { t } = this.props;
+    try {
+      if (Platform.OS === 'android') {
+        const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log(
+              'This feature is not available (on this device / in this context)',
+            );
+            break;
+          case RESULTS.DENIED:
+            console.log(
+              'The permission has not been requested / is denied but requestable',
+            );
+            await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+            break;
+          case RESULTS.GRANTED:
+            // console.log("The permission is granted");
+            this._selectPhoto(item);
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            Alert.alert(
+              t('permission_blocked'),
+              t('permission_blocked_ie'),
+              [
+                {
+                  text: t('cancel'),
+                  style: 'cancel',
+                },
+                {
+                  text: t('ok'),
+                  onPress: this.handleOpenSettings,
+                },
+              ],
+              { cancelable: false },
+            );
+        }
+      } else if (Platform.OS === 'ios') {
+        this._selectPhoto(item);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  _selectPhoto = async (item) => {
+      ImageCropPicker.openPicker({
+          width: 512,
+          height: 512,
+          cropping: true,
+          freeStyleCropEnabled: true,
+          compressImageQuality: 0.8
+      }).then(image => {
+          console.log('_selectPhoto', image);
+          this._setImageForUpload(image, item);
+      });    
+  }
+
+  _setImageForUpload = async (image, item) => {
+      let localUri = image.path;
+      let filename = localUri.split('/').pop();
+
+      // Infer the type of the image
+      let type = image.mime;
+      
+      let av = { uri: localUri, name: filename, type };
+      console.log('setImageForUpload', av);
+      let newDt = this.state.custom_fields.map(ite => {
+        if (ite.id === item.id) {
+          return {
+            ...ite,
+            value: av,
+          };
+        }
+        return ite;
+      });
+      this.setState({custom_fields: newDt});
+  }
 
   pickFile = async item => {
     try {
@@ -357,7 +440,7 @@ class CustomField extends Component {
         </Text>
         {!item.value ? (
           <TouchableOpacity
-            onPress={() => this.pickFile(item)}
+            onPress={() => this.handlePermissions(item)}
             style={{
               backgroundColor: 'rgb(220,220,220)',
               alignItems: 'center',

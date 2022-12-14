@@ -26,7 +26,7 @@ import {
   PERMISSIONS,
   RESULTS,
 } from 'react-native-permissions';
-import DocumentPicker from 'react-native-document-picker';
+import ImageCropPicker from 'react-native-image-crop-picker';
 
 // Component
 import HeaderComponent from '../component/HeaderComponent';
@@ -184,7 +184,7 @@ class ProfileScreen extends Component {
             break;
           case RESULTS.GRANTED:
             // console.log("The permission is granted");
-            this.handleFilePick();
+            this._selectPhoto();
             break;
           case RESULTS.BLOCKED:
             console.log('The permission is denied and not requestable anymore');
@@ -205,24 +205,10 @@ class ProfileScreen extends Component {
             );
         }
       } else if (Platform.OS === 'ios') {
-        this.handleFilePick();
+        this._selectPhoto();
       }
     } catch (error) {
       console.log(error.message);
-    }
-  };
-
-  handleFilePick = async () => {
-    try {
-      // Pick a single file
-      const response = await DocumentPicker.pickSingle({
-        type: [DocumentPicker.types.images],
-      });
-      this.setState({ selectedFile: response, isLocalFile: true });
-    } catch (error) {
-      if (!DocumentPicker.isCancel(error)) {
-        console.log(error);
-      }
     }
   };
 
@@ -393,6 +379,31 @@ class ProfileScreen extends Component {
     }
   };
 
+  _selectPhoto = async () => {
+      ImageCropPicker.openPicker({
+          width: 512,
+          height: 512,
+          cropping: true,
+          freeStyleCropEnabled: true,
+          compressImageQuality: 0.8
+      }).then(image => {
+          console.log('_selectPhoto', image);
+          this._setImageForUpload(image);
+      });    
+  }
+
+  _setImageForUpload = async (image) => {
+      let localUri = image.path;
+      let filename = localUri.split('/').pop();
+
+      // Infer the type of the image
+      let type = image.mime;
+      
+      let av = { uri: localUri, name: filename, type };
+      console.log('setImageForUpload', av);
+      this.setState({ selectedFile: av, isLocalFile: true });
+  }
+
   render() {
     const { isLoading } = this.state;
     const { t } = this.props;
@@ -439,7 +450,7 @@ class ProfileScreen extends Component {
 
             <Text style={styles.textInputText}>{t('avatar')}*</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.loginFormTextInput} onPress={this.handleFilePick}>{t('choose_avatar')}</Text>
+              <Text style={styles.loginFormTextInput} onPress={this.handlePermissions}>{t('choose_avatar')}</Text>
             </View>
 
             <Text style={styles.textInputText}>{t('name')}*</Text>

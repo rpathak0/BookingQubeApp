@@ -140,6 +140,7 @@ android {
         versionCode 5
         versionName "1.4.4"
        missingDimensionStrategy 'react-native-camera', 'mlkit'
+       vectorDrawables.useSupportLibrary = true
     }
     splits {
         abi {
