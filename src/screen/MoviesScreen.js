@@ -13,7 +13,7 @@ import FooterComponent from '../component/FooterComponent';
 
 import { withTranslation } from 'react-i18next';
 
-class CategoryScreen extends Component {
+class MoviesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -25,7 +25,7 @@ class CategoryScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title={t('category')}
+          title={t('movies')}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -40,7 +40,7 @@ class CategoryScreen extends Component {
   }
 }
 
-export default withTranslation()(CategoryScreen);
+export default withTranslation()(MoviesScreen);
 
 const styles = StyleSheet.create({
   container: {

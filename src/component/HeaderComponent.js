@@ -12,6 +12,7 @@ import ic_back from '../assets/icon/ic_back.png';
 import ic_man from '../assets/icon/ic_man.png';
 import login_icon from '../assets/icon/login.png';
 import brand_logo from '../assets/icon/brand_logo.png';
+import logo from '../assets/image/logo.png';
 
 // User Preference
 import { async_keys, getData, storeData } from '../api/UserPreference';

@@ -189,6 +189,10 @@
       "select_ticket_qty"             : "Select a ticket quantity",
       "booking_cancelled"             : "Booking Cancelled",
       
+      "activities"             : "Activities",
+      "more"             : "More",
+      "movies"             : "Movies",
+      
       
 
       "test"                   : "test"

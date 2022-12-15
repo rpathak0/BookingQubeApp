@@ -18,6 +18,8 @@ import { withTranslation } from 'react-i18next';
 
 // Icon
 import ic_home from '../assets/icon/ic_home.png';
+import ic_movies from '../assets/icon/ic_movies.png';
+import ic_menu from '../assets/icon/ic_menu.png';
 import ic_footer_category from '../assets/icon/ic_footer_category.png';
 import ic_footer_event from '../assets/icon/ic_footer_event.png';
 
@@ -65,6 +67,14 @@ class FooterComponent extends PureComponent {
     this.props.nav.navigate('EventList');
   };
   
+  handleMore = async () => {
+    this.props.nav.openDrawer();
+  };
+  
+  handleMovies = async () => {
+    this.props.nav.navigate('Movies');
+  };
+  
   setUserInfo = async () => {
     const organizer = await getData(async_keys.userInfo);
     this.setState({userRoleId: organizer});
@@ -109,6 +119,23 @@ class FooterComponent extends PureComponent {
             </Text>
           </View>
         </TouchableHighlight>
+        
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={this.handleMovies}
+          style={tab === 'Home' ? selectedTabStyle : styles.footerMenu}>
+          <View style={styles.singleMenu}>
+            <Image source={ic_movies} style={styles.footerNavigatorIcon} />
+            <Text
+              style={[
+                this.state.checkDarkMode === 1
+                  ? styles.footerMenuTextBlack
+                  : styles.footerMenuText,
+              ]}>
+              {t('movies')}
+            </Text>
+          </View>
+        </TouchableHighlight>
 
         {(this.state.userRoleId == 2) ? (
         <TouchableHighlight
@@ -147,7 +174,27 @@ class FooterComponent extends PureComponent {
                   ? styles.footerMenuTextBlack
                   : styles.footerMenuText,
               ]}>
-              {t('events')}
+              {t('activities')}
+            </Text>
+          </View>
+        </TouchableHighlight>
+        
+        <TouchableHighlight
+          underlayColor="transparent"
+          onPress={this.handleMore}
+          style={tab === 'Profile' ? selectedTabStyle : styles.footerMenu}>
+          <View style={styles.singleMenu}>
+            <Image
+              source={ic_menu}
+              style={styles.footerNavigatorIcon}
+            />
+            <Text
+              style={[
+                this.state.checkDarkMode === 1
+                  ? styles.footerMenuTextBlack
+                  : styles.footerMenuText,
+              ]}>
+              {t('more')}
             </Text>
           </View>
         </TouchableHighlight>

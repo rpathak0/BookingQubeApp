@@ -27,7 +27,7 @@ import EventListScreen from '../screen/EventListScreen';
 import ViewEventScreen from '../screen/ViewEventScreen';
 
 // Category Screen
-import CategoryScreen from '../screen/CategoryScreen';
+import MoviesScreen from '../screen/MoviesScreen';
 
 // Scan Ticket Screen
 import ScanTicketScreen from '../screen/ScanTicketScreen';
@@ -177,7 +177,7 @@ const HomeNavigator = createStackNavigator(
     ViewEvent: ViewEventScreen,
     ScanTicket: ScanTicketScreen,
     ScanOut: ScanOutScreen,
-    Category: CategoryScreen,
+    Movies: MoviesScreen,
     Login: LoginScreen,
     SignUp: SignUpScreen,
     webView: WebViewScreen,
