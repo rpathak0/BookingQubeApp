@@ -7,12 +7,12 @@ import {
   Image,
   StyleSheet,
   AppState,
+  SafeAreaView
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import SafeAreaView from 'react-native-safe-area-view';
 
 import { withTranslation } from 'react-i18next';
 

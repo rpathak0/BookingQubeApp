@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import React from 'react';
 import { Image, StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
-import SafeAreaView from 'react-native-safe-area-view';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

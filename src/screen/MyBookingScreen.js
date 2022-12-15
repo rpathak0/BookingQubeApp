@@ -16,9 +16,10 @@ import {
   Alert,
   I18nManager,
   ActivityIndicator,
-  Platform
+  Platform,
+  SafeAreaView
 } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
+
 import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,

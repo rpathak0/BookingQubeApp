@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {StyleSheet, I18nManager, Platform} from 'react-native';
+import {StyleSheet, I18nManager, Platform, StatusBar, SafeAreaView} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -18,8 +18,6 @@ import {nsSetTopLevelNavigator} from './src/routes/NavigationService';
 // User Preference
 import {async_keys, getData} from './src/api/UserPreference';
 import LoginContextProvider from './src/context/LoginContext';
-
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 25 : 0;
 
 class App extends Component {
   constructor(props) {
@@ -76,8 +74,11 @@ class App extends Component {
     return (
       <LoginContextProvider>
         <SafeAreaProvider style={styles.container}>
-          <AppContainer ref={this.setNavigatorRef} screenProps={{ t, i18n }} />
-          <Toast />
+          <SafeAreaView style={styles.container}>
+            <StatusBar animated={true} />
+            <AppContainer ref={this.setNavigatorRef} screenProps={{ t, i18n }} />
+            <Toast />
+          </SafeAreaView>
         </SafeAreaProvider>
       </LoginContextProvider>
     );
@@ -88,7 +89,6 @@ export default withTranslation()(App);
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      marginTop: STATUSBAR_HEIGHT,
+    flex: 1,
   }
 });

@@ -13,8 +13,9 @@ import {
   Alert,
   Keyboard,
   I18nManager,
+  SafeAreaView
 } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
