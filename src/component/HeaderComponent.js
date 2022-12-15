@@ -12,15 +12,12 @@ import ic_back from '../assets/icon/ic_back.png';
 import ic_man from '../assets/icon/ic_man.png';
 import login_icon from '../assets/icon/login.png';
 import brand_logo from '../assets/icon/brand_logo.png';
-import logo from '../assets/image/logo.png';
 
 // User Preference
 import { async_keys, getData, storeData } from '../api/UserPreference';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useTranslation } from 'react-i18next';
-import english_icon from '../assets/image/english.png';
-import qatar_icon from '../assets/image/qatar.png';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -45,19 +42,18 @@ const HeaderComponent = props => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(i18n.language);
   const [items, setItems] = useState([
-    {label: 'en', value: "en"},
-    {label: 'ar', value: "ar"},
-    {label: 'de', value: "de"},
-    {label: 'fr', value: "fr"},
-    {label: 'es', value: "es"},
-    {label: 'hi', value: "hi"},
-    {label: 'it', value: "it"},
-    {label: 'ja', value: "ja"},
-    {label: 'nl', value: "nl"},
-    {label: 'pt', value: "pt"},
-    {label: 'ru', value: "ru"},
-    {label: 'zh_CN', value: "zh_CN"},
-    {label: 'zh_TW', value: "zh_TW"},
+    {label: 'En', value: "en", icon: () => <Image source={require('../assets/image/en.png')} style={styles.iconStyle} />},
+    {label: 'Ar', value: "ar", icon: () => <Image source={require('../assets/image/ar.png')} style={styles.iconStyle} />},
+    {label: 'De', value: "de", icon: () => <Image source={require('../assets/image/de.png')} style={styles.iconStyle} />},
+    {label: 'Fr', value: "fr", icon: () => <Image source={require('../assets/image/fr.png')} style={styles.iconStyle} />},
+    {label: 'Es', value: "es", icon: () => <Image source={require('../assets/image/es.png')} style={styles.iconStyle} />},
+    {label: 'In', value: "hi", icon: () => <Image source={require('../assets/image/hi.png')} style={styles.iconStyle} />},
+    {label: 'It', value: "it", icon: () => <Image source={require('../assets/image/it.png')} style={styles.iconStyle} />},
+    {label: 'Ja', value: "ja", icon: () => <Image source={require('../assets/image/ja.png')} style={styles.iconStyle} />},
+    {label: 'Nl', value: "nl", icon: () => <Image source={require('../assets/image/nl.png')} style={styles.iconStyle} />},
+    {label: 'Pt', value: "pt", icon: () => <Image source={require('../assets/image/pt.png')} style={styles.iconStyle} />},
+    {label: 'Ru', value: "ru", icon: () => <Image source={require('../assets/image/ru.png')} style={styles.iconStyle} />},
+    {label: 'Cn', value: "zh_CN", icon: () => <Image source={require('../assets/image/cn.png')} style={styles.iconStyle} />},
   ]);
 
   useEffect(() => {
@@ -157,11 +153,15 @@ const HeaderComponent = props => {
           onChangeValue={(value) => {changeLanguage(value)}}
           zIndex={99999}
           containerStyle={styles.languageSwitch}
+          listItemContainerStyle={styles.listItemContainerStyle}
           theme="DARK"
           listMode='MODAL'
           modalProps={{animationType: "fade"}}
           modalTitle={t('select_language')}
           modalTitleStyle={{fontWeight: "bold"}}
+          hideSelectedItemIcon={true}
+          selectedItemContainerStyle={{display: 'none', padding: 0, margin: 0}}
+          selectedItemLabelStyle={{padding: 0, margin: 0}}
         />
 
         <TouchableOpacity
@@ -248,17 +248,9 @@ const styles = StyleSheet.create({
   languageSwitch: {
     width: 70,
     backgroundColor: '#000',
-    // position: 'absolute',
-    // left: 0,
-    // right: 100,
   },
   languageDropdown: {
     backgroundColor:'#000',
-    // color: '#fff',
-    // width: 70,
-    // alignContent: 'flex-end',
-    // alignSelf: 'center',
-    // zIndex: 99999,
   },
   languageDropdownContainer: {
     zIndex: 999999999999,
@@ -311,4 +303,12 @@ const styles = StyleSheet.create({
     height: wp(10),
     marginLeft: wp(2)
   },
+  iconStyle: {
+    width: wp(15),
+    height: wp(10),
+  },
+  listItemContainerStyle: {
+    marginBottom: hp(2),
+  },
+  
 });
