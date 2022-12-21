@@ -100,7 +100,7 @@ class ViewEventScreen extends Component {
     const { t } = this.props;
 
     const organizer = await getData(async_keys.userInfo);
-    if (organizer === 3) {
+    if (organizer == 3) {
       showToast(t('organizer_not_book'));
     } else {
 
@@ -117,7 +117,7 @@ class ViewEventScreen extends Component {
         maxQuantity: this.state.data.max_ticket_qty,
         currency: this.state.data.currency,
       }
-      this.setState({})
+      
       this.props.navigation.navigate('Checkout', {
         eventInfo: checkOutScreenData
       });

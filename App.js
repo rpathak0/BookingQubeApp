@@ -31,7 +31,7 @@ class App extends Component {
 
   componentDidMount() {
     // Initial setup
-    setTimeout(this.initialSetup, 2000);
+    setTimeout(this.initialSetup, 1000);
     this.setUserLang();
   }
 

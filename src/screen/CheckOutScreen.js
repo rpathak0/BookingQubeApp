@@ -145,7 +145,7 @@ class CheckOutScreen extends Component {
       d_t[item.id] = {};
     });
 
-    setTimeout(this.initialSetup, 2000);
+    setTimeout(this.initialSetup, 800);
   }
 
 
