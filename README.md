@@ -36,3 +36,5 @@ check the other controllers for timeslot update like Downloads controller etc. D
 
 Barcode scanner Honeywell DONE
 Translate the pending langs DONE
+
+Translate lang

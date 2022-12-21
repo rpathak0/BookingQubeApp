@@ -54,6 +54,8 @@ class ViewEventScreen extends Component {
       isLoading: true,
       scrollYPos: 0,
     };
+    
+    this.scroller = React.createRef();
 
     // fetching navigation props
     this.slugTitle = this.props.navigation.getParam('slugTitle', null);
@@ -186,6 +188,7 @@ class ViewEventScreen extends Component {
                 eventSchedulesDatesForMonth={this.state.eventSchedulesDatesForMonth}
                 selectedSchdeuleMonthId={this.state.selectedSchdeuleMonthId}
                 handleGetTicket={(date) => this.handleGetTicket(date)}
+                scroller={this.scroller}
 
               />
             </TouchableOpacity>

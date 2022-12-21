@@ -25,12 +25,18 @@ class Tickets extends Component {
     this.state = {
       selectedSchdeuleMonthId: this.props.selectedSchdeuleMonthId,
       eventSchedulesDatesForMonth: this.props.eventSchedulesDatesForMonth,
+      scrollToSchedulesPos: 0,
+      scroller: this.props.scroller,
     }
   }
 
+  scrollToSchedules = () => {
+    this.state.scroller.scrollTo({ x: 0, y: (2 * this.state.scrollToSchedulesPos) });
+  };
+
   onSelectScheduleMonth = async (schedule) => {
     this.setState({ ...this.state, eventSchedulesDatesForMonth: schedule.schedule_dates.formatted_schedule_dates, selectedSchdeuleMonthId: schedule.id });
-
+    this.scrollToSchedules();
   }
 
   saleFinished() {
@@ -61,9 +67,27 @@ class Tickets extends Component {
       return false;
     }
   }
+  
+  isMonthExpired(eventMonthYear) {
+    var todayDate = new Date();
+    
+    var currentMonth = todayDate.getMonth()+1;
+    var currentYear = todayDate.getFullYear();
+    
+    eventMonthYear = eventMonthYear.split(",").map(function(item) {
+      return item.trim();
+    });
+    // get month in numeric
+    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    
+    if (new Date(eventMonthYear[1], month.indexOf(eventMonthYear[0])+1).valueOf() < new Date(currentYear, currentMonth).valueOf()) {
+      return false;
+    }
+
+    return true;
+  }
 
   render() {
-    console.log('this.props.data.repititive_schedule', this.props.data.repititive_schedule);
     const {
       repetitive_type, start_time_format,
       end_time_format, start_date_format, end_date_format,
@@ -71,8 +95,7 @@ class Tickets extends Component {
     } = this.props.data.event;
     let repititive_schedule = this.props.data.repititive_schedule;
     let tickets = this.props.data.tickets;
-    console.log(tickets);
-
+    
     const { t } = this.props;
 
     return (
@@ -101,7 +124,7 @@ class Tickets extends Component {
 
           {repetitive_type != null && repititive_schedule?.map((schedule) => (
             <>
-              {schedule?.schedule_dates.formatted_schedule_dates.length > 0 && (
+              { (schedule?.schedule_dates.formatted_schedule_dates.length > 0 && this.isMonthExpired(schedule.event_schedule_formatted)) && (
                 <TouchableOpacity
                   onPress={() => this.onSelectScheduleMonth(schedule)}
                 >
@@ -114,7 +137,13 @@ class Tickets extends Component {
             </>
           ))}
           {repetitive_type != null ? (
-            <View style={styles.thirdTicketContainer}>
+            <View 
+              style={styles.thirdTicketContainer} 
+              onLayout={event => {
+                const { layout } = event.nativeEvent;
+                this.setState({ ...this.state, scrollToSchedulesPos: (layout.height) });
+              }}
+            >
               {this.state.eventSchedulesDatesForMonth.map((date, i) => {
                 let canBookTicket = this.CanBookTicket(date.date_value.start_date);
                 return (
