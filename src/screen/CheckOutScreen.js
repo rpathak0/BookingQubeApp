@@ -145,7 +145,7 @@ class CheckOutScreen extends Component {
       d_t[item.id] = {};
     });
 
-    setTimeout(this.initialSetup, 800);
+    setTimeout(this.initialSetup, 500);
   }
 
 
@@ -577,7 +577,7 @@ class CheckOutScreen extends Component {
                 this.handleWebView(url);
               } else {
                 showToast(newResponse.data.message);
-                this.props.navigation.navigate('MyBooking');
+                // this.props.navigation.navigate('MyBooking');
               }
             }
           }
@@ -864,7 +864,9 @@ class CheckOutScreen extends Component {
     });
     if (response.success) {
       showToast(response.message);
-      this.props.navigation.dispatch(resetAction);
+      this.props.navigation.reset({
+        index: 0,
+      });
       RNRestart.Restart();
     } else {
       showToast(response.message);
