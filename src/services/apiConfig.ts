@@ -2,13 +2,13 @@
 // 172.20.10.2
 // 192.168.1.5
 // 192.168.1.33
-// export const SERVER = 'http://192.168.1.38:19001/';
+export const SERVER = 'http://192.168.1.38:19001/';
 
 /* Staging Server */
 // export const SERVER = '';
 
 /* Production Server */
-export const SERVER = 'https://bookingqube.com/';
+// export const SERVER = 'https://bookingqube.com/';
 
 /* API Url */
 export const API_VERSION   = 'v1'

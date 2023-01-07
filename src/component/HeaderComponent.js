@@ -11,7 +11,9 @@ import ic_menu from '../assets/icon/ic_menu.png';
 import ic_back from '../assets/icon/ic_back.png';
 import ic_man from '../assets/icon/ic_man.png';
 import login_icon from '../assets/icon/login.png';
-import brand_logo from '../assets/icon/brand_logo.png';
+// import brand_logo from '../assets/icon/brand_logo.png';
+import brand_logo from '../assets/image/logo.png';
+
 
 // User Preference
 import { async_keys, getData, storeData } from '../api/UserPreference';
@@ -42,18 +44,18 @@ const HeaderComponent = props => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(i18n.language);
   const [items, setItems] = useState([
-    {label: 'En', value: "en", icon: () => <Image source={require('../assets/image/en.png')} style={styles.iconStyle} />},
-    {label: 'Ar', value: "ar", icon: () => <Image source={require('../assets/image/ar.png')} style={styles.iconStyle} />},
-    {label: 'De', value: "de", icon: () => <Image source={require('../assets/image/de.png')} style={styles.iconStyle} />},
-    {label: 'Fr', value: "fr", icon: () => <Image source={require('../assets/image/fr.png')} style={styles.iconStyle} />},
-    {label: 'Es', value: "es", icon: () => <Image source={require('../assets/image/es.png')} style={styles.iconStyle} />},
-    {label: 'In', value: "hi", icon: () => <Image source={require('../assets/image/hi.png')} style={styles.iconStyle} />},
-    {label: 'It', value: "it", icon: () => <Image source={require('../assets/image/it.png')} style={styles.iconStyle} />},
-    {label: 'Ja', value: "ja", icon: () => <Image source={require('../assets/image/ja.png')} style={styles.iconStyle} />},
-    {label: 'Nl', value: "nl", icon: () => <Image source={require('../assets/image/nl.png')} style={styles.iconStyle} />},
-    {label: 'Pt', value: "pt", icon: () => <Image source={require('../assets/image/pt.png')} style={styles.iconStyle} />},
-    {label: 'Ru', value: "ru", icon: () => <Image source={require('../assets/image/ru.png')} style={styles.iconStyle} />},
-    {label: 'Cn', value: "zh_CN", icon: () => <Image source={require('../assets/image/cn.png')} style={styles.iconStyle} />},
+    {label: 'English', value: "en", icon: () => <Image source={require('../assets/image/en.png')} style={styles.iconStyle} />},
+    {label: 'Qatar', value: "ar", icon: () => <Image source={require('../assets/image/ar.png')} style={styles.iconStyle} />},
+    {label: 'Germany', value: "de", icon: () => <Image source={require('../assets/image/de.png')} style={styles.iconStyle} />},
+    {label: 'France', value: "fr", icon: () => <Image source={require('../assets/image/fr.png')} style={styles.iconStyle} />},
+    {label: 'Spain', value: "es", icon: () => <Image source={require('../assets/image/es.png')} style={styles.iconStyle} />},
+    {label: 'India', value: "hi", icon: () => <Image source={require('../assets/image/hi.png')} style={styles.iconStyle} />},
+    {label: 'Italy', value: "it", icon: () => <Image source={require('../assets/image/it.png')} style={styles.iconStyle} />},
+    {label: 'Japan', value: "ja", icon: () => <Image source={require('../assets/image/ja.png')} style={styles.iconStyle} />},
+    {label: 'Nederland', value: "nl", icon: () => <Image source={require('../assets/image/nl.png')} style={styles.iconStyle} />},
+    {label: 'Portugal', value: "pt", icon: () => <Image source={require('../assets/image/pt.png')} style={styles.iconStyle} />},
+    {label: 'Russia', value: "ru", icon: () => <Image source={require('../assets/image/ru.png')} style={styles.iconStyle} />},
+    {label: 'China', value: "zh_CN", icon: () => <Image source={require('../assets/image/cn.png')} style={styles.iconStyle} />},
   ]);
 
   useEffect(() => {
@@ -120,24 +122,14 @@ const HeaderComponent = props => {
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.menuItems}>
+      <View style={[styles.menuItems]}>
         <TouchableOpacity
           onPress={handleNavAction}
           style={styles.menuIconContainer}>
           <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
         </TouchableOpacity>
-        <Text
-          style={styles.headerTitle}
-          value={props.value}
-        >
-          {title}
-        </Text>
-      </View>
-
-      <View style={[styles.menuItems, styles.menuItemsCenter]}>
         <Image
           source={brand_logo}
-          resizeMode="cover"
           style={styles.brandIcon}
         />
       </View>
@@ -153,6 +145,7 @@ const HeaderComponent = props => {
           onChangeValue={(value) => {changeLanguage(value)}}
           zIndex={99999}
           containerStyle={styles.languageSwitch}
+          style={{ backgroundColor: '#000' }}
           listItemContainerStyle={styles.listItemContainerStyle}
           theme="DARK"
           listMode='MODAL'
@@ -213,13 +206,9 @@ const styles = StyleSheet.create({
     borderRadius: wp(20),
   },
   brandIcon: {
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: wp(8),
-    height: wp(8),
-    aspectRatio: 1 / 1,
-    borderRadius: wp(20),
+    marginTop: 3,
+    width: '50%',
+    height: hp(4.5),
   },
   headerTitle: {
     color: '#fff',
@@ -246,7 +235,7 @@ const styles = StyleSheet.create({
     padding: wp(2),
   },
   languageSwitch: {
-    width: 70,
+    width: 100,
     backgroundColor: '#000',
   },
   languageDropdown: {
@@ -304,8 +293,8 @@ const styles = StyleSheet.create({
     marginLeft: wp(2)
   },
   iconStyle: {
-    width: wp(15),
-    height: wp(10),
+    width: wp(10),
+    height: wp(7),
   },
   listItemContainerStyle: {
     marginBottom: hp(2),
