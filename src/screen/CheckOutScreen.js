@@ -33,6 +33,8 @@ import CustomField from '../component/CustomField';
 
 import { WebView } from 'react-native-webview';
 
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+
 // API Info
 import { BASE_URL, makeRequest } from '../api/ApiInfo';
 
@@ -133,6 +135,9 @@ class CheckOutScreen extends Component {
       checked: 0,
       timeslots: [],
       timeslot_id: 0,
+      
+      subscribe: null,
+      is_subscribe: 0,
     };
     this.eventInfo = this.props.navigation.getParam('eventInfo', null);
   }
@@ -198,7 +203,7 @@ class CheckOutScreen extends Component {
 
           if (newResponse) {
             const { success } = newResponse.data;
-            console.log(newResponse)
+            console.log('checkout screen newResponse', newResponse);
             let timeslots = [];
             if (success === true) {
               newResponse.data.data.event.slots.map(item => {
@@ -226,6 +231,7 @@ class CheckOutScreen extends Component {
 
               this.setState({
                 tickets: newResponse.data.data.tickets,
+                subscribe: newResponse.data.data.event.subscribe,
                 isLoading: false,
                 userId: userId,
                 timeslots: timeslots,
@@ -513,7 +519,6 @@ class CheckOutScreen extends Component {
         payment_method: payment_method,
         free_order: "",
         promocode: promocodes,
-        is_subscribe: 1,
         c_fields: c_fields,
         slots: this.state.timeslot_id,
       };
@@ -994,65 +999,6 @@ class CheckOutScreen extends Component {
         />
         <ScrollView>
           <View style={styles.homeContainer}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>{t('booking_info')}</Text>
-            </View>
-
-            <View style={styles.eventInformationContainer}>
-              <Text style={styles.eventCategoryText}>{t('event_category')}</Text>
-              <Text style={styles.eventCategoryTitle}>
-                {this.eventInfo.title}
-              </Text>
-
-              <Text style={styles.eventCategoryText}>{t('venue')}</Text>
-              <Text style={styles.eventCategoryTitle}>
-                {this.eventInfo.venue}
-              </Text>
-
-              <Text style={styles.eventCategoryText}>{t('start_end_date')}</Text>
-              <Text style={styles.eventCategoryTitle}>
-                {convertTimeZoneFormatted(this.eventInfo.finalDate.start_date, '', 'dddd MMM DD, YYYY')} -
-                {convertTimeZoneFormatted(this.eventInfo.finalDate.end_date, '', ' dddd MMM DD, YYYY')}
-              </Text>
-
-              <Text style={styles.eventCategoryText}>{t('timings')}</Text>
-              <Text style={styles.eventCategoryTitle}>
-                {convertTimeZone(`${this.eventInfo.finalDate.start_date} ${this.eventInfo.finalDate.start_time}`).formattedTime} - {convertTimeZone(`${this.eventInfo.finalDate.end_date} ${this.eventInfo.finalDate.end_time}`).formattedTime}
-              </Text>
-            </View>
-
-            {(this.state.timeslots.length > 0) ? (
-              <View>
-                <View style={styles.headerContainer}>
-                  <Text style={styles.headerText}>{t('timeslots')}</Text>
-                </View>
-                <View style={styles.ticketContainer}>
-                  <RNPickerSelect
-                    placeholder={{
-                      label: t('select_timeslot'),
-                      value: 0,
-                    }}
-                    onValueChange={value => { this.handleTimeslotSelectValue(value) }}
-                    fixAndroidTouchableBug={true}
-                    items={this.state.timeslots.map((list, i) => ({
-                      label: this.hourMinute(list.ts_start_time) + ' - '+this.hourMinute(list.ts_end_time),
-                      value: list.id,
-                      key: i,
-                    }))}
-                    style={{
-                      ...pickerStyle,
-                      iconContainer: {
-                        top: 8,
-                        right: 8,
-                      },
-                      
-                    }}
-                    useNativeAndroidPickerStyle={false}
-                  />
-                </View>
-              </View>
-            ) : null}
-
             {/* Tickets */}
             <View>
               <View style={styles.headerContainer}>
@@ -1258,6 +1204,66 @@ class CheckOutScreen extends Component {
               })}
             </View>
 
+
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>{t('booking_info')}</Text>
+            </View>
+
+            <View style={styles.eventInformationContainer}>
+              <Text style={styles.eventCategoryText}>{t('event_category')}</Text>
+              <Text style={styles.eventCategoryTitle}>
+                {this.eventInfo.title}
+              </Text>
+
+              <Text style={styles.eventCategoryText}>{t('venue')}</Text>
+              <Text style={styles.eventCategoryTitle}>
+                {this.eventInfo.venue}
+              </Text>
+
+              <Text style={styles.eventCategoryText}>{t('start_end_date')}</Text>
+              <Text style={styles.eventCategoryTitle}>
+                {convertTimeZoneFormatted(this.eventInfo.finalDate.start_date, '', 'dddd MMM DD, YYYY')} -
+                {convertTimeZoneFormatted(this.eventInfo.finalDate.end_date, '', ' dddd MMM DD, YYYY')}
+              </Text>
+
+              <Text style={styles.eventCategoryText}>{t('timings')}</Text>
+              <Text style={styles.eventCategoryTitle}>
+                {convertTimeZone(`${this.eventInfo.finalDate.start_date} ${this.eventInfo.finalDate.start_time}`).formattedTime} - {convertTimeZone(`${this.eventInfo.finalDate.end_date} ${this.eventInfo.finalDate.end_time}`).formattedTime}
+              </Text>
+            </View>
+
+            {(this.state.timeslots.length > 0) ? (
+              <View>
+                <View style={styles.headerContainer}>
+                  <Text style={styles.headerText}>{t('timeslots')}</Text>
+                </View>
+                <View style={styles.ticketContainer}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: t('select_timeslot'),
+                      value: 0,
+                    }}
+                    onValueChange={value => { this.handleTimeslotSelectValue(value) }}
+                    fixAndroidTouchableBug={true}
+                    items={this.state.timeslots.map((list, i) => ({
+                      label: this.hourMinute(list.ts_start_time) + ' - '+this.hourMinute(list.ts_end_time),
+                      value: list.id,
+                      key: i,
+                    }))}
+                    style={{
+                      ...pickerStyle,
+                      iconContainer: {
+                        top: 8,
+                        right: 8,
+                      },
+                      
+                    }}
+                    useNativeAndroidPickerStyle={false}
+                  />
+                </View>
+              </View>
+            ) : null}
+
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>{t('payment_summary')}</Text>
             </View>
@@ -1310,6 +1316,7 @@ class CheckOutScreen extends Component {
                 </>
               )}
             </View>
+
             <View>
               {(this.state.ticketList.reduce((pre, curr) => pre + parseInt(curr.value), 0) > 0) && (parseFloat(this.state.netTotal) > 0.00) && (
                 <>
@@ -1374,6 +1381,24 @@ class CheckOutScreen extends Component {
                 </View>
               )}
             </View>
+
+            {this.state.subscribe != null && this.state.subscribe != '' ? (
+            <View style={styles.eventInformationContainer}>
+              <BouncyCheckbox
+                size={18}
+                fillColor="#ff0084"
+                text={this.state.subscribe}
+                textStyle={{ fontSize: 12 }}
+                textContainerStyle={{ width: '92%' }}
+                onPress={(isChecked) => {
+                  this.setState({
+                    is_subscribe: isChecked,
+                  });
+                }}
+              />
+            </View>
+            ) : null}
+            
             <View style={styles.checkoutContainer}>
               {this.state.userId === null ? (
                 <View style={styles.checkoutContainer1}>
@@ -1508,7 +1533,7 @@ const styles = StyleSheet.create({
   },
   checkoutText: {
     fontSize: wp(6),
-    color: '#f89b15',
+    color: '#000000',
     textAlign: 'center',
     marginBottom: hp(6)
   },
@@ -1521,15 +1546,17 @@ const styles = StyleSheet.create({
     marginRight: hp(2)
   },
   headerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f89b15',
-    paddingVertical: hp(.5)
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingVertical: hp(.5),
+    borderBottomColor: '#eeeeee',
+    borderBottomWidth: 2,
+
   },
   headerText: {
     fontSize: wp(2.5),
     fontWeight: '500',
-    color: '#fff',
+    color: '#ff0084',
     textAlign: "center"
   },
   eventInformationContainer: {
@@ -1701,7 +1728,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderTopLeftRadius: wp(2),
     borderBottomLeftRadius: wp(2),
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
   },
   registerText: {
     fontSize: wp(3.5),
@@ -1821,7 +1848,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
   },
   saveProfileText: {
     fontSize: wp(3.5),

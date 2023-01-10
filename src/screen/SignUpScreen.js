@@ -380,8 +380,8 @@ class SignUpScreen extends Component {
             
             <Text style={styles.agreeTextStyle}>
               By clicking "Register", I accept the{' '}
-              <Text style={{color: '#f89b15'}}>Terms of Service</Text> and have
-              read the <Text style={{color: '#f89b15'}}>Privacy Policy</Text>.{' '}
+              <Text style={{color: '#000000'}}>Terms of Service</Text> and have
+              read the <Text style={{color: '#000000'}}>Privacy Policy</Text>.{' '}
               {'\n'} I agree that bookingqube may share my information with event
               organizers.
             </Text>
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
   loginButtonTextStyle: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
     marginLeft: wp(2),
   },
   forgetAndRegisterContainer: {
@@ -590,12 +590,12 @@ const styles = StyleSheet.create({
   facebookTextStyle: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
   },
   facebookTextStyle1: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
     marginLeft: wp(2),
   },
 });

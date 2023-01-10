@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#f89b15',
+    color: '#000000',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#f89b15',
+    color: '#000000',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',

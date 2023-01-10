@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   loginButtonTextStyle: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
     marginLeft: wp(2),
   },
   forgetAndRegisterContainer: {
@@ -292,12 +292,12 @@ const styles = StyleSheet.create({
   facebookTextStyle: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
   },
   facebookTextStyle1: {
     fontSize: wp(3.5),
     fontWeight: '700',
-    color: '#f89b15',
+    color: '#000000',
     marginLeft: wp(2),
   },
 });

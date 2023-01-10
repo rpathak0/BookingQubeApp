@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     marginLeft: 'auto',
   },
   saveProfileText: {

@@ -17,8 +17,10 @@ import {
 import { FlatGrid } from 'react-native-super-grid';
 import splash_image from '../../assets/image/spalsh_image.png';
 
+import { withTranslation } from 'react-i18next';
 
-export default class Gallery extends Component {
+
+class Gallery extends Component {
   constructor(props) {
     super(props);
   }
@@ -26,34 +28,39 @@ export default class Gallery extends Component {
   render() {
 
     const { imageGallery } = this.props.data;
-
+    const { t } = this.props;
+    console.log('imageGallery', imageGallery);
     return (
       <View >
-        <ImageBackground
-          source={splash_image}
-          style={styles.eventCategoryContainer}>
-          <Text style={styles.DjsText}>Event Gallery</Text>
-          <FlatList
-                  horizontal={false}
-                  numColumns={2}
-            data={imageGallery}
-            // style={styles.gridView}
-            spacing={2}
-            renderItem={({ item }) => (
-              <TouchableOpacity style={styles.categoryContainer}>
-                <ImageBackground
-                  source={{ uri: item.img }}
-                  resizeMode="cover"
-                  style={styles.categoryImageStyle}>
-                </ImageBackground>
-              </TouchableOpacity>
-            )}
-          />
-        </ImageBackground>
+        {(imageGallery.length > 0) ? (
+          <ImageBackground
+            source={splash_image}
+            style={styles.eventCategoryContainer}>
+            <Text style={styles.DjsText}>{t('event_gallery')}</Text>
+            <FlatList
+                    horizontal={false}
+                    numColumns={2}
+              data={imageGallery}
+              // style={styles.gridView}
+              spacing={2}
+              renderItem={({ item }) => (
+                <TouchableOpacity style={styles.categoryContainer}>
+                  <ImageBackground
+                    source={{ uri: item.img }}
+                    resizeMode="cover"
+                    style={styles.categoryImageStyle}>
+                  </ImageBackground>
+                </TouchableOpacity>
+              )}
+            />
+          </ImageBackground>
+        ) : null}
       </View>
     );
   }
 }
+
+export default withTranslation()(Gallery);
 
 const styles = StyleSheet.create({
   container: {
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     borderRadius: wp(6),
     marginHorizontal: wp(1),
   },
@@ -156,7 +163,7 @@ const styles = StyleSheet.create({
   },
   bookTicketContainer: {
     alignItems: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
   },
   getYourTicketText: {
     fontSize: wp(4),
@@ -192,13 +199,13 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(3.5),
-    color: '#f89b15',
+    color: '#000000',
     textAlign: 'center',
     marginTop: hp(2),
   },
   eventDateCountText: {
     fontSize: wp(3.5),
-    color: '#f89b15',
+    color: '#000000',
     textAlign: 'center',
   },
   thirdTicketContainer: {
@@ -212,7 +219,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(3),
     flexWrap: 'wrap',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',

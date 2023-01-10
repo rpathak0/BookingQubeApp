@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: wp(6),
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     marginHorizontal: wp(4),
   },
   IconStyle: {
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(4),
     marginVertical: hp(2),
     borderRadius: wp(4),
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
   },
   buttonContainerDelete: {
     height: hp(6),

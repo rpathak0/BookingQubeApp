@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   },
   featuredEventDateText: {
     fontSize: wp(3),
-    color: '#f89b15',
+    color: '#000000',
   },
   eventTitleTextStyle: {
     fontSize: wp(3.8),
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
   },
   postedByTextStyle: {
     fontSize: wp(3.5),
-    color: '#f89b15',
+    color: '#000000',
     marginVertical: hp(1),
     marginHorizontal: wp(2),
   },
@@ -449,8 +449,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#f89b15',
-    backgroundColor: '#f89b15',
+    borderColor: '#000000',
+    backgroundColor: '#000000',
     marginTop: hp(2),
     borderBottomRightRadius: wp(4),
     borderBottomLeftRadius: wp(4),
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     top: hp(2),
     height: hp(2),
 
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     borderTopLeftRadius: wp(3),
   },
   onlineLeftContainer: {
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     width: wp(10),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     borderTopRightRadius: wp(3),
   },
   eventWorthText: {
@@ -544,7 +544,7 @@ const styles = StyleSheet.create({
     width: wp(25),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f89b15',
+    backgroundColor: '#000000',
     borderBottomLeftRadius: wp(3),
   },
   eventRoutineText: {
