@@ -5,12 +5,13 @@ import React from 'react';
 import { Image, StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 
+import { version } from '../../package.json';
+import LayoutSize from '../Helper/LayoutSize';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
-import { useTranslation } from 'react-i18next';
 
 // Screens
 import LoginScreen from '../screen/LoginScreen';
@@ -21,6 +22,12 @@ import ForgetPasswordScreen from '../screen/ForgetPasswordScreen';
 
 // Home Screen
 import HomeScreen from '../screen/HomeScreen';
+
+import AboutScreen from '../screen/AboutScreen';
+import ContactScreen from '../screen/ContactScreen';
+import TermsScreen from '../screen/TermsScreen';
+import PrivacyScreen from '../screen/PrivacyScreen';
+import FaqScreen from '../screen/FaqScreen';
 
 // Event Screen
 import EventListScreen from '../screen/EventListScreen';
@@ -60,7 +67,6 @@ const styles = StyleSheet.create({
   },
   drawerContentContainer: {
     flex: 1,
-    // backgroundColor: '#000000',
   },
   drawerHeader: {
     flex: 1,
@@ -83,6 +89,17 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     color: '#000',
   },
+  versionView: {
+    position: 'absolute',
+    top: LayoutSize.window.height-50,
+    right: 10,
+    zIndex: 999999
+  },
+  footerNavigatorIcon: {
+    height: wp(6),
+    aspectRatio: 1 / 1,
+  },
+  
 });
 
 const setDrawerItemIcon = itemIcon => ({
@@ -148,6 +165,9 @@ const CustomDrawerContentComponent = props => {
           onItemPress={onDrawerItemPress(props)}
           labelStyle={styles.drawerLabel}
         />
+        <View style={styles.versionView}>
+          <Text>Version: {version}</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -187,6 +207,12 @@ const HomeNavigator = createStackNavigator(
     SeatingChart: SeatingChartScreen,
     Checkout: CheckoutScreen,
     Attendee: AttendeeScreen,
+    
+    About: AboutScreen,
+    Contact: ContactScreen,
+    Terms: TermsScreen,
+    Privacy: PrivacyScreen,
+    Faq: FaqScreen,
   },
   {
     initialRouteName: 'Home',
@@ -364,6 +390,86 @@ const DrawerCheckOut = createStackNavigator(
 DrawerCheckOut.navigationOptions = ({ screenProps: { t } }) => ({
   drawerLabel: t('check_out', { order: 7 }),
 });
+
+// About
+const DrawerAbout = createStackNavigator(
+  {
+    About: {
+      screen: AboutScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('about', { order: 8 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerAbout.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('about', { order: 8 }),
+});
+
+// Contact
+const DrawerContact = createStackNavigator(
+  {
+    Contact: {
+      screen: ContactScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('contact', { order: 8 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerContact.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('contact', { order: 8 }),
+});
+
+// Terms
+const DrawerTerms = createStackNavigator(
+  {
+    Terms: {
+      screen: TermsScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('terms', { order: 9 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerTerms.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('terms', { order: 9 }),
+});
+
+// Privacy
+const DrawerPrivacy = createStackNavigator(
+  {
+    Privacy: {
+      screen: PrivacyScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('privacy', { order: 10 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerPrivacy.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('privacy', { order: 10 }),
+});
+
+// Faq
+const DrawerFaq = createStackNavigator(
+  {
+    Faq: {
+      screen: FaqScreen,
+      navigationOptions: ({ navigation, screenProps: { t } }) => ({
+        title: t('faq', { order: 11 }),
+        headerShown: false
+      })
+    }
+  }
+);
+DrawerFaq.navigationOptions = ({ screenProps: { t } }) => ({
+  drawerLabel: t('faq', { order: 11 }),
+});
 /* =====----=-=-==-===-- Drawer Labels multi-lingual =====----=-=-==-===-- */
 
 
@@ -377,6 +483,12 @@ const LoggedOutNavigator1 = createDrawerNavigator(
     DrawerCheckIn,
     DrawerCheckOut,
     DrawerLogout,
+    
+    DrawerAbout,
+    DrawerContact,
+    DrawerTerms,
+    DrawerPrivacy,
+    DrawerFaq,
   },
   {
     initialRouteName: 'DrawerHome',
@@ -400,6 +512,12 @@ const LoggedOutNavigator2 = createDrawerNavigator(
     DrawerMyBookings,
     DrawerProfile,
     DrawerLogout,
+    
+    DrawerAbout,
+    DrawerContact,
+    DrawerTerms,
+    DrawerPrivacy,
+    DrawerFaq,
   },
   {
     initialRouteName: 'DrawerHome',
@@ -417,6 +535,12 @@ const AfterGuestLoginNavigator = createDrawerNavigator(
     DrawerMyBookings,
     DrawerProfile,
     DrawerLogout,
+
+    DrawerAbout,
+    DrawerContact,
+    DrawerTerms,
+    DrawerPrivacy,
+    DrawerFaq,
   },
   {
     initialRouteName: 'DrawerMyBookings',
@@ -436,6 +560,12 @@ const LoggedOutNavigator = createDrawerNavigator(
     DrawerHome,
     DrawerEvent,
     DrawerLogin,
+
+    DrawerAbout,
+    DrawerContact,
+    DrawerTerms,
+    DrawerPrivacy,
+    DrawerFaq,
   },
   {
     initialRouteName: 'DrawerHome',

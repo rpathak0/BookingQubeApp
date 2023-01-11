@@ -192,6 +192,14 @@
       "movies"          : "Movies",
       "go_to_mybookings": "Go To My Bookings",
       "go_back"         : "Go Back",
+      "event_gallery"         : "Event Gallery",
+      
+      "about"         : "About Us",
+      "contact"         : "Contact Us",
+      "terms"         : "Terms & Conditions",
+      "privacy"         : "Privacy Policy",
+      "faq"         : "FAQs",
+      
       
       "test"                   : "test"
     }

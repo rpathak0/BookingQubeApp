@@ -19,7 +19,7 @@ import {BASE_URL} from '../api/ApiInfo';
 
 import { withTranslation } from 'react-i18next';
 
-class TermsScreen extends Component {
+class AboutScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +36,7 @@ class TermsScreen extends Component {
     const axios = require('axios');
     try {
       // calling api
-      let slug = 'terms';
+      let slug = 'about';
       await axios.get(BASE_URL + 'page-content/'+slug).then(response => {
         // console.log(response?.data);
         let newResponse = response?.data;
@@ -61,7 +61,7 @@ class TermsScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <HeaderComponent
-          title={t('terms')}
+          title={t('about')}
           navAction="home"
           nav={this.props.navigation}
         />
@@ -81,7 +81,7 @@ class TermsScreen extends Component {
   }
 }
 
-export default withTranslation()(TermsScreen);
+export default withTranslation()(AboutScreen);
 
 const styles = StyleSheet.create({
   container: {
