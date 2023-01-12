@@ -54,6 +54,7 @@ class HomeScreen extends Component {
       upcomingEventList: [],
       topSellingEvents: [],
       exploreCitiesList: [],
+      categoryEvents: [],
       imageURL: null,
       checkFilter: null,
       searchResponse: [],
@@ -166,6 +167,7 @@ class HomeScreen extends Component {
                 upcomingEventList: newResponse.data.data.upcomming_events,
                 topSellingEvents: newResponse.data.data.top_selling_events,
                 exploreCitiesList: newResponse.data.data.cities_events,
+                categoryEvents: newResponse.data.data.category_events,
                 imageUrlPrefix: newResponse.data.data.image_url_prefix,
                 isLoading: false,
               });
@@ -290,90 +292,45 @@ class HomeScreen extends Component {
                 name={t('featured_events')}
                 backGroundImage={false}
               />
-
-              <View>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={this.handleAllEvent}>
-                  <Text style={styles.buttonText}>{t('view_all_events')}</Text>
-                </TouchableOpacity>
-              </View>
             </View>
             ): null}
 
-            <ImageBackground
-              source={splash_image}
-              style={styles.eventCategoryContainer}>
-              
-              <Text style={styles.featuredEventText}>{t('event_category')}</Text>
-
-              <FlatList
-                data={this.state.eventCategoryList}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.categoryContainer}
-                    onPress={() => this.handleAllEvent1(item)}>
-                    <ImageBackground
-                      source={{ uri: imageUrl + item.thumb }}
-                      resizeMode="cover"
-                      style={styles.categoryImageStyle}>
-                      <Text style={styles.categoryTitleText}>
-                        {item.name}
-                      </Text>
-                    </ImageBackground>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={item => item.thumb}
-                horizontal={false}
-                numColumns={2}
-              />
-
-            </ImageBackground>
-
+            
             {(this.state.upcomingEventList.length > 0) ? (
-              <Events
-                eventList={this.state.upcomingEventList}
-                handleEvent={(item) => { this.handleEvent(item) }}
-                name={t('upcomming_events')}
-                backGroundImage={false}
-              />
+              <View>
+                <Events
+                  eventList={this.state.upcomingEventList}
+                  handleEvent={(item) => { this.handleEvent(item) }}
+                  name={t('upcomming_events')}
+                  backGroundImage={false}
+                />
+              </View>
             ): null}
 
             {(this.state.topSellingEvents.length > 0) ? (
-              <Events
-                eventList={this.state.topSellingEvents}
-                handleEvent={(item) => { this.handleEvent(item) }}
-                name={t('top_selling')}
-                backGroundImage={true}
-              />
+              <View>
+                <Events
+                  eventList={this.state.topSellingEvents}
+                  handleEvent={(item) => { this.handleEvent(item) }}
+                  name={t('top_selling')}
+                  backGroundImage={true}
+                />
+              </View>
+            ): null}
+
+            {(this.state.categoryEvents.length > 0) ? (
+              this.state.categoryEvents.map((cevent, cindex)=>(
+                <View>
+                  <Events 
+                    eventList={cevent.events}
+                    handleEvent={(item) => { this.handleEvent(item) }}
+                    name={cevent.name}
+                    backGroundImage={false}
+                  />
+                </View>
+              ))
             ): null}
             
-            <ImageBackground
-              source={splash_image}
-              style={styles.eventCategoryContainer}>
-
-              <Text style={styles.featuredEventText}>{t('explore_cities')}</Text>
-              <FlatList
-                keyExtractor={item => item.thumb}
-                horizontal={false}
-                numColumns={2}
-                data={this.state.exploreCitiesList}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.categoryContainer}
-                    onPress={() => this.handleCity(item)}>
-                    <ImageBackground
-                      source={{ uri: imageUrl + item.poster }}
-                      resizeMode="cover"
-                      style={styles.categoryImageStyle}>
-                      <Text style={styles.categoryTitleText}>
-                        {item.city}
-                      </Text>
-                    </ImageBackground>
-                  </TouchableOpacity>
-                )}
-              />
-            </ImageBackground>
           </View>
         </ScrollView>
 
@@ -405,6 +362,7 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     borderRadius: wp(4),
     marginVertical: hp(2),
+    marginBottom: hp(2),
     marginHorizontal: wp(4),
   },
   inputContainer: {
@@ -435,7 +393,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(3),
     backgroundColor: '#000000',
     elevation: 30,
-    marginBottom: hp(2),
+    marginBottom: hp(4),
     marginHorizontal: wp(4),
   },
   searchIconStyle: {
@@ -639,13 +597,13 @@ const styles = StyleSheet.create({
   button: {
     height: hp(6),
     width: wp(40),
-    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: '#000000',
     borderRadius: wp(4),
-    marginBottom: hp(2),
+    marginTop: 0,
+    marginBottom: 0,
   },
   buttonText: {
     fontSize: wp(3.5),

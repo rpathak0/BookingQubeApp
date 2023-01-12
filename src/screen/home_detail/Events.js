@@ -10,11 +10,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+
+import LayoutSize from '../../Helper/LayoutSize';
 
 import { STORAGE_URL } from '../../api/ApiInfo';
 import CountDown from 'react-native-countdown-component';
@@ -23,6 +26,7 @@ import { convertTimeZoneDateTime, getCurrentTime, getSaleExpirationSeconds, rema
 
 import { withTranslation } from 'react-i18next';
 
+import Carousel from 'react-native-snap-carousel';
 
 
 
@@ -144,118 +148,132 @@ class Events extends Component {
   }
 
 
+  _renderItemCarousel = ({item, index}) => {
+      const { t } = this.props;
+      
+      return (
+        <TouchableOpacity
+          activeOpacity={1}
+          key={`${index}-events`}
+          style={styles.featuredEventBox}
+          onPress={() => {
+            this.handleEvent(item);
+          }}>
+          <Image
+            source={{ uri: STORAGE_URL + item.thumbnail }}
+            resizeMode="cover"
+            style={styles.featuredImageStyle}
+          />
+
+          <View style={styles.eventDateAndPlaceContainer}>
+            <Text style={styles.featuredEventDateText}>
+              { moment(item.start_date).format('DD MMM YYYY')}
+            </Text>
+
+            <Text style={styles.featuredEventDateText}>
+              { moment(item.end_date).format('DD MMM YYYY')}
+            </Text>
+
+            <Text style={styles.featuredEventDateText}>
+              {item.city}
+            </Text>
+          </View>
+
+          <Text style={styles.eventTitleTextStyle}>
+            {item.title}
+          </Text>
+
+          <Text
+            style={styles.eventDescriptionTextStyle}
+            numberOfLines={2}>
+            {item.excerpt}
+          </Text>
+
+          <Text style={styles.postedByTextStyle}>
+            {'@' + item.venue}
+          </Text>
+          {this.renderTicketCategory(item)}
+          
+
+          <View style={styles.eventTypeContainer}>
+            <Text style={styles.eventTypeText}>
+              {item.category_name}
+            </Text>
+          </View>
+            {item?.online_location == "1" && (
+              <>
+                <View style={styles.onlineLeftContainer}>
+                  <Text style={styles.eventDaysLeftText}>
+                    {t('online')}
+                  </Text>
+                </View>
+                <View style={styles.eventOnlineContainer}>
+                  <Text style={styles.eventTimeText}>{t('event')}</Text>
+                </View>
+              </>
+              
+            ) }
+
+          <View style={styles.daysLeftContainer}>
+            <Text style={styles.eventDaysLeftText}>
+              {this.daysRemaining(`${item.start_date} ${item.start_time}`)}
+            </Text>
+          </View>
+          <View style={styles.eventTimeContainer}>
+            <Text style={styles.eventTimeText}>{this.eventStatusText(item)}</Text>
+          </View>
+
+          {item.tickets.map(ticket => {
+            if (ticket.title === 'Free') {
+              return (
+                <View key={`${index}-${ticket.title}-${Math.random(5)}`} style={styles.eventWorthContainer}>
+                  <Text style={styles.eventWorthText}>{t('free')}</Text>
+                </View>
+              );
+            }
+          })}
+
+          {item.repetitive_type === 1 ? (
+            <View style={styles.eventRoutineContainer}>
+              <Text style={styles.eventRoutineText}>{t('repetitive_daily')}</Text>
+            </View>
+          ) : item.repetitive_type === 2 ? (
+            <View style={styles.eventRoutineContainer}>
+              <Text style={styles.eventRoutineText}>{t('repetitive_weekly')}</Text>
+            </View>
+          ) : item.repetitive_type === 3 ? (
+            <View style={styles.eventRoutineContainer}>
+              <Text style={styles.eventRoutineText}>{t('repetitive_monthly')}</Text>
+            </View>
+          ) : item.repetitive_type === null ? null : null}
+        </TouchableOpacity>
+      );
+  }
 
   render() {
 
     var eventList = this.props.eventList;
     var backGroundImage = this.props.backGroundImage;
     const { t } = this.props;
+    const horizontalMargin = 20;
+    const slideWidth = 280;
+
+    const sliderWidth = Dimensions.get("window").width;
+    const itemWidth = slideWidth + horizontalMargin * 2;
+    const itemHeight = 100;
     
     return (
-        <View style={styles.featuredEventContainer}>
-          <Text style={styles.featuredEventText}>{this.props.name}</Text>
-          {eventList.map((item, index) => {
-            
-            return (
-              <TouchableOpacity
-                activeOpacity={1}
-                key={`${index}-events`}
-                style={styles.featuredEventBox}
-                onPress={() => {
-                  this.handleEvent(item);
-                }}>
-                <Image
-                  source={{ uri: STORAGE_URL + item.thumbnail }}
-                  resizeMode="cover"
-                  style={styles.featuredImageStyle}
-                />
-
-                <View style={styles.eventDateAndPlaceContainer}>
-                  <Text style={styles.featuredEventDateText}>
-                    { moment(item.start_date).format('DD MMM YYYY')}
-                  </Text>
-
-                  <Text style={styles.featuredEventDateText}>
-                    { moment(item.end_date).format('DD MMM YYYY')}
-                  </Text>
-
-                  <Text style={styles.featuredEventDateText}>
-                    {item.city}
-                  </Text>
-                </View>
-
-                <Text style={styles.eventTitleTextStyle}>
-                  {item.title}
-                </Text>
-
-                <Text
-                  style={styles.eventDescriptionTextStyle}
-                  numberOfLines={2}>
-                  {item.excerpt}
-                </Text>
-
-                <Text style={styles.postedByTextStyle}>
-                  {'@' + item.venue}
-                </Text>
-                {this.renderTicketCategory(item)}
-                
-
-                <View style={styles.eventTypeContainer}>
-                  <Text style={styles.eventTypeText}>
-                    {item.category_name}
-                  </Text>
-                </View>
-                  {item?.online_location == "1" && (
-                    <>
-                      <View style={styles.onlineLeftContainer}>
-                        <Text style={styles.eventDaysLeftText}>
-                          {t('online')}
-                        </Text>
-                      </View>
-                      <View style={styles.eventOnlineContainer}>
-                        <Text style={styles.eventTimeText}>{t('event')}</Text>
-                      </View>
-                    </>
-                    
-                  ) }
-
-                <View style={styles.daysLeftContainer}>
-                  <Text style={styles.eventDaysLeftText}>
-                    {this.daysRemaining(`${item.start_date} ${item.start_time}`)}
-                  </Text>
-                </View>
-                <View style={styles.eventTimeContainer}>
-                  <Text style={styles.eventTimeText}>{this.eventStatusText(item)}</Text>
-                </View>
-
-                {item.tickets.map(ticket => {
-                  if (ticket.title === 'Free') {
-                    return (
-                      <View key={`${index}-${ticket.title}-${Math.random(5)}`} style={styles.eventWorthContainer}>
-                        <Text style={styles.eventWorthText}>{t('free')}</Text>
-                      </View>
-                    );
-                  }
-                })}
-
-                {item.repetitive_type === 1 ? (
-                  <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>{t('repetitive_daily')}</Text>
-                  </View>
-                ) : item.repetitive_type === 2 ? (
-                  <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>{t('repetitive_weekly')}</Text>
-                  </View>
-                ) : item.repetitive_type === 3 ? (
-                  <View style={styles.eventRoutineContainer}>
-                    <Text style={styles.eventRoutineText}>{t('repetitive_monthly')}</Text>
-                  </View>
-                ) : item.repetitive_type === null ? null : null}
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      
+      <View style={styles.featuredEventContainer}>
+        <Text style={styles.featuredEventText}>{this.props.name}</Text>
+        <Carousel
+          ref={(c) => { this._carousel = c; }}
+          data={eventList}
+          renderItem={this._renderItemCarousel}
+          sliderWidth={LayoutSize.window.width}
+          itemWidth={LayoutSize.window.width-10}
+          
+        />
+      </View>
     );
   }
 }
@@ -328,7 +346,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000000',
     textAlign: 'center',
-    marginTop: hp(4),
+    marginTop: 0,
   },
   gridView: {
     // marginTop: 10,
