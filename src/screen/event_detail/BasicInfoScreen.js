@@ -167,15 +167,17 @@ class BasicInfoScreen extends Component {
   };
 
   getRenderView = (item) => {
-    return (
-      <View style={item.title === 'Online event' ? styles.eventOnlineContainer : styles.eventCategory}>
-        <View style={item.title === 'Online event' ? styles.onlineInnerContainer : {}}>
-          <Text style={styles.categoryText}>
-            {item.title}
-          </Text>
+    if(item.title != null && item.title != '') {
+      return (
+        <View style={item.title === 'Online event' ? styles.eventOnlineContainer : styles.eventCategory}>
+          <View style={item.title === 'Online event' ? styles.onlineInnerContainer : {}}>
+            <Text style={styles.categoryText}>
+              {item.title}
+            </Text>
+          </View>
         </View>
-      </View>
-    )
+      )
+    }
   }
 
 

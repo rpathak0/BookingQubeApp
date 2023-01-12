@@ -539,7 +539,7 @@ class EventListScreen extends Component {
             </View>
 
             <Text style={styles.textInputText}>{t('city')}</Text>
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, {marginBottom: hp(4)}]}>
               <RNPickerSelect
                 onValueChange={this.handleSelectedCity}
                 items={this.state.cities.map(item => ({
@@ -557,7 +557,7 @@ class EventListScreen extends Component {
             <Events
               eventList={this.state.featureEventList}
               handleEvent={(item) => { this.handleEvent(item) }}
-              name={t('events')}
+              name={t('browse_qube')}
               backGroundImage={false}
             />
           </View>

@@ -38,6 +38,8 @@ import ProcessingLoader from '../component/ProcessingLoader';
 // Icon
 import ic_header_home_icon from '../assets/icon/ic_header_home_icon.png';
 import ic_man from '../assets/icon/ic_man.png';
+import ic_save from '../assets/icon/ic_save.png';
+import ic_delete from '../assets/icon/ic_delete.png';
 
 // Image
 import header_image from '../assets/image/header_image.png';
@@ -604,19 +606,29 @@ class ProfileScreen extends Component {
             </View>
 
             <TouchableOpacity
-              style={styles.buttonContainer}
+              style={styles.searchButtonContainer}
               onPress={this.handleUpdateProfile}>
-              <Text style={styles.saveProfileText}>{t('save_profile')}</Text>
+              <Image
+                source={ic_save}
+                resizeMode="cover"
+                style={styles.searchIconStyle}
+              />
+              <Text style={styles.searchEventText}>{t('save_profile')}</Text>
             </TouchableOpacity>
 
             <View style={styles.lineContainer}></View>
-            
-            <TouchableOpacity
-              style={styles.buttonContainerDelete}
-              onPress={this.confirmProfileDelete}>
-              <Text style={styles.saveProfileText}>{t('delete_account')}</Text>
-            </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.deleteButtonContainer}
+              onPress={this.confirmProfileDelete}>
+              <Image
+                source={ic_delete}
+                resizeMode="cover"
+                style={styles.searchIconStyle}
+              />
+              <Text style={styles.searchEventText}>{t('delete_account')}</Text>
+            </TouchableOpacity>
+            
             {/* <Text style={styles.hostText}>Want to create & host events ?</Text> */}
 
             {/* <TouchableOpacity style={styles.hostButtonContainer}>
@@ -791,5 +803,37 @@ const styles = StyleSheet.create({
     width: 'auto',
     backgroundColor: '#ddd',
     marginVertical: hp(0.5),
+  },
+  searchButtonContainer: {
+    flexDirection: 'row',
+    height: hp(6),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: wp(3),
+    backgroundColor: '#000000',
+    elevation: 30,
+    marginVertical: hp(2),
+    marginHorizontal: wp(4),
+  },
+  deleteButtonContainer: {
+    flexDirection: 'row',
+    height: hp(6),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: wp(3),
+    backgroundColor: '#ff7273',
+    elevation: 30,
+    marginVertical: hp(2),
+    marginHorizontal: wp(4),
+  },
+  searchIconStyle: {
+    width: hp(2),
+    aspectRatio: 1 / 1,
+    marginRight: wp(2),
+  },
+  searchEventText: {
+    fontSize: wp(3.5),
+    fontWeight: '700',
+    color: '#fff',
   },
 });

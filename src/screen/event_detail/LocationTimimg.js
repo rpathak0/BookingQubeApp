@@ -6,6 +6,7 @@ import {
   View,
   Text,
   StyleSheet,
+  Image
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -13,6 +14,9 @@ import {
 } from 'react-native-responsive-screen';
 
 import LinearGradient from 'react-native-linear-gradient';
+
+import ic_map from '../../assets/icon/ic_map.png';
+import ic_timer from '../../assets/icon/ic_timer.png';
 
 import { withTranslation } from 'react-i18next';
 
@@ -31,6 +35,11 @@ class LocationTimimg extends Component {
         <LinearGradient
           colors={['#000000', '#ff0084']}
           style={styles.whereBoxContainer}>
+          <Image
+            source={ic_map}
+            resizeMode="cover"
+            style={styles.searchIconStyle}
+          />
           <Text style={styles.whereTextStyle}>{t('where')}</Text>
           <Text style={styles.whereTextStyle}>{venue}</Text>
           <Text style={styles.addressTextStyle}>
@@ -42,15 +51,20 @@ class LocationTimimg extends Component {
         <LinearGradient
           colors={['#000000', '#ff0084']}
           style={styles.whereBoxContainer}>
+          <Image
+            source={ic_timer}
+            resizeMode="cover"
+            style={styles.searchIconStyle}
+          />
           <Text style={styles.whereTextStyle}>{t('when')}</Text>
           <Text style={styles.addressTextStyle}>
-            {start_date_format} 
+            {start_date_format} - {start_time_format}
           </Text>
           <Text style={styles.addressTextStyle}>
            {t('till')} 
           </Text>
           <Text style={styles.addressTextStyle}>
-           {end_date_format}
+           {end_date_format} - {end_time_format}
           </Text>
         </LinearGradient>
       </View>
@@ -144,12 +158,11 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
   },
   whereBoxContainer: {
-    // height: hp(12),
-    // width: wp(45),
     width: '45%',
     justifyContent: 'center',
     minHeight: hp(15),
     marginHorizontal: wp(2),
+    paddingVertical: hp(1),
     alignItems: 'center',
     borderRadius: wp(4),
   },
@@ -395,5 +408,11 @@ const styles = StyleSheet.create({
     fontSize: wp(3.5),
     color: '#000',
     textAlign: 'left',
+  },
+  searchIconStyle: {
+    width: 32,
+    height: 32,
+    marginVertical: hp(1),
+    
   },
 });

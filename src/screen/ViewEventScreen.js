@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff0084',
     marginVertical: hp(2),
     marginHorizontal: wp(4),
-    paddingVertical: wp(2),
+    paddingVertical: wp(3),
   },
   ticketIconStyle: {
     width: wp(6),
