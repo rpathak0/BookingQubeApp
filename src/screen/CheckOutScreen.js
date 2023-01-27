@@ -812,6 +812,11 @@ class CheckOutScreen extends Component {
     const qty = this.state.ticketList.length > 0 ? (this.state.ticketList.filter((t) => t.ticketId == item.id).reduce((pre, curr) => pre + parseInt(curr.value), 0)) : null;
     return qty > 0 ? `${qty} X ` : '';
   }
+  
+  getAdmits = (item) => {
+    const qty = this.state.ticketList.length > 0 ? (this.state.ticketList.filter((t) => t.ticketId == item.id).reduce((pre, curr) => pre + parseInt(curr.value), 0)) : null;
+    return qty;
+  }
 
   checkTaxesIsAvailable = (item) => {
     let ticket = this.state.ticketList.length > 0 ? (this.state.ticketList.find((t) => (t.ticketId == item.id && t.value > 0 && (t.item.price > 0.00)))) : null;
@@ -1039,6 +1044,7 @@ class CheckOutScreen extends Component {
                           </Text>
                         </View>
                         {item?.sale_start_date && (
+                        <View>
                           <View style={styles.ticketQtyWrapper}>
                             <Text>
                               {this.getQtyText(item)}
@@ -1047,6 +1053,12 @@ class CheckOutScreen extends Component {
                               {(item?.sale_price)} {this.eventInfo.currency}
                             </Text>
                           </View>
+                          <View>
+                            <Text style={styles.admits}>
+                              {t('admits')}: {item.admits*this.getAdmits(item)}
+                            </Text>
+                          </View>
+                        </View>
                         )}
                       </View>
                       {!(item?.show_sheat_chart) ? (
@@ -1549,6 +1561,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     paddingVertical: hp(.5),
+    paddingHorizontal: wp(2),
     borderBottomColor: '#eeeeee',
     borderBottomWidth: 2,
 
@@ -1932,4 +1945,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#ff0084', 
   },
+  admits: {
+    marginTop: hp(1),
+    fontWeight: '700',
+    color: '#999', 
+  },
+
 });

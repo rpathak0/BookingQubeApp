@@ -5,7 +5,7 @@
 export const SERVER = 'http://192.168.1.38:19001/';
 
 /* Staging Server */
-// export const SERVER = '';
+// export const SERVER = 'https://stg.bookingqube.com';
 
 /* Production Server */
 // export const SERVER = 'https://bookingqube.com/';
