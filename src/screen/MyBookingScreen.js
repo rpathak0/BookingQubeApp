@@ -733,35 +733,7 @@ class MyBookingScreen extends Component {
                           <Text style={styles.checkedInTextYes}>{t('no')}</Text>
                         )}
                       </View>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('cancellation')}</Text>
-                        {item.booking_cancel === 0 ? (
-                          <TouchableOpacity
-                            style={styles.cancellationContainer}
-                            onPress={() => {(!this.state.showProcessingLoader) ? this.confirmCancelBooking(item) : true;}}>
-                            <Image
-                              source={ic_cancellation}
-                              resizeMode="cover"
-                              style={styles.cancelIconStyle}
-                            />
-                            <Text style={styles.cancelTextWhite}>{t('cancel')}</Text>
-                          </TouchableOpacity>
-                        ) : item.booking_cancel === 1 ? (
-                          <View>
-                            <Text style={styles.cancelText}>
-                              {t('cancellation_pending')}
-                            </Text>
-                          </View>
-                        ) : item.booking_cancel === 2 ? (
-                          <View>
-                            <Text style={styles.cancelText}>{t('approved')}</Text>
-                          </View>
-                        ) : item.booking_cancel === 3 ? (
-                          <View>
-                            <Text style={styles.cancelText}>{t('refunded')}</Text>
-                          </View>
-                        ) : null}
-                      </View>
+                      
                     </View>
 
                     <View style={styles.lineContainer}></View>

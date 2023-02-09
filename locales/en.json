@@ -89,6 +89,7 @@
       "forgot_password_1"      : "Forgot Password?",
       "enter_email_first"      : "Please enter email!",
       "enter_name_first"       : "Please enter name!",
+      "enter_mobile_valid"       : "Please enter valid mobile number!",
       "ok"                     : "Ok",
       "featured_events"        : "Featured Events",
       "view_all_events"        : "View All Events",
@@ -201,6 +202,11 @@
       "faq"         : "FAQs",
       "browse_qube"         : "Browse Qube",
       "admits"         : "Admits",
+      "sign_waiver"         : "Sign Waiver Info",
+      "signature"         : "Signature",
+      "clear_sign"         : "Clear Signature",
+      "please_enter_sign"         : "Please enter signature!",
+      "please_sign_waiver"         : "Please Sign Waiver Info!",
       
       
       "test"                   : "test"

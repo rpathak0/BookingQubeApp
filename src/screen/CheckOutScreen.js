@@ -9,9 +9,13 @@ import {
   Alert,
   Image,
   I18nManager,
-  SafeAreaView
+  SafeAreaView,
+  Dimensions
 } from 'react-native';
 import React, { Component } from 'react';
+
+import RenderHtml from 'react-native-render-html';
+import Signature from "react-native-signature-canvas";
 
 import {
   widthPercentageToDP as wp,
@@ -34,6 +38,8 @@ import CustomField from '../component/CustomField';
 import { WebView } from 'react-native-webview';
 
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+
+const width = Dimensions.get('window').width;
 
 // API Info
 import { BASE_URL, makeRequest } from '../api/ApiInfo';
@@ -137,9 +143,18 @@ class CheckOutScreen extends Component {
       timeslot_id: 0,
       
       subscribe: null,
+      waiver: null,
       is_subscribe: 0,
+      
+      waiverModal: false,
+      waiver_name: null,
+      waiver_email: null,
+      waiver_phone: null,
+      waiver_signature: null,
     };
     this.eventInfo = this.props.navigation.getParam('eventInfo', null);
+
+    this.signature = React.createRef();
   }
 
 
@@ -232,6 +247,7 @@ class CheckOutScreen extends Component {
               this.setState({
                 tickets: newResponse.data.data.tickets,
                 subscribe: newResponse.data.data.event.subscribe,
+                waiver: newResponse.data.data.event.waiver_info,
                 isLoading: false,
                 userId: userId,
                 timeslots: timeslots,
@@ -474,6 +490,17 @@ class CheckOutScreen extends Component {
       return false;
     }
 
+    // sign waiver required
+    if(this.state.waiver != null && this.state.waiver != '') {
+      if (this.state.waiver_name == null || this.state.waiver_name == '' || 
+      this.state.waiver_email == null || this.state.waiver_email == '' || 
+      this.state.waiver_phone == null || this.state.waiver_phone == '' || 
+      this.state.waiver_signature == null || this.state.waiver_signature == '') {
+        showToast(t('please_sign_waiver'));
+        return false;
+      }
+    }
+
     let c_fields = this.manageData();
 
     // custom field validation
@@ -521,6 +548,10 @@ class CheckOutScreen extends Component {
         promocode: promocodes,
         c_fields: c_fields,
         slots: this.state.timeslot_id,
+        waiver_name: this.state.waiver_name,
+        waiver_email: this.state.waiver_email,
+        waiver_phone: this.state.waiver_phone,
+        waiver_signature: this.state.waiver_signature,
       };
 
       const seleactedSeats = ticketList.filter(t => t.seat_ids !== undefined);
@@ -573,7 +604,7 @@ class CheckOutScreen extends Component {
         )
         .then(response => {
           let newResponse = response;
-
+          console.log('book-tickets response', response);
           if (newResponse) {
             const { status, url, redirectToPaymentUrl } = newResponse.data;
             if (status === true) {
@@ -712,6 +743,8 @@ class CheckOutScreen extends Component {
 
   handleCheckoutAsGuestContinue = async () => {
 
+    const {t} = this.props;
+
     try {
       Keyboard.dismiss();
 
@@ -719,21 +752,21 @@ class CheckOutScreen extends Component {
 
       // validation
       if (name.trim() === '') {
-        Alert.alert('', 'Please enter name!', [{ text: 'OK' }], {
+        Alert.alert('', t('enter_name_first'), [{ text: t('ok') }], {
           cancelable: false,
         });
         return;
       }
 
       if (!isEmailAddress(email)) {
-        Alert.alert('', 'Please enter email!', [{ text: 'OK' }], {
+        Alert.alert('', t('enter_email_first'), [{ text: t('ok') }], {
           cancelable: false,
         });
         return;
       }
 
       if (!isMobileNumber(phone)) {
-        Alert.alert('', 'Please enter valid mobile number', [{ text: 'OK' }], {
+        Alert.alert('', t('enter_mobile_valid'), [{ text: t('ok') }], {
           cancelable: false,
         });
         return;
@@ -780,7 +813,7 @@ class CheckOutScreen extends Component {
   };
 
   handleClosePopUp = () => {
-    this.setState({ checkModal: false, checkSecondModal: false });
+    this.setState({ checkModal: false, checkSecondModal: false, waiverModal: false });
   };
 
   mastercardPayment = () => {
@@ -949,6 +982,67 @@ class CheckOutScreen extends Component {
         return selected_tickets.filter(i => i.ticketId === item.id)[0].value;
       }
       return 0;
+    };
+
+    const handleOK = (signature) => {
+      console.log('signature', signature);
+      this.setState({ waiver_signature: signature });
+
+      submitWaiver(signature);
+    };
+
+    const handleConfirm = () => {
+      console.log("handleConfirm");
+      this.signature.readSignature();
+    };
+
+    const handleClear = () => {
+      console.log('handle clear signature')
+      this.signature.clearSignature();
+    };
+
+    const submitWaiver = async (signature) => {
+
+      const {t} = this.props;
+      
+      try {
+        Keyboard.dismiss();
+  
+        // validation
+        if (this.state.waiver_name == null || this.state.waiver_name == '') {
+          Alert.alert('', t('enter_name_first'), [{ text: t('ok') }], {
+            cancelable: false,
+          });
+          return;
+        }
+        
+        if (signature == null) {
+          Alert.alert('', t('please_enter_sign'), [{ text: t('ok') }], {
+            cancelable: false,
+          });
+          return;
+        }
+  
+        if (!isEmailAddress(this.state.waiver_email)) {
+          Alert.alert('', t('enter_email_first'), [{ text: t('ok') }], {
+            cancelable: false,
+          });
+          return;
+        }
+  
+        if (!isMobileNumber(this.state.waiver_phone)) {
+          Alert.alert('', t('enter_mobile_valid'), [{ text: t('ok') }], {
+            cancelable: false,
+          });
+          return;
+        }
+
+        this.setState({ waiverModal: false });
+
+      } catch (error) {
+        console.log('catch error 2', error);
+      }
+
     };
     
     const renderCustomFieldInputs = (item) => {
@@ -1411,6 +1505,21 @@ class CheckOutScreen extends Component {
             </View>
             ) : null}
             
+            {this.state.waiver != null && this.state.waiver != '' ? (
+            <View style={styles.eventInformationContainer}>
+              <BouncyCheckbox
+                size={18}
+                fillColor="#ff0084"
+                text={t('sign_waiver')}
+                textStyle={{ fontSize: 12 }}
+                textContainerStyle={{ width: '92%' }}
+                onPress={(isChecked) => {
+                  this.setState({ waiverModal: isChecked });
+                }}
+              />
+            </View>
+            ) : null}
+            
             <View style={styles.checkoutContainer}>
               {this.state.userId === null ? (
                 <View style={styles.checkoutContainer1}>
@@ -1436,6 +1545,7 @@ class CheckOutScreen extends Component {
             </View>
           </View>
         </ScrollView>
+        
         <Modal
           style={styles.modalStyle}
           isVisible={this.state.checkModal}
@@ -1490,6 +1600,87 @@ class CheckOutScreen extends Component {
 
           {this.state.showModalProcessingLoader && <ProcessingLoader />}
         </Modal>
+        
+
+        {/* Waiver Modal */}
+        <Modal
+          style={styles.modalStyleWaiver}
+          isVisible={this.state.waiverModal}>
+
+          <ScrollView style={styles.waiverContainer}>
+            <RenderHtml tagsStyles={{ p: { fontSize: wp(3.5) } }}
+              contentWidth={width}
+              source={{ html: this.state.waiver }}
+            />
+          </ScrollView>
+          
+          <Text style={styles.textInputText}>{t('name')}*</Text>
+          <View style={styles.modalInputContainer}>
+            <TextInput
+              placeholder={t('name')}
+              placeholderTextColor="#838383"
+              style={styles.modalLoginFormTextInput}
+              keyboardType="default"
+              underlineColorAndroid="transparent"
+              value={this.state.waiver_name}
+              onChangeText={(value) => {this.setState({ waiver_name: value });}}
+            />
+          </View>
+
+          <Text style={styles.textInputText}>{t('phone_number')}*</Text>
+
+          <View style={styles.modalInputContainer}>
+            <TextInput
+              placeholder={t('phone_number')}
+              placeholderTextColor="#838383"
+              style={styles.modalLoginFormTextInput}
+              keyboardType="number-pad"
+              underlineColorAndroid="transparent"
+              value={this.state.waiver_phone}
+              onChangeText={(value) => {this.setState({ waiver_phone: value });}}
+            />
+          </View>
+
+          <Text style={styles.textInputText}>{t('email')}*</Text>
+
+          <View style={styles.modalInputContainer}>
+            <TextInput
+              placeholder={t('email')}
+              placeholderTextColor="#838383"
+              style={styles.modalLoginFormTextInput}
+              keyboardType="email-address"
+              underlineColorAndroid="transparent"
+              value={this.state.waiver_email}
+              onChangeText={(value) => { this.setState({ waiver_email: value }); }}
+            />
+          </View>
+
+          <Text style={styles.textInputText}>{t('signature')}*</Text>
+          <View style={[styles.modalInputContainer, {height: 150}]}>
+            <Signature 
+              ref={(signature) => { this.signature = signature }}
+              onOK={handleOK}
+            />
+          </View>
+          <View style={styles.modalInputContainer}>
+            <TouchableOpacity
+              style={styles.clearSignatureBtn}
+              onPress={handleClear}>
+              <Text style={styles.saveProfileTextSign}>{t('clear_sign')}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={handleConfirm}
+          >
+            <Text style={styles.saveProfileText}>{t('submit')}</Text>
+          </TouchableOpacity>
+
+          {this.state.showModalProcessingLoader && <ProcessingLoader />}
+        </Modal>
+        {/* Waiver Modal */}
+
         <Toast position='bottom'
           bottomOffset={70} />
         <FooterComponent nav={this.props.navigation} />
@@ -1826,6 +2017,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: wp(2),
   },
+  modalStyleWaiver: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    overflow: "scroll",
+    justifyContent: 'center',
+    top: 0,
+    margin: 0,
+    backgroundColor: '#fff',
+  },
   textInputText: {
     fontSize: wp(3.5),
     fontWeight: '500',
@@ -1862,6 +2063,19 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
     borderRadius: wp(4),
     backgroundColor: '#000000',
+  },
+  clearSignatureBtn: {
+    height: hp(5),
+    width: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: wp(2),
+  },
+  saveProfileTextSign: {
+    fontSize: wp(3.5),
+    fontWeight: '700',
+    color: '#000',
   },
   saveProfileText: {
     fontSize: wp(3.5),
@@ -1949,6 +2163,10 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
     fontWeight: '700',
     color: '#999', 
+  },
+  waiverContainer: {
+    paddingVertical: hp(4),
+    paddingHorizontal: wp(2),
   },
 
 });
