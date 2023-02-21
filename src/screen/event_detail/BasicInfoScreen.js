@@ -39,9 +39,6 @@ import onlineBar from '../../assets/image/bar.png';
 class BasicInfoScreen extends Component {
   constructor(props) {
     super(props);
-
-    // fetching navigation props
-    // this.slugTitle = this.props.navigation.getParam('slugTitle', null);
   }
 
   handleFacebook = async () => {

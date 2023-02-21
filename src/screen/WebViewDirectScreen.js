@@ -13,16 +13,18 @@ import {
 } from 'react-native-responsive-screen';
 
 import {withTranslation} from 'react-i18next';
+import {SERVER} from '../services/apiConfig';
 
-class WebViewScreen extends Component {
+class WebViewDirectScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      url: null,
+      webUrl: null,
       exitButton: null,
     };
-    this.paymentUrl = this.props.route.params.paymentUrl;
+    this.webUrl = SERVER+'events/'+this.props.route.params.webUrl;
+    console.log('this.webUrl', this.webUrl)
   }
   componentDidMount() {
     setTimeout(this.initialSetup, 1000);
@@ -33,7 +35,7 @@ class WebViewScreen extends Component {
     try {
       this.setState({
         isLoading: false,
-        url: this.paymentUrl,
+        webUrl: this.webUrl,
       });
     } catch (error) {
       console.log(error.message);
@@ -41,80 +43,35 @@ class WebViewScreen extends Component {
   };
 
   handleNavigationStateChanged = navState => {
-    const {t} = this.props;
-    const {url, title} = navState;
-
-    if (title == 'fail') {
-      this.setState({exitButton: 'events'});
-      this.props.route.params.onPaymentCallback({
-        success: false,
-        message: t('payment_cancelled'),
-      });
-      setTimeout(() => {
-        this.props.navigation.goBack();
-      }, 1000);
-    } else if (title == 'success') {
-      this.setState({exitButton: 'mybookings'});
-      this.props.route.params.onPaymentCallback({
-        success: true,
-        message: t('payment_success'),
-      });
-      setTimeout(() => {
-        this.props.navigation.navigate('MyBooking');
-      }, 1000);
-    }
+    
   };
 
   handleGoBack = async () => {
-    if (this.state.exitButton == 'mybookings') {
-      this.props.navigation.navigate('MyBooking');
-      return true;
-    }
-
-    if (this.state.exitButton == 'events') {
-      this.props.navigation.goBack();
-      return true;
-    }
+    this.props.navigation.navigate('Home');
+    return true;
   };
 
   render() {
-    const {t} = this.props;
-
     return (
       <SafeAreaView style={{flex: 1}}>
         {this.state.isLoading && <CustomLoader />}
 
         <WebView
-          startInLoadingState={false}
+          startInLoadingState={true}
           ref={r => (this.webref = r)}
-          source={{uri: this.state.url}}
+          source={{uri: this.state.webUrl}}
           onNavigationStateChange={this.handleNavigationStateChanged}
           style={{height: 350, width: '100%', resizeMode: 'cover', flex: 1}}
           injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
           scalesPageToFit={true}
         />
 
-        {this.state.exitButton == 'mybookings' ? (
-          <TouchableOpacity
-            style={styles.buttonContainerSuccess}
-            onPress={this.handleGoBack}>
-            <Text style={styles.saveProfileText}>{t('go_to_mybookings')}</Text>
-          </TouchableOpacity>
-        ) : null}
-
-        {this.state.exitButton == 'events' ? (
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={this.handleGoBack}>
-            <Text style={styles.saveProfileText}>{t('go_back')}</Text>
-          </TouchableOpacity>
-        ) : null}
       </SafeAreaView>
     );
   }
 }
 
-export default withTranslation()(WebViewScreen);
+export default withTranslation()(WebViewDirectScreen);
 
 const styles = StyleSheet.create({
   container: {

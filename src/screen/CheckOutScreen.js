@@ -155,8 +155,8 @@ class CheckOutScreen extends Component {
       waiver_phone: null,
       waiver_signature: null,
     };
-    this.eventInfo = this.props.navigation.getParam('eventInfo', null);
-
+    this.eventInfo = this.props.route.params.eventInfo;
+    
     this.signature = React.createRef();
   }
 

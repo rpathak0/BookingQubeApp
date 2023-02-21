@@ -175,24 +175,34 @@ class HomeScreen extends Component {
     this.setState({search});
   };
 
+  handleWebView = url => {
+    this.props.navigation.navigate('webViewDirect', {
+      webUrl: url,
+    });
+  };
+
   handleEvent = item => {
     const {imageUrlPrefix} = this.state;
 
     const slug = item.slug;
     // console.log(slug);
-    this.props.navigation.navigate('ViewEvent', {
-      slugTitle: {slug, imageUrlPrefix},
-    });
+    // this.props.navigation.navigate('ViewEvent', {
+    //   slugTitle: {slug, imageUrlPrefix},
+    // });
+
+    // open WebViewDirect
+    this.handleWebView(slug);
   };
 
   handleBannerClick = item => {
     const {imageUrlPrefix} = this.state;
     const slug = item.app_event_slug;
-    console.log('banner slg', slug);
+    console.log('banner slg', item);
     if (slug != null && slug != '') {
-      this.props.navigation.navigate('ViewEvent', {
-        slugTitle: {slug, imageUrlPrefix},
-      });
+      this.handleWebView(slug);
+      // this.props.navigation.navigate('ViewEvent', {
+      //   slugTitle: {slug, imageUrlPrefix},
+      // });
     }
     return true;
   };

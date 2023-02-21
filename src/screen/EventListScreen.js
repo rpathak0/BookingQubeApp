@@ -344,14 +344,18 @@ class EventListScreen extends Component {
     this.handleHideDatePicker(date);
   };
 
-  handleViewEvent = async () => {
-    this.props.navigation.navigate('ViewEvent');
+  handleWebView = url => {
+    this.props.navigation.navigate('webViewDirect', {
+      webUrl: url,
+    });
   };
 
   handleEvent = item => {
     const slug = item.slug;
-    // console.log(slug);
-    this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
+    // open WebViewDirect
+    this.handleWebView(slug);
+
+    // this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
   handleReset = async () => {

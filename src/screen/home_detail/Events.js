@@ -29,6 +29,8 @@ import {
 } from '../../Helper/dateConverter';
 // Component
 
+import FastImage from 'react-native-fast-image'
+
 import {withTranslation} from 'react-i18next';
 
 import Carousel from 'react-native-snap-carousel';
@@ -36,9 +38,6 @@ import Carousel from 'react-native-snap-carousel';
 class Events extends Component {
   constructor(props) {
     super(props);
-
-    // fetching navigation props
-    // this.slugTitle = this.props.navigation.getParam('slugTitle', null);
   }
 
   daysRemaining(eventStartDate) {
@@ -175,11 +174,19 @@ class Events extends Component {
         onPress={() => {
           this.handleEvent(item);
         }}>
-        <Image
+        <FastImage
+            style={styles.featuredImageStyle}
+            source={{
+                uri: STORAGE_URL + item.thumbnail,
+                priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+        />
+        {/* <Image
           source={{uri: STORAGE_URL + item.thumbnail}}
           resizeMode="cover"
           style={styles.featuredImageStyle}
-        />
+        /> */}
 
         <View style={styles.eventDateAndPlaceContainer}>
           <Text style={styles.featuredEventDateText}>

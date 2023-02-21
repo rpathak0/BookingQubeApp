@@ -15,6 +15,7 @@ import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import LoginScreen from '../screen/LoginScreen';
 import SignUpScreen from '../screen/SignUpScreen';
 import WebViewScreen from '../screen/WebViewScreen';
+import WebViewDirectScreen from '../screen/WebViewDirectScreen';
 
 import ForgetPasswordScreen from '../screen/ForgetPasswordScreen';
 
@@ -247,6 +248,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         <Stack.Screen name={'Login'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUpScreen} />
         <Stack.Screen name={'webView'} component={WebViewScreen} />
+        <Stack.Screen name={'webViewDirect'} component={WebViewDirectScreen} />
         <Stack.Screen
           name={'ForgetPassword'}
           component={ForgetPasswordScreen}
@@ -272,6 +274,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         <Stack.Screen name={'Login'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUpScreen} />
         <Stack.Screen name={'webView'} component={WebViewScreen} />
+        <Stack.Screen name={'webViewDirect'} component={WebViewDirectScreen} />
         <Stack.Screen
           name={'ForgetPassword'}
           component={ForgetPasswordScreen}

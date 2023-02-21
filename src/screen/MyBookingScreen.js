@@ -319,10 +319,18 @@ class MyBookingScreen extends Component {
     this.getAllFilterData();
   };
 
+  handleWebView = url => {
+    this.props.navigation.navigate('webViewDirect', {
+      webUrl: url,
+    });
+  };
+
   handleGotoEvent = async item => {
     const slug = item.event_title;
 
-    this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
+    this.handleWebView(slug);
+
+    // this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
   confirmCancelBooking = async item => {
