@@ -53,6 +53,17 @@ import {showToast} from '../component/CustomToast';
 // Logo
 import logo from '../assets/image/logo.png';
 import homeIcon from '../assets/icon/ic_home.png';
+import eventIcon from '../assets/icon/ic_footer_event.png';
+import loginIcon from '../assets/icon/login.png';
+import faqIcon from '../assets/icon/faq.png';
+import contactIcon from '../assets/icon/contact_us.png';
+import termsIcon from '../assets/icon/terms.png';
+import privacyIcon from '../assets/icon/privacy.png';
+import aboutIcon from '../assets/icon/about_us.png';
+import checkinIcon from '../assets/icon/checkin.png';
+import checkoutIcon from '../assets/icon/checkout.png';
+import logoutIcon from '../assets/icon/logout.png';
+import mybookingsIcon from '../assets/icon/mybookings.png';
 
 // User Preference
 import {clearData} from '../api/UserPreference';
@@ -66,7 +77,7 @@ const styles = StyleSheet.create({
   drawerItemIcon: {
     width: wp(5),
     height: wp(5),
-    tintColor: '#000',
+    tintColor: '#fff',
     marginRight: -wp(5),
   },
   drawerItemStyle: {
@@ -74,6 +85,7 @@ const styles = StyleSheet.create({
   },
   drawerContentContainer: {
     flex: 1,
+    backgroundColor: '#000000',
   },
   drawerHeader: {
     flex: 1,
@@ -94,7 +106,7 @@ const styles = StyleSheet.create({
   },
   drawerLabel: {
     fontSize: wp(3.5),
-    color: '#000',
+    color: '#fff',
   },
   versionView: {
     position: 'absolute',
@@ -105,6 +117,7 @@ const styles = StyleSheet.create({
   footerNavigatorIcon: {
     height: wp(6),
     aspectRatio: 1 / 1,
+    
   },
 });
 
@@ -145,7 +158,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
       }
     };
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ backgroundColor: '#000' }}>
         <View
           style={styles.drawerContentContainer}
           forceInset={drawerContentContainerInset}>
@@ -342,7 +355,8 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           name={'DrawerEvent'}
           component={EventListingNavigator}
           options={() => ({
-            title: t('event', {order: 2}),
+            title: t('activities', {order: 2}),
+            drawerIcon: () => setDrawerItemIcon(eventIcon),
           })}
         />
         <Drawer.Screen
@@ -350,6 +364,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ProfileNavigator}
           options={() => ({
             title: t('profile', {order: 5}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
         <Drawer.Screen
@@ -357,6 +372,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ScanTicketScreen}
           options={() => ({
             title: t('check_in', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(checkinIcon),
           })}
         />
         <Drawer.Screen
@@ -364,6 +380,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ScanOutScreen}
           options={() => ({
             title: t('check_out', {order: 7}),
+            drawerIcon: () => setDrawerItemIcon(checkoutIcon),
           })}
         />
         <Drawer.Screen
@@ -371,6 +388,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={'NA'}
           options={() => ({
             title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
 
@@ -379,6 +397,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={AboutScreen}
           options={() => ({
             title: t('about', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(aboutIcon),
           })}
         />
         <Drawer.Screen
@@ -386,6 +405,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ContactScreen}
           options={() => ({
             title: t('contact', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(contactIcon),
           })}
         />
         <Drawer.Screen
@@ -393,6 +413,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={TermsScreen}
           options={() => ({
             title: t('terms', {order: 9}),
+            drawerIcon: () => setDrawerItemIcon(termsIcon),
           })}
         />
         <Drawer.Screen
@@ -400,6 +421,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={PrivacyScreen}
           options={() => ({
             title: t('privacy', {order: 10}),
+            drawerIcon: () => setDrawerItemIcon(privacyIcon),
           })}
         />
         <Drawer.Screen
@@ -407,6 +429,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={FaqScreen}
           options={() => ({
             title: t('faq', {order: 11}),
+            drawerIcon: () => setDrawerItemIcon(faqIcon),
           })}
         />
       </Drawer.Navigator>
@@ -438,7 +461,8 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           name={'DrawerEvent'}
           component={EventListingNavigator}
           options={() => ({
-            title: t('event', {order: 2}),
+            title: t('activities', {order: 2}),
+            drawerIcon: () => setDrawerItemIcon(eventIcon),
           })}
         />
         <Drawer.Screen
@@ -446,6 +470,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={MyBookingNavigator}
           options={() => ({
             title: t('my_bookings', {order: 4}),
+            drawerIcon: () => setDrawerItemIcon(mybookingsIcon),
           })}
         />
         <Drawer.Screen
@@ -453,6 +478,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ProfileNavigator}
           options={() => ({
             title: t('profile', {order: 5}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
         <Drawer.Screen
@@ -460,6 +486,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={() => null}
           options={() => ({
             title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
 
@@ -468,6 +495,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={AboutScreen}
           options={() => ({
             title: t('about', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(aboutIcon),
           })}
         />
         <Drawer.Screen
@@ -475,6 +503,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ContactScreen}
           options={() => ({
             title: t('contact', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(contactIcon),
           })}
         />
         <Drawer.Screen
@@ -482,6 +511,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={TermsScreen}
           options={() => ({
             title: t('terms', {order: 9}),
+            drawerIcon: () => setDrawerItemIcon(termsIcon),
           })}
         />
         <Drawer.Screen
@@ -489,6 +519,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={PrivacyScreen}
           options={() => ({
             title: t('privacy', {order: 10}),
+            drawerIcon: () => setDrawerItemIcon(privacyIcon),
           })}
         />
         <Drawer.Screen
@@ -496,6 +527,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={FaqScreen}
           options={() => ({
             title: t('faq', {order: 11}),
+            drawerIcon: () => setDrawerItemIcon(faqIcon),
           })}
         />
       </Drawer.Navigator>
@@ -525,7 +557,8 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           name={'DrawerEvent'}
           component={EventListingNavigator}
           options={() => ({
-            title: t('event', {order: 2}),
+            title: t('activities', {order: 2}),
+            drawerIcon: () => setDrawerItemIcon(eventIcon),
           })}
         />
         <Drawer.Screen
@@ -533,6 +566,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={MyBookingNavigator}
           options={() => ({
             title: t('my_bookings', {order: 4}),
+            drawerIcon: () => setDrawerItemIcon(mybookingsIcon),
           })}
         />
         <Drawer.Screen
@@ -540,6 +574,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ProfileNavigator}
           options={() => ({
             title: t('profile', {order: 5}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
         <Drawer.Screen
@@ -547,6 +582,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={() => null}
           options={() => ({
             title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
 
@@ -555,6 +591,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={AboutScreen}
           options={() => ({
             title: t('about', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(aboutIcon),
           })}
         />
         <Drawer.Screen
@@ -562,6 +599,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ContactScreen}
           options={() => ({
             title: t('contact', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(contactIcon),
           })}
         />
         <Drawer.Screen
@@ -569,6 +607,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={TermsScreen}
           options={() => ({
             title: t('terms', {order: 9}),
+            drawerIcon: () => setDrawerItemIcon(termsIcon),
           })}
         />
         <Drawer.Screen
@@ -576,6 +615,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={PrivacyScreen}
           options={() => ({
             title: t('privacy', {order: 10}),
+            drawerIcon: () => setDrawerItemIcon(privacyIcon),
           })}
         />
         <Drawer.Screen
@@ -583,6 +623,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={FaqScreen}
           options={() => ({
             title: t('faq', {order: 11}),
+            drawerIcon: () => setDrawerItemIcon(faqIcon),
           })}
         />
       </Drawer.Navigator>
@@ -613,7 +654,8 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           name={'DrawerEvent'}
           component={EventListingNavigator}
           options={() => ({
-            title: t('event', {order: 2}),
+            title: t('activities', {order: 2}),
+            drawerIcon: () => setDrawerItemIcon(eventIcon),
           })}
         />
         <Drawer.Screen
@@ -621,6 +663,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={AdminNavigator}
           options={() => ({
             title: t('login', {order: 3}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
 
@@ -629,6 +672,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={AboutScreen}
           options={() => ({
             title: t('about', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(aboutIcon),
           })}
         />
         <Drawer.Screen
@@ -636,6 +680,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={ContactScreen}
           options={() => ({
             title: t('contact', {order: 8}),
+            drawerIcon: () => setDrawerItemIcon(contactIcon),
           })}
         />
         <Drawer.Screen
@@ -643,6 +688,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={TermsScreen}
           options={() => ({
             title: t('terms', {order: 9}),
+            drawerIcon: () => setDrawerItemIcon(termsIcon),
           })}
         />
         <Drawer.Screen
@@ -650,6 +696,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={PrivacyScreen}
           options={() => ({
             title: t('privacy', {order: 10}),
+            drawerIcon: () => setDrawerItemIcon(privacyIcon),
           })}
         />
         <Drawer.Screen
@@ -657,6 +704,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           component={FaqScreen}
           options={() => ({
             title: t('faq', {order: 11}),
+            drawerIcon: () => setDrawerItemIcon(faqIcon),
           })}
         />
       </Drawer.Navigator>
