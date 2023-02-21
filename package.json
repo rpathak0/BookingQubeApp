@@ -1,6 +1,6 @@
 {
   "name": "BookingQube",
-  "version": "1.7",
+  "version": "1.9",
   "main": "index.js",
   "private": true,
   "scripts": {
