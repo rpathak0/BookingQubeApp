@@ -60,7 +60,7 @@ class ScanTicketScreen extends Component {
   }
 
   componentDidMount() {
-    console.log('component mounted');
+
     this.scanHoneywell();
 
     // testing only
@@ -74,30 +74,30 @@ class ScanTicketScreen extends Component {
   }
 
   scanHoneywell = async e => {
-    console.log('call honewell function')
-    if( HoneywellScanner.isCompatible ) {
-      console.log('honewell compatible')
+
+    if (HoneywellScanner.isCompatible) {
+
       HoneywellScanner.startReader().then((claimed) => {
-          console.log(claimed ? 'Barcode reader is claimed' : 'Barcode reader is busy');
-          HoneywellScanner.onBarcodeReadSuccess(event => {
-              console.log('Received data', event.data);
-              let barcodedata = event.data.split('-');
-              let data        = {
-                id: barcodedata[0],
-                order_number: barcodedata[1],
-                url_route: "eventmie.get_booking",
-              }
-              this.honeywellCheckIn(data);
-              
-          });
+
+        HoneywellScanner.onBarcodeReadSuccess(event => {
+
+          let barcodedata = event.data.split('-');
+          let data = {
+            id: barcodedata[0],
+            order_number: barcodedata[1],
+            url_route: "eventmie.get_booking",
+          }
+          this.honeywellCheckIn(data);
+
+        });
       });
 
-      return(
+      return (
         () => {
-            HoneywellScanner.stopReader().then(() => {
-                console.log("Freedom!!");
-                HoneywellScanner.offBarcodeReadSuccess();
-            });
+          HoneywellScanner.stopReader().then(() => {
+
+            HoneywellScanner.offBarcodeReadSuccess();
+          });
         }
       )
     }
@@ -123,16 +123,16 @@ class ScanTicketScreen extends Component {
       data.url_route = 'eventmie.get_booking';
       await axios
         .post(BASE_URL + 'get-booking', data, axiosConfig)
-        .then(response => {});
-    } catch (error) {}
+        .then(response => { });
+    } catch (error) { }
   };
 
-  
+
 
   onSuccess = async e => {
     const data = JSON.parse(e.data);
     const { t } = this.props;
-    console.log('datadata', data);
+
 
     this.setState({ scannerData: data });
 
@@ -163,13 +163,12 @@ class ScanTicketScreen extends Component {
         .then(response => {
           let newResponse = response.data;
 
-          console.log('newResponsenewResponsenewResponse', response);
 
           if (newResponse) {
-            // console.log('here');
+
             const { status } = newResponse;
             if (status === true) {
-              console.log('newResponse.booking.checked_in', newResponse.booking);
+
               this.setState({
                 ticketList: [newResponse.booking],
                 showQR: null,
@@ -203,7 +202,7 @@ class ScanTicketScreen extends Component {
   };
 
   render() {
-    const  { t } = this.props;
+    const { t } = this.props;
     if (this.state.showQR === 1) {
       return (
         <SafeAreaView style={styles.container}>
@@ -216,7 +215,7 @@ class ScanTicketScreen extends Component {
             <View>
               <TouchableOpacity
                 style={styles.buttonContainerRefresh}
-                onPress={() => {this.scannerRefresh()}}>
+                onPress={() => { this.scannerRefresh() }}>
                 <Image
                   source={ic_reset}
                   resizeMode="cover"
@@ -224,7 +223,7 @@ class ScanTicketScreen extends Component {
                 />
                 <Text style={styles.buttonText}>{t('reload_scanner')}</Text>
               </TouchableOpacity>
-            </View>    
+            </View>
             <View style={styles.scanTicketInner}>
               <QRCodeScanner
                 onRead={this.onSuccess}
@@ -242,8 +241,8 @@ class ScanTicketScreen extends Component {
                 ref={this.scanner}
               />
             </View>
-              
-            
+
+
           </View>
 
           <FooterComponent nav={this.props.navigation} />
@@ -262,7 +261,7 @@ class ScanTicketScreen extends Component {
                 <View>
                   <TouchableOpacity
                     style={styles.buttonContainerRefresh}
-                    onPress={() => {this.scannerRefresh()}}>
+                    onPress={() => { this.scannerRefresh() }}>
                     <Image
                       source={ic_reset}
                       resizeMode="cover"
@@ -270,12 +269,12 @@ class ScanTicketScreen extends Component {
                     />
                     <Text style={styles.buttonText}>{t('reload_scanner')}</Text>
                   </TouchableOpacity>
-                </View>    
+                </View>
                 <View style={styles.bookedTicketContainer}>
                   <View style={styles.orderIdWrapper}>
                     <Text style={styles.orderIdText}>{t('order_id')} #{item.order_number}</Text>
                   </View>
-                  
+
                   <Text style={styles.eventTitleText}>{t('event')}</Text>
                   <Text style={styles.eventPlaceText}>
                     {item.event_title} ({item.event_category})
@@ -298,10 +297,10 @@ class ScanTicketScreen extends Component {
                     <View>
                       <Text style={styles.eventTitleText}>{t('attendee_name')}</Text>
                       <Text style={styles.eventTimeText}>
-                      {item.attendees[0].name}
+                        {item.attendees[0].name}
                       </Text>
                     </View>
-                    
+
                   </View>
 
                   <View style={styles.lineContainer}></View>
@@ -331,7 +330,7 @@ class ScanTicketScreen extends Component {
                     <View>
                       <Text style={styles.eventTitleText}>{t('payment')}</Text>
                       <Text style={styles.eventTimeText}>
-                        {item.payment_type} / 
+                        {item.payment_type} /
                         {item.is_paid === 0 ? (
                           <Text style={styles.paymentProcessText}>{t('pending')}</Text>
                         ) : (
@@ -356,7 +355,7 @@ class ScanTicketScreen extends Component {
                       )}
                     </View>
                   </View>
-                  
+
                 </View>
               </ScrollView>
             ))}
@@ -683,23 +682,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
   },
-  scanTicketOuter:{
+  scanTicketOuter: {
     // flex: 1,
     // flexDirection: 'column',
   },
-  scanTicketWrapper:{
+  scanTicketWrapper: {
     // flex: 1,
     // flexDirection: 'column',
   },
-  scanTicketInner:{
+  scanTicketInner: {
     marginTop: Platform.OS === 'ios' ? hp(2) : hp(6),
     marginHorizontal: wp(4),
   },
-  scanTicketButtonWrapper:{
+  scanTicketButtonWrapper: {
     flex: 1,
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: hp(3),
   },
   orderIdWrapper: {

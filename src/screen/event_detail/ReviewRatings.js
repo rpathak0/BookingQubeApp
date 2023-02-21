@@ -28,7 +28,6 @@ class ReviewRatings extends Component {
 
     const { reviews } = this.props.data.event;
     const { t } = this.props;
-    console.log(reviews);
 
     return (
       <View >
@@ -48,13 +47,13 @@ class ReviewRatings extends Component {
                     maxStars={5}
                     color={'#FFB200'}
                     starSize={20}
-                    onChange={()=>{}}
-                    starStyle={{marginLeft:-5}}
+                    onChange={() => { }}
+                    starStyle={{ marginLeft: -5 }}
                     rating={parseFloat(item.rating)}
                   />
-                    <Text style={styles.ratingText}>
-                      {item.rating + ' ' + t('rating_5')}
-                     </Text>
+                  <Text style={styles.ratingText}>
+                    {item.rating + ' ' + t('rating_5')}
+                  </Text>
                 </View>
 
                 <Text style={styles.reviewText}>{item.review}</Text>
@@ -377,8 +376,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
     textAlign: 'center',
-    marginTop:hp(2),
-    marginBottom:hp(1)
+    marginTop: hp(2),
+    marginBottom: hp(1)
   },
   totalReviewsText: {
     fontSize: wp(3),
@@ -400,7 +399,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   reviewText: {
-    marginTop:hp(1),
+    marginTop: hp(1),
     fontSize: wp(3.8),
     color: '#000',
     textAlign: 'left',

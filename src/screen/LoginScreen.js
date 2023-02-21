@@ -13,7 +13,7 @@ import {
   Alert,
   Platform,
   I18nManager,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -22,8 +22,7 @@ import {
 } from 'react-native-responsive-screen';
 import RNRestart from 'react-native-restart';
 
-import { useTranslation } from 'react-i18next';
-
+import {useTranslation} from 'react-i18next';
 
 // Component
 import ProcessingLoader from '../component/ProcessingLoader';
@@ -43,42 +42,32 @@ import {BASE_URL, makeRequest} from '../api/ApiInfo';
 
 // User Preference
 import {async_keys, storeData} from '../api/UserPreference';
-import { LoginContext } from '../context/LoginContext';
-import { User } from '../utils/user';
+import {LoginContext} from '../context/LoginContext';
+import {User} from '../utils/user';
 
 // Validation
 import {isEmailAddress} from '../validation/FormValidator';
 
 // export default class LoginScreen extends Component
 const LoginScreen = ({navigation}) => {
-  
   const {setLogin, setType} = useContext(LoginContext);
-  const [loginFrom ,setLoginForm] =  useState(
-    {"hidePassword": true}
-  )
+  const [loginFrom, setLoginForm] = useState({hidePassword: true});
 
-  const { t } = useTranslation();
-  
+  const {t} = useTranslation();
 
-  const handleChange = (value,name) => {
-    
+  const handleChange = (value, name) => {
     const updatedLoginForm = {
       ...loginFrom,
-      [name]:value
-    }
+      [name]: value,
+    };
     setLoginForm(updatedLoginForm);
   };
 
-  
-
   const setPasswordVisibility = () => {
-    setLoginForm(
-      {
-        ...loginFrom,
-        hidePassword:!loginFrom?.hidePassword
-
-      }
-    );
+    setLoginForm({
+      ...loginFrom,
+      hidePassword: !loginFrom?.hidePassword,
+    });
   };
 
   const handleRegister = async () => {
@@ -91,9 +80,9 @@ const LoginScreen = ({navigation}) => {
 
   const handleLogin = async () => {
     Keyboard.dismiss();
-    
+
     const {email, password} = loginFrom;
-    
+
     // validation
     if (!isEmailAddress(email)) {
       Alert.alert('', t('enter_valid_email'), [{text: t('ok')}], {
@@ -123,7 +112,7 @@ const LoginScreen = ({navigation}) => {
       // calling api
       const response = await makeRequest(BASE_URL + 'login', params, true);
       if (response) {
-        const {success, errors, token ,auth} = response;
+        const {success, errors, token, auth} = response;
 
         if (success === true) {
           // stopping processing loader
@@ -134,10 +123,10 @@ const LoginScreen = ({navigation}) => {
 
           console.log('async_keys.userId', async_keys.userId);
           console.log('token', token);
-          
+
           console.log('async_keys.userInfo', async_keys.userInfo);
           console.log('response.data.role_id', response.data.role_id);
-          
+
           console.log('response.data.avatar', response.data.avatar);
 
           await storeData(async_keys.userId, token);
@@ -164,17 +153,12 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
-  
-    return (
-      <SafeAreaView style={styles.safeAreaContainer}>
+  return (
+    <SafeAreaView style={styles.safeAreaContainer}>
       <ImageBackground style={styles.container} source={splash_image}>
-        <HeaderComponent
-          title={t('login')}
-          navAction="back"
-          nav={navigation}
-        />
+        <HeaderComponent title={t('login')} navAction="back" nav={navigation} />
         <View style={styles.homeContainer}>
-          <Text style={styles.loginTextStyle}>{ t('login') }</Text>
+          <Text style={styles.loginTextStyle}>{t('login')}</Text>
 
           <View style={styles.inputContainer}>
             <TextInput
@@ -184,8 +168,10 @@ const LoginScreen = ({navigation}) => {
               keyboardType="email-address"
               autoCapitalize="none"
               underlineColorAndroid="transparent"
-              value={ loginFrom?.email }
-              onChangeText={(value)=>{handleChange(value,'email')}}
+              value={loginFrom?.email}
+              onChangeText={value => {
+                handleChange(value, 'email');
+              }}
             />
           </View>
 
@@ -199,15 +185,19 @@ const LoginScreen = ({navigation}) => {
               underlineColorAndroid="transparent"
               // value={this.state.password}
               // onChangeText={this.handlePasswordChange}
-              value={ loginFrom?.password }
-              onChangeText={(value)=>{handleChange(value,'password')}}
+              value={loginFrom?.password}
+              onChangeText={value => {
+                handleChange(value, 'password');
+              }}
               InputProps={{disableUnderline: true}}
             />
 
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.touchAbleButton}
-              onPress={()=>{setPasswordVisibility}}>
+              onPress={() => {
+                setPasswordVisibility;
+              }}>
               <Image
                 source={
                   loginFrom?.hidePassword
@@ -237,9 +227,7 @@ const LoginScreen = ({navigation}) => {
               {t('forgot_password_1')}
             </Text>
 
-            <Text
-              style={styles.additionalTextStyle}
-              onPress={handleRegister}>
+            <Text style={styles.additionalTextStyle} onPress={handleRegister}>
               {t('register')}
             </Text>
           </View>
@@ -247,10 +235,9 @@ const LoginScreen = ({navigation}) => {
 
         {loginFrom?.showProcessingLoader && <ProcessingLoader />}
       </ImageBackground>
-      </SafeAreaView>
-    );
-  
-}
+    </SafeAreaView>
+  );
+};
 export default LoginScreen;
 
 const styles = StyleSheet.create({
@@ -291,7 +278,7 @@ const styles = StyleSheet.create({
     paddingLeft: wp(2),
     color: '#fff',
     borderRadius: wp(1),
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   touchAbleButton: {
     position: 'absolute',

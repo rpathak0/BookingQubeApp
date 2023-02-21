@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
-import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet, I18nManager } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  I18nManager,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -14,12 +21,11 @@ import login_icon from '../assets/icon/login.png';
 // import brand_logo from '../assets/icon/brand_logo.png';
 import brand_logo from '../assets/image/logo.png';
 
-
 // User Preference
-import { async_keys, getData, storeData } from '../api/UserPreference';
+import {async_keys, getData, storeData} from '../api/UserPreference';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -27,15 +33,16 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import RNRestart from 'react-native-restart';
 
 // API Info
-import { STORAGE_URL } from '../api/ApiInfo';
-import { t } from 'i18next';
+import {STORAGE_URL} from '../api/ApiInfo';
+import {t} from 'i18next';
+import {useNavigation} from '@react-navigation/native';
 const HeaderComponent = props => {
-
-  const { i18n } = useTranslation();
+  const {i18n} = useTranslation();
+  const navigation = useNavigation();
 
   const [img, setImg] = useState('');
   const [defualtAvatar, setDefaultAvatar] = useState(login_icon);
-  const { nav, title, navAction } = props;
+  const {nav, title, navAction} = props;
   // let {isLogin} = React.useContext(LoginContext);
   const toggleDrawer = () => {
     nav.openDrawer();
@@ -44,47 +51,153 @@ const HeaderComponent = props => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(i18n.language);
   const [items, setItems] = useState([
-    {label: 'English', value: "en", icon: () => <Image source={require('../assets/image/en.png')} style={styles.iconStyle} />},
-    {label: 'Qatar', value: "ar", icon: () => <Image source={require('../assets/image/ar.png')} style={styles.iconStyle} />},
-    {label: 'Germany', value: "de", icon: () => <Image source={require('../assets/image/de.png')} style={styles.iconStyle} />},
-    {label: 'France', value: "fr", icon: () => <Image source={require('../assets/image/fr.png')} style={styles.iconStyle} />},
-    {label: 'Spain', value: "es", icon: () => <Image source={require('../assets/image/es.png')} style={styles.iconStyle} />},
-    {label: 'India', value: "hi", icon: () => <Image source={require('../assets/image/hi.png')} style={styles.iconStyle} />},
-    {label: 'Italy', value: "it", icon: () => <Image source={require('../assets/image/it.png')} style={styles.iconStyle} />},
-    {label: 'Japan', value: "ja", icon: () => <Image source={require('../assets/image/ja.png')} style={styles.iconStyle} />},
-    {label: 'Nederland', value: "nl", icon: () => <Image source={require('../assets/image/nl.png')} style={styles.iconStyle} />},
-    {label: 'Portugal', value: "pt", icon: () => <Image source={require('../assets/image/pt.png')} style={styles.iconStyle} />},
-    {label: 'Russia', value: "ru", icon: () => <Image source={require('../assets/image/ru.png')} style={styles.iconStyle} />},
-    {label: 'China', value: "zh_CN", icon: () => <Image source={require('../assets/image/cn.png')} style={styles.iconStyle} />},
+    {
+      label: 'English',
+      value: 'en',
+      icon: () => (
+        <Image
+          source={require('../assets/image/en.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Qatar',
+      value: 'ar',
+      icon: () => (
+        <Image
+          source={require('../assets/image/ar.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Germany',
+      value: 'de',
+      icon: () => (
+        <Image
+          source={require('../assets/image/de.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'France',
+      value: 'fr',
+      icon: () => (
+        <Image
+          source={require('../assets/image/fr.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Spain',
+      value: 'es',
+      icon: () => (
+        <Image
+          source={require('../assets/image/es.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'India',
+      value: 'hi',
+      icon: () => (
+        <Image
+          source={require('../assets/image/hi.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Italy',
+      value: 'it',
+      icon: () => (
+        <Image
+          source={require('../assets/image/it.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Japan',
+      value: 'ja',
+      icon: () => (
+        <Image
+          source={require('../assets/image/ja.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Nederland',
+      value: 'nl',
+      icon: () => (
+        <Image
+          source={require('../assets/image/nl.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Portugal',
+      value: 'pt',
+      icon: () => (
+        <Image
+          source={require('../assets/image/pt.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'Russia',
+      value: 'ru',
+      icon: () => (
+        <Image
+          source={require('../assets/image/ru.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
+    {
+      label: 'China',
+      value: 'zh_CN',
+      icon: () => (
+        <Image
+          source={require('../assets/image/cn.png')}
+          style={styles.iconStyle}
+        />
+      ),
+    },
   ]);
 
   useEffect(() => {
-
-    AsyncStorage.getItem('guestCheckoutSuccess').then((guestCheckoutSuccess) => {
-
+    AsyncStorage.getItem('guestCheckoutSuccess').then(guestCheckoutSuccess => {
       if (guestCheckoutSuccess == '"yes"') {
         setDefaultAvatar(ic_man);
-
       } else {
-
-        AsyncStorage.getItem('avatar').then((avatar) => {
-          avatar = avatar?.replace(/['"]+/g, '')
+        AsyncStorage.getItem('avatar').then(avatar => {
+          avatar = avatar?.replace(/['"]+/g, '');
           if (avatar !== 'users/default.png') {
             setImg(avatar);
           } else {
             setDefaultAvatar(ic_man);
           }
-        })
+        });
       }
-
-    })
-
-
-  }, [img])
-
+    });
+  }, [img]);
 
   const handleBack = async () => {
-    nav.pop();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('DrawerHome', {
+        screen: 'Home',
+      });
+    }
   };
 
   let navIcon = ic_menu;
@@ -94,7 +207,6 @@ const HeaderComponent = props => {
     navIcon = ic_back;
     handleNavAction = handleBack;
   }
-
 
   const handleProfile = async () => {
     // getting token from AsyncStorage
@@ -106,19 +218,16 @@ const HeaderComponent = props => {
       nav.navigate('Profile');
     }
   };
-  
-  const changeLanguage = async (value) => {
+
+  const changeLanguage = async value => {
     console.log('changeLanguage', value);
     await storeData(async_keys.userLang, value);
 
-    i18n
-    .changeLanguage(value)
-    .then(() => {
+    i18n.changeLanguage(value).then(() => {
       I18nManager.forceRTL(value == 'ar');
       RNRestart.Restart();
     });
   };
-
 
   return (
     <View style={styles.headerContainer}>
@@ -128,10 +237,7 @@ const HeaderComponent = props => {
           style={styles.menuIconContainer}>
           <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
         </TouchableOpacity>
-        <Image
-          source={brand_logo}
-          style={styles.brandIcon}
-        />
+        <Image source={brand_logo} style={styles.brandIcon} />
       </View>
 
       <View style={[styles.menuContainer, styles.menuItems]}>
@@ -142,16 +248,18 @@ const HeaderComponent = props => {
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
-          onChangeValue={(value) => {changeLanguage(value)}}
+          onChangeValue={value => {
+            changeLanguage(value);
+          }}
           zIndex={99999}
           containerStyle={styles.languageSwitch}
-          style={{ backgroundColor: '#000' }}
+          style={{backgroundColor: '#000'}}
           listItemContainerStyle={styles.listItemContainerStyle}
           theme="DARK"
-          listMode='MODAL'
-          modalProps={{animationType: "fade"}}
+          listMode="MODAL"
+          modalProps={{animationType: 'fade'}}
           modalTitle={t('select_language')}
-          modalTitleStyle={{fontWeight: "bold"}}
+          modalTitleStyle={{fontWeight: 'bold'}}
           hideSelectedItemIcon={true}
           selectedItemContainerStyle={{display: 'none', padding: 0, margin: 0}}
           selectedItemLabelStyle={{padding: 0, margin: 0}}
@@ -161,22 +269,21 @@ const HeaderComponent = props => {
           onPress={handleProfile}
           activeOpacity={1}
           style={styles.notificationIconContainer}>
-          {(img) ?
+          {img ? (
             <Image
-              source={{ uri: STORAGE_URL+`${img}` }}
+              source={{uri: STORAGE_URL + `${img}`}}
               resizeMode="cover"
               style={styles.cartIconStyle}
-            /> : 
+            />
+          ) : (
             <Image
               source={defualtAvatar}
               resizeMode="cover"
               style={styles.cartIconStyle}
             />
-          }
+          )}
         </TouchableOpacity>
       </View>
-
-      
     </View>
   );
 };
@@ -188,7 +295,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    
+
     paddingHorizontal: wp(2),
     backgroundColor: '#000',
   },
@@ -239,7 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   languageDropdown: {
-    backgroundColor:'#000',
+    backgroundColor: '#000',
   },
   languageDropdownContainer: {
     zIndex: 999999999999,
@@ -258,14 +365,13 @@ const styles = StyleSheet.create({
   },
   menuItems: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   menuItemsCenter: {
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    
   },
   notificationIcon: {
     width: wp(5.6),
@@ -290,7 +396,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: wp(30),
     height: wp(10),
-    marginLeft: wp(2)
+    marginLeft: wp(2),
   },
   iconStyle: {
     width: wp(10),
@@ -299,5 +405,4 @@ const styles = StyleSheet.create({
   listItemContainerStyle: {
     marginBottom: hp(2),
   },
-  
 });

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   StatusBar,
   Platform,
   I18nManager,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -34,14 +34,14 @@ import ic_search from '../assets/icon/ic_search.png';
 // Image
 import splash_image from '../assets/image/spalsh_image.png';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
-import { SliderBox } from "react-native-image-slider-box";
+import {SliderBox} from 'react-native-image-slider-box';
 
 // API Info
-import { BASE_URL, STORAGE_URL } from '../api/ApiInfo';
+import {BASE_URL, STORAGE_URL} from '../api/ApiInfo';
 import axios from 'axios';
-import { black } from 'react-native-paper/lib/typescript/styles/colors';
+import {black} from 'react-native-paper/lib/typescript/styles/colors';
 import Events from './home_detail/Events';
 
 class HomeScreen extends Component {
@@ -62,9 +62,7 @@ class HomeScreen extends Component {
       imageUrlPrefix: null,
       saleExpired: false,
       banners: [],
-      banners_images: [
-        require('../assets/image/banner.jpg'),
-      ],
+      banners_images: [require('../assets/image/banner.jpg')],
     };
   }
 
@@ -73,8 +71,6 @@ class HomeScreen extends Component {
     this.fetchBannersData();
     // this.pay();
   }
-
- 
 
   pay = () => {
     const params = {
@@ -107,8 +103,6 @@ class HomeScreen extends Component {
   };
 
   fetchBannersData = async () => {
-    const axios = require('axios');
-
     try {
       // calling api
       await axios
@@ -118,22 +112,18 @@ class HomeScreen extends Component {
         .then(response => {
           let newResponse = response;
           if (newResponse) {
-            const { success } = newResponse.data;
-
-            console.log(newResponse.data);
+            const {success} = newResponse.data;
 
             if (success === true) {
               let bannersImages = newResponse.data.data.banners.map(banner => {
-                return STORAGE_URL+banner.image;
+                return STORAGE_URL + banner.image;
               });
-              
+
               this.setState({
                 banners: newResponse.data.data.banners,
                 banners_images: bannersImages,
                 isLoading: false,
               });
-
-              console.log('banners_images', bannersImages)
             }
           }
         });
@@ -143,8 +133,6 @@ class HomeScreen extends Component {
   };
 
   fetchEventData = async () => {
-    const axios = require('axios');
-
     try {
       // calling api
       await axios
@@ -153,12 +141,10 @@ class HomeScreen extends Component {
         // processing response
         .then(response => {
           let newResponse = response;
-          this.setState({ imageURL: newResponse.data.data.image_url_prefix });
+          this.setState({imageURL: newResponse.data.data.image_url_prefix});
 
           if (newResponse) {
-            const { success } = newResponse.data;
-
-            console.log(newResponse.data);
+            const {success} = newResponse.data;
 
             if (success === true) {
               this.setState({
@@ -180,32 +166,32 @@ class HomeScreen extends Component {
   };
 
   fetchFilterData = async () => {
-    const { search } = this.state;
+    const {search} = this.state;
 
-    this.props.navigation.navigate('EventList', { searchInfo: { search } });
+    this.props.navigation.navigate('EventList', {searchInfo: {search}});
   };
 
   handleSearchChanged = search => {
-    this.setState({ search });
+    this.setState({search});
   };
 
   handleEvent = item => {
-    const { imageUrlPrefix } = this.state;
+    const {imageUrlPrefix} = this.state;
 
     const slug = item.slug;
     // console.log(slug);
     this.props.navigation.navigate('ViewEvent', {
-      slugTitle: { slug, imageUrlPrefix },
+      slugTitle: {slug, imageUrlPrefix},
     });
   };
 
   handleBannerClick = item => {
-    const { imageUrlPrefix } = this.state;
+    const {imageUrlPrefix} = this.state;
     const slug = item.app_event_slug;
     console.log('banner slg', slug);
-    if(slug != null && slug != '') {
+    if (slug != null && slug != '') {
       this.props.navigation.navigate('ViewEvent', {
-        slugTitle: { slug, imageUrlPrefix },
+        slugTitle: {slug, imageUrlPrefix},
       });
     }
     return true;
@@ -215,8 +201,8 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('EventList');
   };
 
-  handleAllEvent1 = ({ name }) => {
-    this.props.navigation.navigate('EventList', { searchData: { slug: name } });
+  handleAllEvent1 = ({name}) => {
+    this.props.navigation.navigate('EventList', {searchData: {slug: name}});
   };
 
   handleCity = item => {
@@ -227,31 +213,29 @@ class HomeScreen extends Component {
   };
 
   render() {
-    const { t } = this.props;
-    const { isLoading } = this.state;
-    if (isLoading) {
-      return <CustomLoader />;
-    }
+    const {t} = this.props;
+    const {isLoading} = this.state;
+
     const imageUrl = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
+        {isLoading && <CustomLoader />}
         <HeaderComponent title={t('home')} nav={this.props.navigation} />
         <ScrollView
         // contentContainerStyle={{flex: 1}}
         >
           <View style={styles.homeContainer}>
-            
-            
             <View>
               <SliderBox
                 images={this.state.banners_images}
                 autoplay
                 circleLoop
-                onCurrentImagePressed={index => this.handleBannerClick(this.state.banners[index])}
+                onCurrentImagePressed={index =>
+                  this.handleBannerClick(this.state.banners[index])
+                }
                 autoplayInterval={9000}
               />
             </View>
-
 
             <View style={styles.searchContainer}>
               <View style={styles.inputContainer}>
@@ -268,7 +252,7 @@ class HomeScreen extends Component {
                   underlineColorAndroid="transparent"
                   value={this.state.search}
                   onChangeText={this.handleSearchChanged}
-                // InputProps={{disableUnderline: true}}
+                  // InputProps={{disableUnderline: true}}
                 />
               </View>
             </View>
@@ -283,61 +267,66 @@ class HomeScreen extends Component {
               />
               <Text style={styles.searchEventText}>{t('search_events')}</Text>
             </TouchableOpacity>
-            
-            {(this.state.featureEventList.length > 0) ? (
-            <View>
-              <Events 
-                eventList={this.state.featureEventList}
-                handleEvent={(item) => { this.handleEvent(item) }}
-                name={t('featured_events')}
-                backGroundImage={false}
-              />
-            </View>
-            ): null}
 
-            
-            {(this.state.upcomingEventList.length > 0) ? (
+            {this.state.featureEventList.length > 0 ? (
+              <View>
+                <Events
+                  eventList={this.state.featureEventList}
+                  handleEvent={item => {
+                    this.handleEvent(item);
+                  }}
+                  name={t('featured_events')}
+                  backGroundImage={false}
+                />
+              </View>
+            ) : null}
+
+            {this.state.upcomingEventList.length > 0 ? (
               <View>
                 <Events
                   eventList={this.state.upcomingEventList}
-                  handleEvent={(item) => { this.handleEvent(item) }}
+                  handleEvent={item => {
+                    this.handleEvent(item);
+                  }}
                   name={t('upcomming_events')}
                   backGroundImage={false}
                 />
               </View>
-            ): null}
+            ) : null}
 
-            {(this.state.topSellingEvents.length > 0) ? (
+            {this.state.topSellingEvents.length > 0 ? (
               <View>
                 <Events
                   eventList={this.state.topSellingEvents}
-                  handleEvent={(item) => { this.handleEvent(item) }}
+                  handleEvent={item => {
+                    this.handleEvent(item);
+                  }}
                   name={t('top_selling')}
                   backGroundImage={true}
                 />
               </View>
-            ): null}
+            ) : null}
 
-            {(this.state.categoryEvents.length > 0) ? (
-              this.state.categoryEvents.map((cevent, cindex)=>(
-                <View>
-                  <Events 
-                    eventList={cevent.events}
-                    handleEvent={(item) => { this.handleEvent(item) }}
-                    name={cevent.name}
-                    backGroundImage={false}
-                  />
-                </View>
-              ))
-            ): null}
-            
+            {this.state.categoryEvents.length > 0
+              ? this.state.categoryEvents.map((cevent, cindex) => (
+                  <View>
+                    <Events
+                      eventList={cevent.events}
+                      handleEvent={item => {
+                        this.handleEvent(item);
+                      }}
+                      name={cevent.name}
+                      backGroundImage={false}
+                    />
+                  </View>
+                ))
+              : null}
           </View>
         </ScrollView>
 
         <FooterComponent nav={this.props.navigation} />
       </SafeAreaView>
     );
-
   }
 }
 
@@ -383,7 +372,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   searchButtonContainer: {
     flexDirection: 'row',
@@ -432,7 +421,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(4),
     overflow: 'hidden',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.9,
     shadowRadius: 10,
     // elevation: 3,
@@ -646,5 +635,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-
 });

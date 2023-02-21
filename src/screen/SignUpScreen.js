@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ const axios = require('axios');
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import ProcessingLoader from '../component/ProcessingLoader';
-import {showToast} from '../component/CustomToast';
+import { showToast } from '../component/CustomToast';
 
 // Icon
 import ic_login from '../assets/icon/ic_login.png';
@@ -42,10 +42,10 @@ import google from '../assets/icon/google.png';
 import splash_image from '../assets/image/spalsh_image.png';
 
 // API
-import {BASE_URL, makeRequest} from '../api/ApiInfo';
+import { BASE_URL, makeRequest } from '../api/ApiInfo';
 
 // Validation
-import {isEmailAddress} from '../validation/FormValidator';
+import { isEmailAddress } from '../validation/FormValidator';
 
 import { withTranslation } from 'react-i18next';
 import { t } from 'i18next';
@@ -59,14 +59,14 @@ class SignUpScreen extends Component {
       password: '',
       hidePassword: true,
       showProcessingLoader: false,
-      
+
       OpenGender: false,
       ValueGender: '',
       ItemsGender: [
-        {label: 'Male', value: "male"},
-        {label: 'Female', value: "female"},
+        { label: 'Male', value: "male" },
+        { label: 'Female', value: "female" },
       ],
-      
+
       OpenCountry: false,
       ValueCountry: '',
       LodingCountry: false,
@@ -79,19 +79,19 @@ class SignUpScreen extends Component {
   }
 
   handleNameChange = name => {
-    this.setState({name});
+    this.setState({ name });
   };
 
   handleEmailChange = email => {
-    this.setState({email});
+    this.setState({ email });
   };
 
   handlePasswordChange = password => {
-    this.setState({password});
+    this.setState({ password });
   };
 
   setPasswordVisibility = () => {
-    this.setState({hidePassword: !this.state.hidePassword});
+    this.setState({ hidePassword: !this.state.hidePassword });
   };
 
   setOpenGender = (OpenGender) => {
@@ -107,7 +107,6 @@ class SignUpScreen extends Component {
   }
 
   setItemsGender = (callback) => {
-    console.log('setItemsGender', callback);
     this.setState(state => ({
       ItemsGender: callback(state.ItemsGender)
     }));
@@ -118,7 +117,7 @@ class SignUpScreen extends Component {
       OpenCountry
     });
   }
-  
+
   setLodingCountry = (LodingCountry) => {
     this.setState({
       LodingCountry
@@ -132,7 +131,7 @@ class SignUpScreen extends Component {
   }
 
   setItemsCountry = (countries) => {
-    console.log('setItemsCountry-----', countries);
+
     this.setState(state => ({
       ItemsCountry: countries
     }));
@@ -147,17 +146,17 @@ class SignUpScreen extends Component {
         .get(BASE_URL + 'get-countries')
         .then(response => {
           let newResponse = response;
-          console.log('newResponsenewResponse',newResponse);
+
           if (newResponse) {
             const { status, countries } = newResponse.data;
             let ItemsCountry = [];
-            console.log('countries', newResponse);
-            console.log('status', status);
+
+
             if (status === true) {
               countries.map(item => {
-                ItemsCountry.push({label: item.country_name, value: item.id});
+                ItemsCountry.push({ label: item.country_name, value: item.id });
               });
-              console.log('ItemsCountry', ItemsCountry);
+
               this.setItemsCountry(ItemsCountry);
               this.setLodingCountry(false);
             }
@@ -174,40 +173,40 @@ class SignUpScreen extends Component {
     const { t } = this.props;
     Keyboard.dismiss();
 
-    const {name, email, password, ValueGender, ValueCountry} = this.state;
-    console.log('handleregis', this.state);
+    const { name, email, password, ValueGender, ValueCountry } = this.state;
+
 
     // validation
     if (name.trim() === '') {
-      Alert.alert('', t('enter_name_first'), [{text: t('ok')}], {
+      Alert.alert('', t('enter_name_first'), [{ text: t('ok') }], {
         cancelable: false,
       });
       return;
     }
 
     if (!isEmailAddress(email)) {
-      Alert.alert('', t('enter_email_first'), [{text: t('ok')}], {
+      Alert.alert('', t('enter_email_first'), [{ text: t('ok') }], {
         cancelable: false,
       });
       return;
     }
 
     if (password.trim() === '') {
-      Alert.alert('', t('enter_valid_password'), [{text: t('ok')}], {
+      Alert.alert('', t('enter_valid_password'), [{ text: t('ok') }], {
         cancelable: false,
       });
       return;
     }
-    
+
     if (ValueGender == '' || ValueGender == null) {
-      Alert.alert('', t('select_gender'), [{text: t('ok')}], {
+      Alert.alert('', t('select_gender'), [{ text: t('ok') }], {
         cancelable: false,
       });
       return;
     }
-    
+
     if (ValueCountry == '' || ValueCountry == null) {
-      Alert.alert('', t('select_country'), [{text: t('ok')}], {
+      Alert.alert('', t('select_country'), [{ text: t('ok') }], {
         cancelable: false,
       });
       return;
@@ -227,20 +226,19 @@ class SignUpScreen extends Component {
         accept: 'true',
       };
 
-      console.log('paramspost', params);
+
 
       // calling api
       const response = await makeRequest(BASE_URL + 'register', params, true);
-      
+
       // processing response
       if (response) {
-        const {status, message, errors} = response;
-        console.log('2',errors);
+        const { status, message, errors } = response;
 
         if (status === true) {
           // stopping processing loader
-          this.setState({showProcessingLoader: false});
-          console.log(',');
+          this.setState({ showProcessingLoader: false });
+
           // showing toast
           showToast(message);
 
@@ -250,7 +248,7 @@ class SignUpScreen extends Component {
           // const {name, email, password} = errors;
 
           //   // stopping processing loader
-          this.setState({showProcessingLoader: false});
+          this.setState({ showProcessingLoader: false });
 
           if (errors.name) {
             // showing toast
@@ -338,7 +336,7 @@ class SignUpScreen extends Component {
                 />
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.inputContainerDropdown}>
               <DropDownPicker
                 open={this.state.OpenGender}
@@ -350,13 +348,13 @@ class SignUpScreen extends Component {
                 zIndex={99999}
                 theme="DARK"
                 listMode='MODAL'
-                modalProps={{animationType: "fade"}}
+                modalProps={{ animationType: "fade" }}
                 modalTitle={t('select_gender')}
                 placeholder={t('select_gender')}
-                modalTitleStyle={{fontWeight: "bold"}}
+                modalTitleStyle={{ fontWeight: "bold" }}
               />
             </View>
-            
+
             <View style={styles.inputContainerDropdown}>
               <DropDownPicker
                 open={this.state.OpenCountry}
@@ -370,18 +368,18 @@ class SignUpScreen extends Component {
                 zIndex={99999}
                 theme="DARK"
                 listMode='MODAL'
-                modalProps={{animationType: "fade"}}
+                modalProps={{ animationType: "fade" }}
                 modalTitle={t('select_country')}
                 placeholder={t('select_country')}
                 searchPlaceholder={t('search_country')}
-                modalTitleStyle={{fontWeight: "bold"}}
+                modalTitleStyle={{ fontWeight: "bold" }}
               />
             </View>
-            
+
             <Text style={styles.agreeTextStyle}>
               By clicking "Register", I accept the{' '}
-              <Text style={{color: '#000000'}}>Terms of Service</Text> and have
-              read the <Text style={{color: '#000000'}}>Privacy Policy</Text>.{' '}
+              <Text style={{ color: '#000000' }}>Terms of Service</Text> and have
+              read the <Text style={{ color: '#000000' }}>Privacy Policy</Text>.{' '}
               {'\n'} I agree that bookingqube may share my information with event
               organizers.
             </Text>
@@ -492,7 +490,7 @@ const styles = StyleSheet.create({
     paddingLeft: wp(2),
     color: '#fff',
     borderRadius: wp(1),
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   touchAbleButton: {
     position: 'absolute',

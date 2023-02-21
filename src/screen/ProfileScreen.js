@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   Alert,
   Keyboard,
   I18nManager,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -45,15 +45,15 @@ import ic_delete from '../assets/icon/ic_delete.png';
 import header_image from '../assets/image/header_image.png';
 
 // API Info
-import { BASE_URL, makeRequest, STORAGE_URL } from '../api/ApiInfo';
+import {BASE_URL, makeRequest, STORAGE_URL} from '../api/ApiInfo';
 
 // User Preference
-import { async_keys, getData, clearData } from '../api/UserPreference';
+import {async_keys, getData, clearData} from '../api/UserPreference';
 
-import { showToast } from '../component/CustomToast';
+import {showToast} from '../component/CustomToast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -101,7 +101,7 @@ class ProfileScreen extends Component {
           let newResponse = response;
 
           if (newResponse) {
-            const { success, data } = newResponse.data;
+            const {success, data} = newResponse.data;
             AsyncStorage.setItem('avatar', data.avatar);
             if (success === true) {
               this.setState({
@@ -123,52 +123,51 @@ class ProfileScreen extends Component {
   };
 
   handleNameChange = name => {
-    this.setState({ name });
+    this.setState({name});
   };
 
   handleEmailChange = email => {
-    this.setState({ email });
+    this.setState({email});
   };
 
   handleAddressChange = address => {
-    this.setState({ address });
+    this.setState({address});
   };
 
   handlePhoneChange = phone => {
-    this.setState({ phone });
+    this.setState({phone});
   };
 
   handleTaxpayerNumberChange = taxpayerNumber => {
-    this.setState({ taxpayerNumber });
+    this.setState({taxpayerNumber});
   };
 
   handleCurrentPasswordChange = currentPassword => {
-    this.setState({ currentPassword });
+    this.setState({currentPassword});
   };
 
   handleNewPasswordChange = newPassword => {
-    this.setState({ newPassword });
+    this.setState({newPassword});
   };
 
   handleConfirmPasswordChange = confirmPassword => {
-    this.setState({ confirmPassword });
+    this.setState({confirmPassword});
   };
 
   setCurrentPasswordVisibility = () => {
-    this.setState({ hideCurrentPassword: !this.state.hideCurrentPassword });
+    this.setState({hideCurrentPassword: !this.state.hideCurrentPassword});
   };
 
   setNewPasswordVisibility = () => {
-    this.setState({ hideNewPassword: !this.state.hideNewPassword });
+    this.setState({hideNewPassword: !this.state.hideNewPassword});
   };
 
   setConfirmPasswordVisibility = () => {
-    this.setState({ hideConfirmPassword: !this.state.hideConfirmPassword });
-    console.log('here');
+    this.setState({hideConfirmPassword: !this.state.hideConfirmPassword});
   };
 
   handlePermissions = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
     try {
       if (Platform.OS === 'android') {
         const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
@@ -186,11 +185,9 @@ class ProfileScreen extends Component {
             await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
             break;
           case RESULTS.GRANTED:
-            // console.log("The permission is granted");
             this._selectPhoto();
             break;
           case RESULTS.BLOCKED:
-            console.log('The permission is denied and not requestable anymore');
             Alert.alert(
               t('permission_blocked'),
               t('permission_blocked_ie'),
@@ -204,7 +201,7 @@ class ProfileScreen extends Component {
                   onPress: this.handleOpenSettings,
                 },
               ],
-              { cancelable: false },
+              {cancelable: false},
             );
         }
       } else if (Platform.OS === 'ios') {
@@ -216,7 +213,7 @@ class ProfileScreen extends Component {
   };
 
   handleOpenSettings = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
     try {
       await openSettings();
     } catch (error) {
@@ -225,7 +222,7 @@ class ProfileScreen extends Component {
   };
 
   confirmProfileDelete = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
     // confirmation dialog
     Alert.alert(
       t('delete_account'),
@@ -236,10 +233,10 @@ class ProfileScreen extends Component {
       ],
       {cancelable: false},
     );
-  }
+  };
 
   handleDeleteProfile = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
 
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
@@ -257,36 +254,35 @@ class ProfileScreen extends Component {
 
     try {
       // starting processing loader
-      this.setState({ showProcessingLoader: true });
+      this.setState({showProcessingLoader: true});
 
       var data = new FormData();
       await axios
         .post(BASE_URL + 'profile/delete', data, axiosConfig)
         .then(response => {
-          console.log('response', response);
           let newResponse = response.data;
 
           if (newResponse) {
-            const { success, data } = newResponse;
+            const {success, data} = newResponse;
 
             if (success === true) {
               // starting processing loader
-              this.setState({ showProcessingLoader: false });
+              this.setState({showProcessingLoader: false});
 
               // showing toast
               showToast(t('profile_deleted'));
-              
+
               // Logout the user
-              this.handleLogoutOkPress()
+              this.handleLogoutOkPress();
             }
           }
         });
     } catch (error) {
       // starting processing loader
-      this.setState({ showProcessingLoader: false });
+      this.setState({showProcessingLoader: false});
 
       showToast('Something went wrong.');
-      console.log('error--->', error)
+      console.log('error--->', error);
     }
   };
 
@@ -305,7 +301,7 @@ class ProfileScreen extends Component {
   handleUpdateProfile = async () => {
     Keyboard.dismiss();
 
-    const { t } = this.props;
+    const {t} = this.props;
 
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
@@ -335,7 +331,7 @@ class ProfileScreen extends Component {
 
     try {
       // starting processing loader
-      this.setState({ showProcessingLoader: true });
+      this.setState({showProcessingLoader: true});
 
       var data = new FormData();
       data.append('name', name);
@@ -353,7 +349,6 @@ class ProfileScreen extends Component {
         });
       }
 
-
       await axios
         .post(BASE_URL + 'profile/update', data, axiosConfig)
         .then(response => {
@@ -362,11 +357,11 @@ class ProfileScreen extends Component {
           if (newResponse) {
             this.fetchProfile();
 
-            const { success, data } = newResponse;
+            const {success, data} = newResponse;
 
             if (success === true) {
               // starting processing loader
-              this.setState({ showProcessingLoader: false });
+              this.setState({showProcessingLoader: false});
 
               // showing toast
               showToast(data);
@@ -376,50 +371,47 @@ class ProfileScreen extends Component {
         });
     } catch (error) {
       // starting processing loader
-      this.setState({ showProcessingLoader: false });
+      this.setState({showProcessingLoader: false});
 
       showToast(t('went_wrong'));
     }
   };
 
   _selectPhoto = async () => {
-      ImageCropPicker.openPicker({
-          width: 512,
-          height: 512,
-          cropping: true,
-          freeStyleCropEnabled: true,
-          compressImageQuality: 0.8
-      }).then(image => {
-          console.log('_selectPhoto', image);
-          this._setImageForUpload(image);
-      });    
-  }
+    ImageCropPicker.openPicker({
+      width: 512,
+      height: 512,
+      cropping: true,
+      freeStyleCropEnabled: true,
+      compressImageQuality: 0.8,
+    }).then(image => {
+      console.log('_selectPhoto', image);
+      this._setImageForUpload(image);
+    });
+  };
 
-  _setImageForUpload = async (image) => {
-      let localUri = image.path;
-      let filename = localUri.split('/').pop();
+  _setImageForUpload = async image => {
+    let localUri = image.path;
+    let filename = localUri.split('/').pop();
 
-      // Infer the type of the image
-      let type = image.mime;
-      
-      let av = { uri: localUri, name: filename, type };
-      console.log('setImageForUpload', av);
-      this.setState({ selectedFile: av, isLocalFile: true });
-  }
+    // Infer the type of the image
+    let type = image.mime;
+
+    let av = {uri: localUri, name: filename, type};
+    console.log('setImageForUpload', av);
+    this.setState({selectedFile: av, isLocalFile: true});
+  };
 
   render() {
-    const { isLoading } = this.state;
-    const { t } = this.props;
-
-    if (isLoading) {
-      return <CustomLoader />;
-    }
+    const {isLoading} = this.state;
+    const {t} = this.props;
 
     const url = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
+        {isLoading && <CustomLoader />}
         <HeaderComponent
-          title={t("profile")}
+          title={t('profile')}
           navAction="back"
           nav={this.props.navigation}
         />
@@ -436,13 +428,13 @@ class ProfileScreen extends Component {
                 <>
                   {this.state.isLocalFile ? (
                     <Image
-                      source={{ uri: this.state.selectedFile?.uri }}
+                      source={{uri: this.state.selectedFile?.uri}}
                       resizeMode="cover"
                       style={styles.profileAvatarIcon1}
                     />
                   ) : (
                     <Image
-                      source={{ uri: url + this.state.selectedFile }}
+                      source={{uri: url + this.state.selectedFile}}
                       resizeMode="cover"
                       style={styles.profileAvatarIcon1}
                     />
@@ -453,7 +445,11 @@ class ProfileScreen extends Component {
 
             <Text style={styles.textInputText}>{t('avatar')}*</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.loginFormTextInput} onPress={this.handlePermissions}>{t('choose_avatar')}</Text>
+              <Text
+                style={styles.loginFormTextInput}
+                onPress={this.handlePermissions}>
+                {t('choose_avatar')}
+              </Text>
             </View>
 
             <Text style={styles.textInputText}>{t('name')}*</Text>
@@ -628,7 +624,7 @@ class ProfileScreen extends Component {
               />
               <Text style={styles.searchEventText}>{t('delete_account')}</Text>
             </TouchableOpacity>
-            
+
             {/* <Text style={styles.hostText}>Want to create & host events ?</Text> */}
 
             {/* <TouchableOpacity style={styles.hostButtonContainer}>
@@ -711,7 +707,6 @@ const styles = StyleSheet.create({
   profileAvatarIcon: {
     height: hp(14),
     aspectRatio: 1 / 1,
-    
   },
   profileAvatarIcon1: {
     height: hp(14),
@@ -723,7 +718,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000',
     marginTop: hp(2),
-    marginBottom: hp(.5),
+    marginBottom: hp(0.5),
     marginHorizontal: wp(2),
   },
   inputContainer: {
@@ -742,7 +737,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   buttonContainer: {
     height: hp(6),

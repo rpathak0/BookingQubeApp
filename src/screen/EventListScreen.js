@@ -1,17 +1,15 @@
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
   Image,
   TextInput,
-  ImageBackground,
-  // FlatList,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
   I18nManager,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -22,25 +20,24 @@ import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 // Component
 import HeaderComponent from '../component/HeaderComponent';
 import FooterComponent from '../component/FooterComponent';
 
 // Icon
-import ic_header_home_icon from '../assets/icon/ic_header_home_icon.png';
 import ic_reset from '../assets/icon/ic_reset.png';
 
 // Image
-import header_image from '../assets/image/header_image.png';
 
 // APi Info
-import { BASE_URL } from '../api/ApiInfo';
+import {BASE_URL} from '../api/ApiInfo';
 
 // User Preference
-import { async_keys, getData } from '../api/UserPreference';
+import {async_keys, getData} from '../api/UserPreference';
 import Events from './home_detail/Events';
+import axios from 'axios';
 
 class EventListScreen extends Component {
   constructor(props) {
@@ -62,39 +59,30 @@ class EventListScreen extends Component {
     };
 
     // fetching navigation props
-    this.searchData = this.props.navigation.getParam('searchData', null);
-    this.searchInfo = this.props.navigation.getParam('searchInfo', null);
-    // console.log(this.searchData.slug + ' ' + 'here search data');
+    this.searchData = this.props.route.params?.searchData;
+    this.searchInfo = this.props.route.params?.searchInfo;
   }
 
   componentDidMount() {
-
-    const { navigation } = this.props;
-    this.focusListener = navigation?.addListener("didFocus", () => {
-      if (navigation?.state?.params?.searchData?.slug) {
-        this.handleSelectedCategory(navigation?.state?.params?.searchData?.slug);
+    if (this.searchData?.slug) {
+      this.handleSelectedCategory(this.searchData?.slug);
+    } else {
+      if (this.searchInfo !== null) {
+        this.checkSearchData();
+      } else if (this?.searchData !== null) {
+        this.checkSearchData1();
+      } else {
+        this.fetchSearchData();
       }
-      else {
-        if (this.searchInfo !== null) {
-          this.checkSearchData();
-        } else if (this.searchData !== null) {
-          this.checkSearchData1();
-        } else {
-          this.fetchSearchData();
-        }
-      }
-      this.getFilters();
-    });
+    }
+    this.getFilters();
   }
 
   componentWillUnmount() {
-    // Remove the event listener
-    this.focusListener.remove();
+    this.focusListener = null;
   }
 
   getFilters = async () => {
-    const axios = require('axios');
-
     try {
       await axios
         .get(BASE_URL + 'eventFilters')
@@ -103,9 +91,8 @@ class EventListScreen extends Component {
         .then(response => {
           let newResponse = response;
 
-
           if (newResponse) {
-            const { success } = newResponse.data;
+            const {success} = newResponse.data;
 
             if (success === true) {
               this.setState({
@@ -114,31 +101,28 @@ class EventListScreen extends Component {
                 country: newResponse.data.data.country_filter.countries,
               });
 
-
               if (this.props?.navigation?.state?.params?.city) {
                 let country = newResponse.data.data.country_filter.countries;
                 for (let value of country) {
-                  if (value.city == this.props?.navigation?.state?.params?.city) {
+                  if (
+                    value.city == this.props?.navigation?.state?.params?.city
+                  ) {
                     this.setState({
                       selectedCountry: value.country_name,
                       city: value.city,
-                    })
+                    });
                     this.getCities(value);
                   }
                 }
                 // this.handleSelectedCity(navigation?.state?.params?.city);
               }
-
             }
           }
         });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   fetchSearchData = async () => {
-    const axios = require('axios');
-
     try {
       await axios
         .post(BASE_URL + 'events')
@@ -150,26 +134,23 @@ class EventListScreen extends Component {
           // console.log(newResponse.data.categories);
 
           if (newResponse) {
-            const { success } = newResponse.data;
+            const {success} = newResponse.data;
 
             if (success === true) {
               // console.log(newResponse.data.events.data);
-              this.setState({ featureEventList: newResponse.data.events.data });
+              this.setState({featureEventList: newResponse.data.events.data});
             }
           }
         });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   checkSearchData = async () => {
-    this.setState({ searchText: this.searchInfo.search });
-
-    const axios = require('axios');
+    this.setState({searchText: this.searchInfo?.search || ''});
 
     // preparing params
     const params = {
-      search: this.searchInfo.search,
+      search: this.searchInfo?.search || '',
     };
 
     // console.log(params.start_date);
@@ -183,22 +164,19 @@ class EventListScreen extends Component {
       .then(response => {
         let newResponse = response;
 
-
         if (newResponse) {
-          const { success } = newResponse.data;
+          const {success} = newResponse.data;
 
           if (success === true) {
             // console.log(newResponse.data.events.data);
-            this.setState({ featureEventList: newResponse.data.events.data });
+            this.setState({featureEventList: newResponse.data.events.data});
           }
         }
       });
   };
 
   checkSearchData1 = async () => {
-    this.setState({ selectedCategory: this.searchData.slug });
-
-    const axios = require('axios');
+    this.setState({selectedCategory: this.searchData.slug});
 
     // preparing params
     const params = {
@@ -216,25 +194,26 @@ class EventListScreen extends Component {
       .then(response => {
         let newResponse = response;
 
-
         if (newResponse) {
-          const { success } = newResponse.data;
+          const {success} = newResponse.data;
 
           if (success === true) {
             // console.log(newResponse.data.events.data);
-            this.setState({ featureEventList: newResponse.data.events.data });
+            this.setState({featureEventList: newResponse.data.events.data});
           }
         }
       });
   };
 
-  filterData = async ({ selectedCategory = this.state.selectedCategory, dateFilter = this.state.dateFilter, selectedPrice = this.state.selectedPrice, searchText = this.state.searchText }) => {
-    const axios = require('axios');
+  filterData = async ({
+    selectedCategory = this.state.selectedCategory,
+    dateFilter = this.state.dateFilter,
+    selectedPrice = this.state.selectedPrice,
+    searchText = this.state.searchText,
+  }) => {
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
-    const {
-      selectedCountry,
-    } = this.state;
+    const {selectedCountry} = this.state;
 
     try {
       let axiosConfig = {
@@ -263,10 +242,10 @@ class EventListScreen extends Component {
         .then(response => {
           let newResponse = response;
           if (newResponse) {
-            const { success } = newResponse.data;
+            const {success} = newResponse.data;
             if (success === true) {
               // console.log(newResponse.data.events.data);
-              this.setState({ featureEventList: newResponse.data.events.data });
+              this.setState({featureEventList: newResponse.data.events.data});
             }
           }
         });
@@ -276,8 +255,8 @@ class EventListScreen extends Component {
   };
 
   handleSearchChange = searchText => {
-    this.setState({ searchText: searchText });
-    this.filterData({ searchText: searchText });
+    this.setState({searchText: searchText});
+    this.filterData({searchText: searchText});
   };
 
   handleSelectedCategory = async value => {
@@ -285,7 +264,7 @@ class EventListScreen extends Component {
       this.setState({
         selectedCategory: value,
       });
-      this.filterData({ selectedCategory: value });
+      this.filterData({selectedCategory: value});
     }
   };
 
@@ -295,13 +274,12 @@ class EventListScreen extends Component {
         selectedPrice: value,
         isEnabled: true,
       });
-      this.filterData({ selectedPrice: value });
+      this.filterData({selectedPrice: value});
     }
-
   };
 
   handleSelectedCountry = async value => {
-    const { country } = this.state;
+    const {country} = this.state;
 
     let countryCode = country.find(i => {
       return i.country_name === value;
@@ -316,9 +294,7 @@ class EventListScreen extends Component {
   };
 
   getCities = async countryCode => {
-    const axios = require('axios');
-
-    const params = { country_id: countryCode.id };
+    const params = {country_id: countryCode?.id};
 
     try {
       await axios
@@ -329,10 +305,9 @@ class EventListScreen extends Component {
           let newResponse = response;
 
           if (newResponse) {
-            const { success } = newResponse.data;
+            const {success} = newResponse.data;
 
             if (success === true) {
-
               this.setState({
                 cities: newResponse.data.data,
               });
@@ -345,26 +320,24 @@ class EventListScreen extends Component {
   };
 
   handleDateChange = dateFilter => {
-    this.setState({ dateFilter });
+    this.setState({dateFilter});
   };
 
   handleShowDatePicker = () => {
-    this.setState({ setDatePickerVisibility: true, isDatePickerVisible: true });
+    this.setState({setDatePickerVisibility: true, isDatePickerVisible: true});
   };
 
-  handleHideDatePicker = (date) => {
-    this.setState({ isDatePickerVisible: false });
+  handleHideDatePicker = date => {
+    this.setState({isDatePickerVisible: false});
     if (date) {
-      this.filterData({ dateFilter: date });
+      this.filterData({dateFilter: date});
     } else {
       this.filterData();
-
     }
-
   };
 
   handleConfirm = date => {
-    date = moment(date).format('YYYY-MM-DD')
+    date = moment(date).format('YYYY-MM-DD');
     this.setState({
       dateFilter: date,
     });
@@ -378,11 +351,11 @@ class EventListScreen extends Component {
   handleEvent = item => {
     const slug = item.slug;
     // console.log(slug);
-    this.props.navigation.navigate('ViewEvent', { slugTitle: { slug } });
+    this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
-  handleReset = async() => {
-    this.setState ({
+  handleReset = async () => {
+    this.setState({
       ...this.state,
       searchText: '',
       selectedCategory: '',
@@ -391,8 +364,8 @@ class EventListScreen extends Component {
       selectedCountry: '',
       selectedCity: '',
       featureEventList: [],
-    })
-    this.filterData('', '', '', '' );
+    });
+    this.filterData('', '', '', '');
   };
 
   handleChangeToCategory = () => {
@@ -401,8 +374,6 @@ class EventListScreen extends Component {
   };
 
   handleSelectedCity = async value => {
-    const axios = require('axios');
-
     // preparing params
     const params = {
       city: value,
@@ -414,13 +385,11 @@ class EventListScreen extends Component {
       .then(response => {
         let newResponse = response;
 
-
         if (newResponse) {
-          const { success } = newResponse.data;
+          const {success} = newResponse.data;
 
           if (success === true) {
-            console.warn(value, '//////');
-            this.setState({ featureEventList: newResponse.data.events.data });
+            this.setState({featureEventList: newResponse.data.events.data});
           }
         }
       });
@@ -429,7 +398,7 @@ class EventListScreen extends Component {
   itemSeparator = () => <View style={styles.separator} />;
 
   render() {
-    const { t } = this.props;
+    const {t} = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -440,7 +409,6 @@ class EventListScreen extends Component {
         />
         <ScrollView>
           <View style={styles.homeContainer}>
-
             <TouchableOpacity
               style={styles.resetFilterContainer}
               onPress={this.handleReset}>
@@ -461,7 +429,9 @@ class EventListScreen extends Component {
                 keyboardType="default"
                 underlineColorAndroid="transparent"
                 value={this.state.searchText}
-                onChangeText={(v) => { this.handleSearchChange(v) }}
+                onChangeText={v => {
+                  this.handleSearchChange(v);
+                }}
               />
             </View>
 
@@ -469,7 +439,9 @@ class EventListScreen extends Component {
             <View style={styles.inputContainer}>
               {this.searchData === null ? (
                 <RNPickerSelect
-                  onValueChange={(v) => { this.handleSelectedCategory(v) }}
+                  onValueChange={v => {
+                    this.handleSelectedCategory(v);
+                  }}
                   items={this.state.category.map(item => ({
                     label: item.name,
                     value: item.name,
@@ -477,7 +449,7 @@ class EventListScreen extends Component {
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
                   value={this.state.selectedCategory}
-                  placeholder={{label: t('select_item'),value: null}}
+                  placeholder={{label: t('select_item'), value: null}}
                 />
               ) : (
                 <Text onPress={this.handleChangeToCategory}>
@@ -490,7 +462,10 @@ class EventListScreen extends Component {
             <View style={styles.inputContainer}>
               <TouchableOpacity onPress={this.handleShowDatePicker}>
                 {this.state.dateFilter === '' ? (
-                  <Text style={[styles.descriptionText, styles.dateFilterPadding]}>{t('date_filter')}</Text>
+                  <Text
+                    style={[styles.descriptionText, styles.dateFilterPadding]}>
+                    {t('date_filter')}
+                  </Text>
                 ) : (
                   <Text style={styles.descriptionText}>
                     {this.state.dateFilter}
@@ -500,7 +475,7 @@ class EventListScreen extends Component {
                 <DateTimePickerModal
                   isVisible={this.state.isDatePickerVisible}
                   mode="date"
-                  onConfirm={(d) => this.handleConfirm(d)}
+                  onConfirm={d => this.handleConfirm(d)}
                   onCancel={this.handleHideDatePicker}
                   data={this.state.dateFilter}
                   onDateChange={this.handleDateChange}
@@ -512,14 +487,16 @@ class EventListScreen extends Component {
             <Text style={styles.textInputText}>{t('price')}</Text>
             <View style={styles.inputContainer}>
               <RNPickerSelect
-                onValueChange={(v) => { this.handleSelectedPrice(v) }}
+                onValueChange={v => {
+                  this.handleSelectedPrice(v);
+                }}
                 items={this.state.price.map(item => ({
                   label: item.name,
                   value: item.value,
                 }))}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false}
-                placeholder={{label: t('select_item'),value: null}}
+                placeholder={{label: t('select_item'), value: null}}
               />
             </View>
 
@@ -534,7 +511,7 @@ class EventListScreen extends Component {
                 style={pickerStyle}
                 value={this.state.selectedCountry}
                 useNativeAndroidPickerStyle={false}
-                placeholder={{label: t('select_item'),value: null}}
+                placeholder={{label: t('select_item'), value: null}}
               />
             </View>
 
@@ -550,13 +527,15 @@ class EventListScreen extends Component {
                 value={this.state.city}
                 useNativeAndroidPickerStyle={false}
                 disabled={this.state.cityCheck}
-                placeholder={{label: t('select_item'),value: null}}
+                placeholder={{label: t('select_item'), value: null}}
               />
             </View>
 
             <Events
               eventList={this.state.featureEventList}
-              handleEvent={(item) => { this.handleEvent(item) }}
+              handleEvent={item => {
+                this.handleEvent(item);
+              }}
               name={t('browse_qube')}
               backGroundImage={false}
             />
@@ -660,18 +639,17 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   textInputText: {
     fontSize: wp(3.5),
     fontWeight: '500',
     color: '#000',
     marginTop: hp(2),
-    marginBottom: hp(.5),
+    marginBottom: hp(0.5),
     marginHorizontal: wp(2),
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
     writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr',
-    
   },
   dropdownStyle: {
     fontSize: wp(3.5),
@@ -684,8 +662,8 @@ const styles = StyleSheet.create({
     color: '#c9c9c9',
     marginVertical: hp(2),
   },
-  dateFilterPadding:{
-    paddingLeft:10,
+  dateFilterPadding: {
+    paddingLeft: 10,
   },
   resetFilterContainer: {
     flexDirection: 'row',
@@ -722,7 +700,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(4),
     overflow: 'hidden',
     shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.9,
     shadowRadius: 10,
     // elevation: 3,
@@ -882,6 +860,5 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     fontSize: wp(2.5),
-  }
-
+  },
 });

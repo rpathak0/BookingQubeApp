@@ -29,7 +29,7 @@ class Gallery extends Component {
 
     const { imageGallery } = this.props.data;
     const { t } = this.props;
-    console.log('imageGallery', imageGallery);
+
     return (
       <View >
         {(imageGallery.length > 0) ? (
@@ -38,8 +38,8 @@ class Gallery extends Component {
             style={styles.eventCategoryContainer}>
             <Text style={styles.DjsText}>{t('event_gallery')}</Text>
             <FlatList
-                    horizontal={false}
-                    numColumns={2}
+              horizontal={false}
+              numColumns={2}
               data={imageGallery}
               // style={styles.gridView}
               spacing={2}

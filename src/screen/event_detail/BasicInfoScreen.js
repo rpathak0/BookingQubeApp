@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -18,14 +18,14 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 import RNFetchBlob from 'rn-fetch-blob';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { STORAGE_URL } from '../../api/ApiInfo';
+import {STORAGE_URL} from '../../api/ApiInfo';
 // Component
 
-import { SERVER } from '../../services/apiConfig';
+import {SERVER} from '../../services/apiConfig';
 
 // Icon
 import ic_facebook from '../../assets/icon/ic_facebook.png';
@@ -36,26 +36,19 @@ import ic_reddit from '../../assets/icon/ic_reddit.png';
 import ic_chain from '../../assets/icon/ic_chain.png';
 import onlineBar from '../../assets/image/bar.png';
 
-
-
-
 class BasicInfoScreen extends Component {
   constructor(props) {
     super(props);
-
 
     // fetching navigation props
     // this.slugTitle = this.props.navigation.getParam('slugTitle', null);
   }
 
-
   handleFacebook = async () => {
     try {
-      const { poster, title, description } = this.props.data.event;
+      const {poster, title, description} = this.props.data.event;
       const htmlTagRegex = /<[^>]*>?/gm;
-      const dsc = description
-        .replace(htmlTagRegex, '')
-        .replace(/&nbsp;/gm, '');
+      const dsc = description.replace(htmlTagRegex, '').replace(/&nbsp;/gm, '');
 
       const imageUrl = STORAGE_URL + '/' + poster;
 
@@ -77,9 +70,7 @@ class BasicInfoScreen extends Component {
           var base64Data = `data:image/png;base64,` + base64Data;
           let facebookParameters = [];
 
-          facebookParameters.push(
-            'u=' + encodeURI(SERVER),
-          );
+          facebookParameters.push('u=' + encodeURI(SERVER));
           if (title) {
             facebookParameters.push('quote=' + encodeURI(title));
             const url =
@@ -94,14 +85,11 @@ class BasicInfoScreen extends Component {
     }
   };
 
-
   handleTwitter = async () => {
     let twitterParameters = [];
 
-    const { title } = this.props.data.event;
-    twitterParameters.push(
-      'url=' + encodeURI(SERVER),
-    );
+    const {title} = this.props.data.event;
+    twitterParameters.push('url=' + encodeURI(SERVER));
 
     twitterParameters.push('text=' + encodeURI(title));
 
@@ -117,19 +105,21 @@ class BasicInfoScreen extends Component {
   };
 
   handleLinkedin = async () => {
-    const { title,description } = this.props.data.event;
+    const {title, description} = this.props.data.event;
     try {
-      const url = `https://www.linkedin.com/shareArticle?mini=true&summary=${description}&title=${title}&url=`+SERVER+`events/${title}`;
+      const url =
+        `https://www.linkedin.com/shareArticle?mini=true&summary=${description}&title=${title}&url=` +
+        SERVER +
+        `events/${title}`;
       Linking.openURL(url);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   handleWhatsApp = async () => {
     try {
-      const { title } = this.props.data.event;
+      const {title} = this.props.data.event;
 
-      Linking.openURL(`whatsapp://send?text=`+SERVER+`events/${title}`);
+      Linking.openURL(`whatsapp://send?text=` + SERVER + `events/${title}`);
     } catch (error) {
       console.log(error.message);
     }
@@ -137,8 +127,11 @@ class BasicInfoScreen extends Component {
 
   handleReddit = async () => {
     try {
-      const { title } = this.props.data.event;
-      let url = `https://www.reddit.com/submit?title=${title}&url=`+SERVER+`events/${title}`
+      const {title} = this.props.data.event;
+      let url =
+        `https://www.reddit.com/submit?title=${title}&url=` +
+        SERVER +
+        `events/${title}`;
       Linking.openURL(url);
     } catch (error) {
       console.log(error.message);
@@ -146,17 +139,16 @@ class BasicInfoScreen extends Component {
   };
 
   copyclipboard = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
     try {
-      const { title } = this.props.data.event;
-      let url = SERVER+`events/${title}`
+      const {title} = this.props.data.event;
+      let url = SERVER + `events/${title}`;
       Clipboard.setString(url);
       showToast(t('url_copied'));
     } catch (error) {
       console.log(error.message);
     }
   };
-
 
   handleChain = async () => {
     try {
@@ -166,47 +158,58 @@ class BasicInfoScreen extends Component {
     }
   };
 
-  getRenderView = (item) => {
-    if(item.title != null && item.title != '') {
+  getRenderView = item => {
+    if (item.title != null && item.title != '') {
       return (
-        <View style={item.title === 'Online event' ? styles.eventOnlineContainer : styles.eventCategory}>
-          <View style={item.title === 'Online event' ? styles.onlineInnerContainer : {}}>
-            <Text style={styles.categoryText}>
-              {item.title}
-            </Text>
+        <View
+          style={
+            item.title === 'Online event'
+              ? styles.eventOnlineContainer
+              : styles.eventCategory
+          }>
+          <View
+            style={
+              item.title === 'Online event' ? styles.onlineInnerContainer : {}
+            }>
+            <Text style={styles.categoryText}>{item.title}</Text>
           </View>
         </View>
-      )
+      );
     }
-  }
-
-
+  };
 
   render() {
-    const { t } = this.props;
+    const {t} = this.props;
     var listItems = [];
-    const { title, poster, event_type_text, category_name, online_location,orgainser } = this.props.data.event;
+    const {
+      title,
+      poster,
+      event_type_text,
+      category_name,
+      online_location,
+      orgainser,
+    } = this.props.data.event;
     var isFreeTickets = this.props.data.free_tickets?.length > 0 ? true : false;
     if (online_location)
-      listItems.push({ title: 'Online event', icon: onlineBar });
-    listItems.push({ title: category_name, icon: "" });
+      listItems.push({title: 'Online event', icon: onlineBar});
+    listItems.push({title: category_name, icon: ''});
     if (isFreeTickets) {
-      listItems.push({ title: "Free Tickets", icon: "" });
+      listItems.push({title: 'Free Tickets', icon: ''});
     }
-    listItems.push({ title: event_type_text, icon: "" });
-
+    listItems.push({title: event_type_text, icon: ''});
 
     return (
-
       <>
         <Image
-          source={{ uri: STORAGE_URL + poster }}
+          source={{uri: STORAGE_URL + poster}}
           resizeMode="cover"
           style={styles.eventImageStyle}
         />
 
         <Text style={styles.eventTitleTextStyle}>{title}</Text>
-        <Text style={styles.eventOrganiserTextStyle}>{t('organizer')} {orgainser}</Text>
+        <Text style={styles.eventOrganiserTextStyle}>
+          {t('organizer')} {orgainser}
+        </Text>
 
         <View style={styles.eventTypeContainer}>
           <FlatList
@@ -214,9 +217,7 @@ class BasicInfoScreen extends Component {
             horizontal={false}
             numColumns={3}
             data={listItems}
-            renderItem={({ item }) => (
-              this.getRenderView(item)
-            )}
+            renderItem={({item}) => this.getRenderView(item)}
           />
         </View>
 
@@ -306,15 +307,15 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000',
     marginHorizontal: wp(2),
-    marginTop:wp(2),
-    paddingLeft:wp(2)
+    marginTop: wp(2),
+    paddingLeft: wp(2),
   },
   eventOrganiserTextStyle: {
     fontSize: wp(4),
     fontWeight: '500',
     color: '#444',
     marginHorizontal: wp(2),
-    paddingLeft:wp(2)
+    paddingLeft: wp(2),
   },
   eventTypeContainer: {
     flexDirection: 'row',
@@ -346,7 +347,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   categoryText: {
     fontSize: wp(3),
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
   },
   listDateContainer: {
     // width: wp(70),
-    alignItems: 'center'
+    alignItems: 'center',
   },
   listTimeContainer: {
     // width: wp(30),
@@ -510,14 +510,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: 'auto',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#ff0084',
     marginHorizontal: wp(2),
-    alignItems: 'center'
+    alignItems: 'center',
   },
   eventInfoContainer: {
     marginVertical: hp(2),

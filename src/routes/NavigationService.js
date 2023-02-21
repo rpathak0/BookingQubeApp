@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from '@react-navigation/native';
 
 let topLevelNavigator = null;
 

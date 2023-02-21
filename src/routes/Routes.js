@@ -1,17 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { createSwitchNavigator } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 import React from 'react';
-import { Image, StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
-import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import {Image, StyleSheet, ScrollView, View, Text, Alert} from 'react-native';
+import {withTranslation, useTranslation} from 'react-i18next';
 
-import { version } from '../../package.json';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
+
+import {version} from '../../package.json';
 import LayoutSize from '../Helper/LayoutSize';
 
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 
 // Screens
 import LoginScreen from '../screen/LoginScreen';
@@ -50,20 +48,29 @@ import AttendeeScreen from '../screen/AttendeeScreen';
 import SeatingChartScreen from '../screen/SeatingChartScreen';
 
 // Component
-import { showToast } from '../component/CustomToast';
+import {showToast} from '../component/CustomToast';
 
 // Logo
 import logo from '../assets/image/logo.png';
+import homeIcon from '../assets/icon/ic_home.png';
 
 // User Preference
-import { clearData } from '../api/UserPreference';
-import { Dimensions } from 'react-native';
-const width = Dimensions.get('window').width;
+import {clearData} from '../api/UserPreference';
+import {CommonActions, DrawerActions} from '@react-navigation/native';
+
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
 // Style Sheet
 const styles = StyleSheet.create({
   drawerItemIcon: {
     width: wp(5),
     height: wp(5),
+    tintColor: '#000',
+    marginRight: -wp(5),
+  },
+  drawerItemStyle: {
+    marginHorizontal: 0,
   },
   drawerContentContainer: {
     flex: 1,
@@ -77,13 +84,13 @@ const styles = StyleSheet.create({
   profileImage: {
     height: 50,
     width: 'auto',
-    marginTop: 20
+    marginTop: 20,
   },
   drawerTitle: {
     color: '#fff',
     marginLeft: wp(2),
     fontWeight: '700',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   drawerLabel: {
     fontSize: wp(3.5),
@@ -91,496 +98,577 @@ const styles = StyleSheet.create({
   },
   versionView: {
     position: 'absolute',
-    top: LayoutSize.window.height-50,
+    top: LayoutSize.window.height - 50,
     right: 10,
-    zIndex: 999999
+    zIndex: 999999,
   },
   footerNavigatorIcon: {
     height: wp(6),
     aspectRatio: 1 / 1,
   },
-  
 });
 
-const setDrawerItemIcon = itemIcon => ({
-  drawerIcon: (
+const Routes = ({checkScanning, guestCheckoutSuccess}) => {
+  const {t} = useTranslation();
+
+  const setDrawerItemIcon = itemIcon => (
     <Image source={itemIcon} resizeMode="cover" style={styles.drawerItemIcon} />
-  ),
-});
-
-const drawerContentContainerInset = {
-  top: 'always',
-  horizontal: 'never',
-};
-
-const onLogoutYesPress = (nav, t) => async () => {
-  try {
-    // Clearing user preferences from local storage
-    await clearData();
-    showToast(t('logout_success'));
-    // Resetting Navigation to initial state for login again
-    nav.navigate('LoggedOut');
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const onDrawerItemPress = props => route => {
-  const { t } = props.screenProps;
-  if (route.route.routeName !== 'DrawerLogout') {
-    props.onItemPress(route);
-    return;
-  }
-
-  // If 'Logout' route pressed
-  props.navigation.closeDrawer();
-
-  Alert.alert(
-    t('logout'),
-    t('sure_logout'),
-    [
-      { text: t('no'), style: 'cancel' },
-      { text: t('yes'), onPress: onLogoutYesPress(props.navigation, t) },
-    ],
-    {
-      cancelable: false,
-    },
   );
-};
 
-const CustomDrawerContentComponent = props => {
-  const { t } = props.screenProps;
-  console.log('props.screenPropsprops.screenProps', props.screenProps);
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View
-        style={styles.drawerContentContainer}
-        forceInset={drawerContentContainerInset}>
-        <View style={styles.drawerHeader}>
-          <Image source={logo} style={styles.profileImage} />
-          <Text style={styles.drawerTitle}>{t('welcome_to')}</Text>
+  const drawerContentContainerInset = {
+    top: 'always',
+    horizontal: 'never',
+  };
+
+  const CustomDrawerContentComponent = props => {
+    const {state, navigation, descriptors} = props;
+    const focusedRoute = state.routes[state.index];
+    const focusedDescriptor = descriptors[focusedRoute.key];
+    const focusedOptions = focusedDescriptor.options;
+
+    const {
+      drawerActiveTintColor,
+      drawerInactiveTintColor,
+      drawerActiveBackgroundColor,
+      drawerInactiveBackgroundColor,
+    } = focusedOptions;
+
+    const onLogoutYesPress = (nav, t) => async () => {
+      try {
+        // Clearing user preferences from local storage
+        await clearData();
+        showToast(t('logout_success'));
+        // Resetting Navigation to initial state for login again
+        nav.navigate('LoggedOut');
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={styles.drawerContentContainer}
+          forceInset={drawerContentContainerInset}>
+          <View style={styles.drawerHeader}>
+            <Image source={logo} style={styles.profileImage} />
+            <Text style={styles.drawerTitle}>{t('welcome_to')}</Text>
+          </View>
+
+          {state.routes.map((route, i) => {
+            const focused = i === state.index;
+
+            const onPress = () => {
+              if (route.name === 'DrawerLogout') {
+                Alert.alert(
+                  t('logout'),
+                  t('sure_logout'),
+                  [
+                    {text: t('no'), style: 'cancel'},
+                    {
+                      text: t('yes'),
+                      onPress: onLogoutYesPress(props.navigation, t),
+                    },
+                  ],
+                  {
+                    cancelable: false,
+                  },
+                );
+                return;
+              }
+              navigation.dispatch({
+                ...(focused
+                  ? DrawerActions.closeDrawer()
+                  : CommonActions.navigate({name: route.name, merge: true})),
+                target: state.key,
+              });
+            };
+
+            const {
+              title,
+              drawerLabel,
+              drawerIcon,
+              drawerLabelStyle,
+              drawerItemStyle,
+              drawerAllowFontScaling,
+            } = descriptors[route.key].options;
+
+            return (
+              <DrawerItem
+                key={route.key}
+                label={
+                  drawerLabel !== undefined
+                    ? drawerLabel
+                    : title !== undefined
+                    ? title
+                    : route.name
+                }
+                icon={drawerIcon}
+                focused={focused}
+                activeTintColor={drawerActiveTintColor}
+                inactiveTintColor={drawerInactiveTintColor}
+                activeBackgroundColor={drawerActiveBackgroundColor}
+                inactiveBackgroundColor={drawerInactiveBackgroundColor}
+                allowFontScaling={drawerAllowFontScaling}
+                labelStyle={[styles.drawerLabel, drawerLabelStyle]}
+                style={[styles.drawerItemStyle, drawerItemStyle]}
+                onPress={onPress}
+              />
+            );
+          })}
+
+          <View style={styles.versionView}>
+            <Text>Version: {version}</Text>
+          </View>
         </View>
-        <DrawerItems
-          {...props}
-          onItemPress={onDrawerItemPress(props)}
-          labelStyle={styles.drawerLabel}
+      </ScrollView>
+    );
+  };
+
+  const AdminNavigator = () => {
+    return (
+      <Stack.Navigator
+        initialRouteName={'Login'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'Login'} component={LoginScreen} />
+        <Stack.Screen name={'SignUp'} component={SignUpScreen} />
+        <Stack.Screen name={'webView'} component={WebViewScreen} />
+        <Stack.Screen
+          name={'ForgetPassword'}
+          component={ForgetPasswordScreen}
         />
-        <View style={styles.versionView}>
-          <Text>Version: {version}</Text>
-        </View>
-      </View>
-    </ScrollView>
-  );
-  
-};
+      </Stack.Navigator>
+    );
+  };
 
+  const HomeNavigator = () => {
+    return (
+      <Stack.Navigator
+        id="HomeNavigator"
+        initialRouteName={'Home'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'Home'} component={HomeScreen} />
+        <Stack.Screen name={'EventList'} component={EventListScreen} />
+        <Stack.Screen name={'ViewEvent'} component={ViewEventScreen} />
+        <Stack.Screen name={'ScanTicket'} component={ScanTicketScreen} />
+        <Stack.Screen name={'ScanOut'} component={ScanOutScreen} />
+        <Stack.Screen name={'Movies'} component={MoviesScreen} />
+        <Stack.Screen name={'Login'} component={LoginScreen} />
+        <Stack.Screen name={'SignUp'} component={SignUpScreen} />
+        <Stack.Screen name={'webView'} component={WebViewScreen} />
+        <Stack.Screen
+          name={'ForgetPassword'}
+          component={ForgetPasswordScreen}
+        />
+        <Stack.Screen name={'Profile'} component={ProfileScreen} />
+        <Stack.Screen name={'MyBooking'} component={MyBookingScreen} />
+        <Stack.Screen name={'SeatingChart'} component={SeatingChartScreen} />
+        <Stack.Screen name={'Checkout'} component={CheckoutScreen} />
+        <Stack.Screen name={'Attendee'} component={AttendeeScreen} />
+        <Stack.Screen name={'About'} component={AboutScreen} />
+        <Stack.Screen name={'Contact'} component={ContactScreen} />
+        <Stack.Screen name={'Terms'} component={TermsScreen} />
+        <Stack.Screen name={'Privacy'} component={PrivacyScreen} />
+        <Stack.Screen name={'Faq'} component={FaqScreen} />
+      </Stack.Navigator>
+    );
+  };
 
-const AdminNavigator = createStackNavigator(
-  {
-    Login: LoginScreen,
-    SignUp: SignUpScreen,
-    webView: WebViewScreen,
-    ForgetPassword: ForgetPasswordScreen,
-  },
-  {
-    initialRouteName: 'Login',
-    defaultNavigationOptions: {
-      headerShown: false,
-    },
-  },
-);
+  const ProfileNavigator = () => {
+    return (
+      <Stack.Navigator
+        id="ProfileNavigator"
+        initialRouteName={'Profile'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'Profile'} component={ProfileScreen} />
+      </Stack.Navigator>
+    );
+  };
 
-const HomeNavigator = createStackNavigator(
-  {
-    Home: HomeScreen,
-    EventList: EventListScreen,
-    ViewEvent: ViewEventScreen,
-    ScanTicket: ScanTicketScreen,
-    ScanOut: ScanOutScreen,
-    Movies: MoviesScreen,
-    Login: LoginScreen,
-    SignUp: SignUpScreen,
-    webView: WebViewScreen,
-    ForgetPassword: ForgetPasswordScreen,
-    Profile: ProfileScreen,
-    MyBooking: MyBookingScreen,
-    SeatingChart: SeatingChartScreen,
-    Checkout: CheckoutScreen,
-    Attendee: AttendeeScreen,
-    
-    About: AboutScreen,
-    Contact: ContactScreen,
-    Terms: TermsScreen,
-    Privacy: PrivacyScreen,
-    Faq: FaqScreen,
-  },
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+  const EventListingNavigator = () => {
+    return (
+      <Stack.Navigator
+        id="EventListingNavigator"
+        initialRouteName={'EventList'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'EventList'} component={EventListScreen} />
+        <Stack.Screen name={'ViewEvent'} component={ViewEventScreen} />
+      </Stack.Navigator>
+    );
+  };
 
-const ProfileNavigator = createStackNavigator(
-  {
-    Profile: ProfileScreen,
-  },
-  {
-    initialRouteName: 'Profile',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+  const MyBookingNavigator = () => {
+    return (
+      <Stack.Navigator
+        initialRouteName={'MyBooking'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'MyBooking'} component={MyBookingScreen} />
+        <Stack.Screen name={'SeatingChart'} component={SeatingChartScreen} />
+        <Stack.Screen name={'Checkout'} component={CheckoutScreen} />
+        <Stack.Screen name={'Attendee'} component={AttendeeScreen} />
+      </Stack.Navigator>
+    );
+  };
 
-const EventListingNavigator = createStackNavigator(
-  {
-    EventList: EventListScreen,
-    ViewEvent: ViewEventScreen,
-  },
-  {
-    initialRouteName: 'EventList',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+  // this is showing after organizer login
+  const LoggedOutNavigator1 = () => {
+    return (
+      <Drawer.Navigator
+        id="LoggedOutNavigator1"
+        initialRouteName="DrawerHome"
+        screenOptions={{
+          unmountOnBlur: true,
+          headerShown: false,
+        }}
+        drawerContent={CustomDrawerContentComponent}>
+        <Drawer.Screen
+          name={'DrawerHome'}
+          component={HomeNavigator}
+          options={() => ({
+            title: t('home', {order: 1}),
+            drawerIcon: () => setDrawerItemIcon(homeIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerEvent'}
+          component={EventListingNavigator}
+          options={() => ({
+            title: t('event', {order: 2}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerProfile'}
+          component={ProfileNavigator}
+          options={() => ({
+            title: t('profile', {order: 5}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerCheckIn'}
+          component={ScanTicketScreen}
+          options={() => ({
+            title: t('check_in', {order: 6}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerCheckOut'}
+          component={ScanOutScreen}
+          options={() => ({
+            title: t('check_out', {order: 7}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={'NA'}
+          options={() => ({
+            title: t('logout', {order: 6}),
+          })}
+        />
 
-const MyBookingNavigator = createStackNavigator(
-  {
-    MyBooking: MyBookingScreen,
-    SeatingChart: SeatingChartScreen,
-    Checkout: CheckoutScreen,
-    Attendee: AttendeeScreen,
-  },
-  {
-    initialRouteName: 'MyBooking',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+        <Drawer.Screen
+          name={'DrawerAbout'}
+          component={AboutScreen}
+          options={() => ({
+            title: t('about', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerContact'}
+          component={ContactScreen}
+          options={() => ({
+            title: t('contact', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerTerms'}
+          component={TermsScreen}
+          options={() => ({
+            title: t('terms', {order: 9}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerPrivacy'}
+          component={PrivacyScreen}
+          options={() => ({
+            title: t('privacy', {order: 10}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerFaq'}
+          component={FaqScreen}
+          options={() => ({
+            title: t('faq', {order: 11}),
+          })}
+        />
+      </Drawer.Navigator>
+    );
+  };
 
-/* =====----=-=-==-===-- Drawer Labels multi-lingual =====----=-=-==-===-- */
-// Home
-const DrawerHome = createStackNavigator(
-  {
-    Home: {
-      screen: HomeNavigator,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('home', { order: 1 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerHome.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('home', { order: 1 }),
-});
+  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
 
-// Event
-const DrawerEvent = createStackNavigator(
-  {
-    Event: {
-      screen: EventListingNavigator,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('event', { order: 2 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerEvent.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('event', { order: 2 }),
-});
+  // this is showing after customer login
+  const LoggedOutNavigator2 = () => {
+    return (
+      <Drawer.Navigator
+        id="LoggedOutNavigator2"
+        initialRouteName="DrawerHome"
+        screenOptions={{
+          unmountOnBlur: true,
+          headerShown: false,
+        }}
+        drawerContent={CustomDrawerContentComponent}>
+        <Drawer.Screen
+          name={'DrawerHome'}
+          component={HomeNavigator}
+          options={() => ({
+            title: t('home', {order: 1}),
+            drawerIcon: () => setDrawerItemIcon(homeIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerEvent'}
+          component={EventListingNavigator}
+          options={() => ({
+            title: t('event', {order: 2}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerMyBookings'}
+          component={MyBookingNavigator}
+          options={() => ({
+            title: t('my_bookings', {order: 4}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerProfile'}
+          component={ProfileNavigator}
+          options={() => ({
+            title: t('profile', {order: 5}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={() => null}
+          options={() => ({
+            title: t('logout', {order: 6}),
+          })}
+        />
 
-// Login
-const DrawerLogin = createStackNavigator(
-  {
-    Login: {
-      screen: AdminNavigator,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('login', { order: 3 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerLogin.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('login', { order: 3 }),
-});
+        <Drawer.Screen
+          name={'DrawerAbout'}
+          component={AboutScreen}
+          options={() => ({
+            title: t('about', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerContact'}
+          component={ContactScreen}
+          options={() => ({
+            title: t('contact', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerTerms'}
+          component={TermsScreen}
+          options={() => ({
+            title: t('terms', {order: 9}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerPrivacy'}
+          component={PrivacyScreen}
+          options={() => ({
+            title: t('privacy', {order: 10}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerFaq'}
+          component={FaqScreen}
+          options={() => ({
+            title: t('faq', {order: 11}),
+          })}
+        />
+      </Drawer.Navigator>
+    );
+  };
+  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
 
-// MyBooking
-const DrawerMyBookings = createStackNavigator(
-  {
-    MyBookings: {
-      screen: MyBookingNavigator,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('my_bookings', { order: 4 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerMyBookings.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('my_bookings', { order: 4 }),
-});
+  const AfterGuestLoginNavigator = () => {
+    return (
+      <Drawer.Navigator
+        id="AfterGuestLoginNavigator"
+        initialRouteName="DrawerMyBookings"
+        screenOptions={{
+          unmountOnBlur: true,
+          headerShown: false,
+        }}
+        drawerContent={CustomDrawerContentComponent}>
+        <Drawer.Screen
+          name={'DrawerHome'}
+          component={HomeNavigator}
+          options={() => ({
+            title: t('home', {order: 1}),
+            drawerIcon: () => setDrawerItemIcon(homeIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerEvent'}
+          component={EventListingNavigator}
+          options={() => ({
+            title: t('event', {order: 2}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerMyBookings'}
+          component={MyBookingNavigator}
+          options={() => ({
+            title: t('my_bookings', {order: 4}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerProfile'}
+          component={ProfileNavigator}
+          options={() => ({
+            title: t('profile', {order: 5}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={() => null}
+          options={() => ({
+            title: t('logout', {order: 6}),
+          })}
+        />
 
-// Profile
-const DrawerProfile = createStackNavigator(
-  {
-    Profile: {
-      screen: ProfileNavigator,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('profile', { order: 5 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerProfile.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('profile', { order: 5 }),
-});
+        <Drawer.Screen
+          name={'DrawerAbout'}
+          component={AboutScreen}
+          options={() => ({
+            title: t('about', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerContact'}
+          component={ContactScreen}
+          options={() => ({
+            title: t('contact', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerTerms'}
+          component={TermsScreen}
+          options={() => ({
+            title: t('terms', {order: 9}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerPrivacy'}
+          component={PrivacyScreen}
+          options={() => ({
+            title: t('privacy', {order: 10}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerFaq'}
+          component={FaqScreen}
+          options={() => ({
+            title: t('faq', {order: 11}),
+          })}
+        />
+      </Drawer.Navigator>
+    );
+  };
 
-// Logout
-const DrawerLogout = createStackNavigator(
-  {
-    Logout: {
-      screen: 'No Screen',
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('logout', { order: 6 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerLogout.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('logout', { order: 6 }),
-});
+  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
 
-// Check-in
-const DrawerCheckIn = createStackNavigator(
-  {
-    CheckIn: {
-      screen: ScanTicketScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('check_in', { order: 6 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerCheckIn.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('check_in', { order: 6 }),
-});
+  const LoggedOutNavigator = () => {
+    return (
+      <Drawer.Navigator
+        id="LoggedOutNavigator"
+        initialRouteName="DrawerHome"
+        screenOptions={{
+          unmountOnBlur: true,
+          headerShown: false,
+        }}
+        drawerContent={CustomDrawerContentComponent}>
+        <Drawer.Screen
+          name={'DrawerHome'}
+          component={HomeNavigator}
+          options={() => ({
+            title: t('home', {order: 1}),
+            drawerIcon: () => setDrawerItemIcon(homeIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerEvent'}
+          component={EventListingNavigator}
+          options={() => ({
+            title: t('event', {order: 2}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogin'}
+          component={AdminNavigator}
+          options={() => ({
+            title: t('login', {order: 3}),
+          })}
+        />
 
-// Check-out
-const DrawerCheckOut = createStackNavigator(
-  {
-    CheckIn: {
-      screen: ScanOutScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('check_out', { order: 7 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerCheckOut.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('check_out', { order: 7 }),
-});
+        <Drawer.Screen
+          name={'DrawerAbout'}
+          component={AboutScreen}
+          options={() => ({
+            title: t('about', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerContact'}
+          component={ContactScreen}
+          options={() => ({
+            title: t('contact', {order: 8}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerTerms'}
+          component={TermsScreen}
+          options={() => ({
+            title: t('terms', {order: 9}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerPrivacy'}
+          component={PrivacyScreen}
+          options={() => ({
+            title: t('privacy', {order: 10}),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerFaq'}
+          component={FaqScreen}
+          options={() => ({
+            title: t('faq', {order: 11}),
+          })}
+        />
+      </Drawer.Navigator>
+    );
+  };
 
-// About
-const DrawerAbout = createStackNavigator(
-  {
-    About: {
-      screen: AboutScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('about', { order: 8 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerAbout.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('about', { order: 8 }),
-});
+  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
 
-// Contact
-const DrawerContact = createStackNavigator(
-  {
-    Contact: {
-      screen: ContactScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('contact', { order: 8 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerContact.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('contact', { order: 8 }),
-});
-
-// Terms
-const DrawerTerms = createStackNavigator(
-  {
-    Terms: {
-      screen: TermsScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('terms', { order: 9 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerTerms.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('terms', { order: 9 }),
-});
-
-// Privacy
-const DrawerPrivacy = createStackNavigator(
-  {
-    Privacy: {
-      screen: PrivacyScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('privacy', { order: 10 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerPrivacy.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('privacy', { order: 10 }),
-});
-
-// Faq
-const DrawerFaq = createStackNavigator(
-  {
-    Faq: {
-      screen: FaqScreen,
-      navigationOptions: ({ navigation, screenProps: { t } }) => ({
-        title: t('faq', { order: 11 }),
-        headerShown: false
-      })
-    }
-  }
-);
-DrawerFaq.navigationOptions = ({ screenProps: { t } }) => ({
-  drawerLabel: t('faq', { order: 11 }),
-});
-/* =====----=-=-==-===-- Drawer Labels multi-lingual =====----=-=-==-===-- */
-
-
-
-// this is showing after organizer login
-const LoggedOutNavigator1 = createDrawerNavigator(
-  {
-    DrawerHome,
-    DrawerEvent,
-    DrawerProfile,
-    DrawerCheckIn,
-    DrawerCheckOut,
-    DrawerLogout,
-    
-    DrawerAbout,
-    DrawerContact,
-    DrawerTerms,
-    DrawerPrivacy,
-    DrawerFaq,
-  },
-  {
-    initialRouteName: 'DrawerHome',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-
-
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
-
-
-
-
-
-// this is showing after customer login
-const LoggedOutNavigator2 = createDrawerNavigator(
-  {
-    DrawerHome,
-    DrawerEvent,
-    DrawerMyBookings,
-    DrawerProfile,
-    DrawerLogout,
-    
-    DrawerAbout,
-    DrawerContact,
-    DrawerTerms,
-    DrawerPrivacy,
-    DrawerFaq,
-  },
-  {
-    initialRouteName: 'DrawerHome',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
-
-
-const AfterGuestLoginNavigator = createDrawerNavigator(
-  {
-    DrawerHome,
-    DrawerEvent,
-    DrawerMyBookings,
-    DrawerProfile,
-    DrawerLogout,
-
-    DrawerAbout,
-    DrawerContact,
-    DrawerTerms,
-    DrawerPrivacy,
-    DrawerFaq,
-  },
-  {
-    initialRouteName: 'DrawerMyBookings',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-
-
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
-
-
-
-
-const LoggedOutNavigator = createDrawerNavigator(
-  {
-    DrawerHome,
-    DrawerEvent,
-    DrawerLogin,
-
-    DrawerAbout,
-    DrawerContact,
-    DrawerTerms,
-    DrawerPrivacy,
-    DrawerFaq,
-  },
-  {
-    initialRouteName: 'DrawerHome',
-    unmountInactiveRoutes: true,
-    contentComponent: CustomDrawerContentComponent,
-  },
-);
-/* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
-
-export const createRootNavigator = (checkScanning, guestCheckoutSuccess,paymentFailed) => {
-  console.log('createRootNavigator checkScanning', checkScanning);
   let initialRouteName = 'LoggedOut';
-  if(guestCheckoutSuccess =='yes'){
+  if (guestCheckoutSuccess == 'yes') {
     initialRouteName = 'AfterGuestLoginNavigator';
-  }else{
+  } else {
     if (checkScanning == 3) {
       initialRouteName = 'LoggedOutNavigator1';
     } else if (checkScanning == 2) {
@@ -590,14 +678,29 @@ export const createRootNavigator = (checkScanning, guestCheckoutSuccess,paymentF
     }
   }
 
-  const ROUTES = {
-    LoggedOut: LoggedOutNavigator,
-    LoggedIn: LoggedOutNavigator,
-    LoggedOutNavigator1: LoggedOutNavigator1,
-    LoggedOutNavigator2: LoggedOutNavigator2,
-    AfterGuestLoginNavigator: AfterGuestLoginNavigator,
-  };
-
-  
-  return createSwitchNavigator(ROUTES, { initialRouteName });
+  return (
+    <Stack.Navigator
+      id="MainNavigator"
+      initialRouteName={initialRouteName}
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name={'LoggedOut'} component={LoggedOutNavigator} />
+      <Stack.Screen name={'LoggedIn'} component={LoggedOutNavigator} />
+      <Stack.Screen
+        name={'LoggedOutNavigator1'}
+        component={LoggedOutNavigator1}
+      />
+      <Stack.Screen
+        name={'LoggedOutNavigator2'}
+        component={LoggedOutNavigator2}
+      />
+      <Stack.Screen
+        name={'AfterGuestLoginNavigator'}
+        component={AfterGuestLoginNavigator}
+      />
+    </Stack.Navigator>
+  );
 };
+
+export default withTranslation()(Routes);

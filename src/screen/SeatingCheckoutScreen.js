@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   SafeAreaView,
@@ -15,13 +15,13 @@ import {
 
 import { useTranslation } from 'react-i18next';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 // API Info
-import {BASE_URL, makeRequest} from '../api/ApiInfo';
+import { BASE_URL, makeRequest } from '../api/ApiInfo';
 // import  axios  from 'axios';
 
-const Section = ({children, title}) => {
+const Section = ({ children, title }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -47,7 +47,7 @@ const Section = ({children, title}) => {
   );
 };
 
-const SeatingScreen = ({navigation}) => {
+const SeatingScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -60,11 +60,11 @@ const SeatingScreen = ({navigation}) => {
   const getSeatingData = async () => {
     try {
       const response = await fetch(
-        BASE_URL+'events/show/open-air-concert-reserved-seating',
+        BASE_URL + 'events/show/open-air-concert-reserved-seating',
       );
       const json = await response.json();
       setTickets(json.data.tickets);
-      console.log(json.data.tickets);
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -85,7 +85,7 @@ const SeatingScreen = ({navigation}) => {
   const handleSelectSeat = (ticket, seat) => {
     const findticket = tickets.find(t => t.id == ticket?.id);
     const newSeats = findticket.seatchart.seats.find(s => s.id == seat?.id);
-    console.log(newSeats);
+
   };
 
   return (
@@ -95,14 +95,14 @@ const SeatingScreen = ({navigation}) => {
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         {loading ? (
-          <View style={{backgroundColor: Colors.black}}>
+          <View style={{ backgroundColor: Colors.black }}>
             <Text style={styles.color}>{t('loading')}</Text>
           </View>
         ) : (
           <>
             {tickets?.map(ticket => (
               <View key={ticket?.id}>
-                <Text style={{backgroundColor: Colors.white, color: 'black'}}>
+                <Text style={{ backgroundColor: Colors.white, color: 'black' }}>
                   {ticket?.title}
                 </Text>
                 <ScrollView horizontal={true} style={styles.seatWrapper}>

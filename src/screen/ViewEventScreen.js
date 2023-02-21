@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -19,7 +19,7 @@ import {
 } from 'react-native-responsive-screen';
 import RenderHtml from 'react-native-render-html';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 // Component
 import CustomLoader from '../component/CustomLoader';
@@ -28,11 +28,11 @@ import FooterComponent from '../component/FooterComponent';
 
 // Icon
 import ic_ticket from '../assets/icon/ic_ticket.png';
-import { BASE_URL } from '../api/ApiInfo';
+import {BASE_URL} from '../api/ApiInfo';
 
 // User Preference
-import { async_keys, getData } from '../api/UserPreference';
-import { showToast } from '../component/CustomToast';
+import {async_keys, getData} from '../api/UserPreference';
+import {showToast} from '../component/CustomToast';
 import BasicInfoScreen from './event_detail/BasicInfoScreen';
 import LocationTimimg from './event_detail/LocationTimimg';
 import Tickets from './event_detail/Tickets';
@@ -40,7 +40,7 @@ import TagGroups from './event_detail/TagGroups';
 import Gallery from './event_detail/Gallery';
 import ReviewRatings from './event_detail/ReviewRatings';
 import SeatChart from './event_detail/SeatChart';
-import { t } from 'i18next';
+import {t} from 'i18next';
 
 const width = Dimensions.get('window').width;
 
@@ -54,11 +54,11 @@ class ViewEventScreen extends Component {
       isLoading: true,
       scrollYPos: 0,
     };
-    
+
     this.scroller = React.createRef();
 
     // fetching navigation props
-    this.slugTitle = this.props.navigation.getParam('slugTitle', null);
+    this.slugTitle = this.props.route.params?.slugTitle;
   }
 
   componentDidMount() {
@@ -66,25 +66,33 @@ class ViewEventScreen extends Component {
   }
 
   fetchEventDetail = async () => {
-
     const axios = require('axios');
 
     try {
       // calling api
 
-      await axios.get(BASE_URL + 'events/show/' + this.slugTitle.slug)
+      await axios
+        .get(BASE_URL + 'events/show/' + this.slugTitle.slug)
         .then(response => {
           let newResponse = response;
 
           if (newResponse) {
-            const { success } = newResponse.data;
+            const {success} = newResponse.data;
 
             if (success === true) {
               this.setState({
                 data: newResponse.data.data,
-                eventSchedulesDatesForMonth: newResponse.data.data.repititive_schedule.length > 0 ? newResponse.data.data.repititive_schedule[0].schedule_dates.formatted_schedule_dates : [],
-                selectedSchdeuleMonthId: newResponse.data.data.repititive_schedule.length > 0 ? newResponse.data.data.repititive_schedule[0].id : 0, // show repetitive schedule selectedf
-                showSheatChart: newResponse.data.data.tickets[0].show_sheat_chart,
+                eventSchedulesDatesForMonth:
+                  newResponse.data.data.repititive_schedule.length > 0
+                    ? newResponse.data.data.repititive_schedule[0]
+                        .schedule_dates.formatted_schedule_dates
+                    : [],
+                selectedSchdeuleMonthId:
+                  newResponse.data.data.repititive_schedule.length > 0
+                    ? newResponse.data.data.repititive_schedule[0].id
+                    : 0, // show repetitive schedule selectedf
+                showSheatChart:
+                  newResponse.data.data.tickets[0].show_sheat_chart,
                 isLoading: false,
               });
             }
@@ -96,14 +104,12 @@ class ViewEventScreen extends Component {
   };
 
   handleGetTicket = async date => {
-    console.log('this.state.data?.event?.faq', this.state.data?.event?.faq);
-    const { t } = this.props;
+    const {t} = this.props;
 
     const organizer = await getData(async_keys.userInfo);
     if (organizer == 3) {
       showToast(t('organizer_not_book'));
     } else {
-
       const checkOutScreenData = {
         title: this.state.data.event.title,
         startDate: date.start_date,
@@ -116,40 +122,37 @@ class ViewEventScreen extends Component {
         finalDate: date,
         maxQuantity: this.state.data.max_ticket_qty,
         currency: this.state.data.currency,
-      }
-      
+      };
+
       this.props.navigation.navigate('Checkout', {
-        eventInfo: checkOutScreenData
+        eventInfo: checkOutScreenData,
       });
     }
   };
 
   scrollToGetTicket = () => {
-    this.scroller.scrollTo({ x: 0, y: (2 * this.state.scrollYPos) });
+    this.scroller.scrollTo({x: 0, y: 2 * this.state.scrollYPos});
   };
   render() {
-
-    const { isLoading } = this.state;
-    const { t } = this.props;
-
-    if (isLoading) {
-      return <CustomLoader />;
-    }
-
+    const {isLoading} = this.state;
+    const {t} = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
+        {isLoading && <CustomLoader />}
         <HeaderComponent
           title={t('event')}
           navAction="back"
           nav={this.props.navigation}
         />
-        <ScrollView ref={(scroller) => { this.scroller = scroller }}>
-
+        <ScrollView
+          ref={scroller => {
+            this.scroller = scroller;
+          }}>
           <View style={styles.homeContainer}>
             {/* Basic Info */}
-            <BasicInfoScreen data={this.state.data} />
-            
+            {!isLoading && <BasicInfoScreen data={this.state.data} />}
+
             <TouchableOpacity
               style={styles.getTicketButtonContainer}
               onPress={this.scrollToGetTicket}>
@@ -160,61 +163,66 @@ class ViewEventScreen extends Component {
               />
               <Text style={styles.getTicketText}>{t('get_tickets')}</Text>
             </TouchableOpacity>
-            
-            <View style={{ marginHorizontal: wp(4) }}>
-              <RenderHtml tagsStyles={{ p: { fontSize: wp(3.5) } }}
+
+            <View style={{marginHorizontal: wp(4)}}>
+              <RenderHtml
+                tagsStyles={{p: {fontSize: wp(3.5)}}}
                 contentWidth={width}
-                source={{ html: this.state.data?.event?.description }}
+                source={{html: this.state.data?.event?.description}}
               />
             </View>
-
-            <LocationTimimg data={this.state.data} />
+            {!isLoading && <LocationTimimg data={this.state.data} />}
             {/* Ticket month wise */}
 
             {this.state.data.event?.seatingchart_image && (
               <SeatChart data={this.state.data} />
             )}
 
-            <TouchableOpacity
-              style={styles.bookTicketContainer}
-              activeOpacity={1}
-              onLayout={event => {
-                const { layout } = event.nativeEvent;
-                this.setState({ ...this.state, scrollYPos: (layout.height) });
-              }}
-            >
-              <Tickets
-                data={this.state.data}
-                eventSchedulesDatesForMonth={this.state.eventSchedulesDatesForMonth}
-                selectedSchdeuleMonthId={this.state.selectedSchdeuleMonthId}
-                handleGetTicket={(date) => this.handleGetTicket(date)}
-                scroller={this.scroller}
-
-              />
-            </TouchableOpacity>
+            {!isLoading && (
+              <TouchableOpacity
+                style={styles.bookTicketContainer}
+                activeOpacity={1}
+                onLayout={event => {
+                  const {layout} = event.nativeEvent;
+                  this.setState({...this.state, scrollYPos: layout.height});
+                }}>
+                <Tickets
+                  data={this.state.data}
+                  eventSchedulesDatesForMonth={
+                    this.state.eventSchedulesDatesForMonth
+                  }
+                  selectedSchdeuleMonthId={this.state.selectedSchdeuleMonthId}
+                  handleGetTicket={date => this.handleGetTicket(date)}
+                  scroller={this.scroller}
+                />
+              </TouchableOpacity>
+            )}
             {/* Event Info */}
-            { (this.state.data?.event?.faq != null && this.state.data?.event?.faq != '') ? (
+            {this.state.data?.event?.faq != null &&
+            this.state.data?.event?.faq != '' ? (
               <View style={styles.eventInfoContainer}>
                 <Text style={styles.eventInfoText}>{t('event_info')}</Text>
-                <View style={{ marginHorizontal: wp(4) }}>
-
-                  <RenderHtml tagsStyles={{ p: { fontSize: wp(2.5) } }}
+                <View style={{marginHorizontal: wp(4)}}>
+                  <RenderHtml
+                    tagsStyles={{p: {fontSize: wp(2.5)}}}
                     contentWidth={width}
-                    source={{ html: this.state.data?.event?.faq }}
+                    source={{html: this.state.data?.event?.faq}}
                   />
                 </View>
               </View>
             ) : null}
-            
-            {/* Tage Grops (HOST,DANCER,etc)  */}
-            <TagGroups
-              data={this.state.data}
-            />
-            {/* Event gallery  */}
-            <Gallery data={this.state.data} />
 
-            {/* Event Review and rating  */}
-            <ReviewRatings data={this.state.data} />
+            {!isLoading && (
+              <>
+                {/* Tage Grops (HOST,DANCER,etc)  */}
+                <TagGroups data={this.state.data} />
+                {/* Event gallery  */}
+                <Gallery data={this.state.data} />
+
+                {/* Event Review and rating  */}
+                <ReviewRatings data={this.state.data} />
+              </>
+            )}
           </View>
         </ScrollView>
 
@@ -402,7 +410,7 @@ const styles = StyleSheet.create({
   },
   listDateContainer: {
     // width: wp(70),
-    alignItems: 'center'
+    alignItems: 'center',
   },
   listTimeContainer: {
     // width: wp(30),
@@ -412,14 +420,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: 'auto',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   listTimeText: {
     fontSize: wp(3.5),
     fontWeight: '700',
     color: '#ff0084',
     marginHorizontal: wp(2),
-    alignItems: 'center'
+    alignItems: 'center',
   },
   eventInfoContainer: {
     marginVertical: hp(2),

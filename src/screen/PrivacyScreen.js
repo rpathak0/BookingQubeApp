@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Dimensions, ScrollView} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, Dimensions, ScrollView } from 'react-native';
 
 import {
   widthPercentageToDP as wp,
@@ -15,7 +15,7 @@ import RenderHtml from 'react-native-render-html';
 const width = Dimensions.get('window').width;
 
 // API Info
-import {BASE_URL} from '../api/ApiInfo';
+import { BASE_URL } from '../api/ApiInfo';
 
 import { withTranslation } from 'react-i18next';
 
@@ -37,16 +37,14 @@ class PrivacyScreen extends Component {
     try {
       // calling api
       let slug = 'privacy';
-      await axios.get(BASE_URL + 'page-content/'+slug).then(response => {
-        // console.log(response?.data);
+      await axios.get(BASE_URL + 'page-content/' + slug).then(response => {
         let newResponse = response?.data;
 
         if (newResponse) {
-          const {status} = newResponse;
+          const { status } = newResponse;
 
           if (status === true) {
-            console.log('newResponse.data', newResponse.data);
-            this.setState({pageContent: newResponse.data.body});
+            this.setState({ pageContent: newResponse.data.body });
           }
         }
       });

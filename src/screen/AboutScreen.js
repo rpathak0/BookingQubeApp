@@ -1,6 +1,13 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Dimensions, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 
 import {
   widthPercentageToDP as wp,
@@ -17,7 +24,7 @@ const width = Dimensions.get('window').width;
 // API Info
 import {BASE_URL} from '../api/ApiInfo';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 class AboutScreen extends Component {
   constructor(props) {
@@ -37,7 +44,7 @@ class AboutScreen extends Component {
     try {
       // calling api
       let slug = 'about';
-      await axios.get(BASE_URL + 'page-content/'+slug).then(response => {
+      await axios.get(BASE_URL + 'page-content/' + slug).then(response => {
         // console.log(response?.data);
         let newResponse = response?.data;
 
@@ -45,7 +52,6 @@ class AboutScreen extends Component {
           const {status} = newResponse;
 
           if (status === true) {
-            console.log('newResponse.data', newResponse.data);
             this.setState({pageContent: newResponse.data.body});
           }
         }
@@ -56,7 +62,7 @@ class AboutScreen extends Component {
   };
 
   render() {
-    const { t } = this.props;
+    const {t} = this.props;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -68,9 +74,10 @@ class AboutScreen extends Component {
 
         <ScrollView>
           <View style={styles.homeContainer}>
-            <RenderHtml tagsStyles={{ p: { fontSize: wp(3.5) } }}
+            <RenderHtml
+              tagsStyles={{p: {fontSize: wp(3.5)}}}
               contentWidth={width}
-              source={{ html: this.state.pageContent }}
+              source={{html: this.state.pageContent}}
             />
           </View>
         </ScrollView>

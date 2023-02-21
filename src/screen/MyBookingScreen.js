@@ -17,7 +17,7 @@ import {
   I18nManager,
   ActivityIndicator,
   Platform,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -29,10 +29,10 @@ import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
-import {Download} from './Download';
-import { STORAGE_URL } from '../api/ApiInfo';
+import {Download} from './download';
+import {STORAGE_URL} from '../api/ApiInfo';
 // Component
 import CustomLoader from '../component/CustomLoader';
 import HeaderComponent from '../component/HeaderComponent';
@@ -41,8 +41,8 @@ import {showToast} from '../component/CustomToast';
 import ProcessingLoader from '../component/ProcessingLoader';
 
 import LayoutSize from '../Helper/LayoutSize';
-import CountDown from 'react-native-countdown-component';
-import { checkoutCountDown } from '../Helper/dateConverter';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import {checkoutCountDown} from '../Helper/dateConverter';
 
 // Icon
 import ic_header_home_icon from '../assets/icon/ic_header_home_icon.png';
@@ -98,7 +98,7 @@ class MyBookingScreen extends Component {
   }
 
   fetchBookedTickets = async () => {
-    const { t } = this.props;
+    const {t} = this.props;
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
 
@@ -121,11 +121,7 @@ class MyBookingScreen extends Component {
           if (newResponse) {
             const {status} = newResponse;
 
-            console.log(newResponse);
-
             if (status === 200) {
-              // console.log(newResponse.data.currency);
-
               if (newResponse?.data?.bookings?.data === 0) {
                 this.setState({
                   checkBookingStatus: null,
@@ -329,9 +325,9 @@ class MyBookingScreen extends Component {
     this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
-  confirmCancelBooking = async (item) => {
+  confirmCancelBooking = async item => {
     const {t} = this.props;
-    
+
     // confirmation dialog
     Alert.alert(
       t('cancel_booking'),
@@ -342,7 +338,7 @@ class MyBookingScreen extends Component {
       ],
       {cancelable: false},
     );
-  }
+  };
 
   handleCancelTicket = async item => {
     let booking_id = [];
@@ -408,11 +404,9 @@ class MyBookingScreen extends Component {
     }
   };
 
-
-  DownloadInvoicefile = async(id, type) =>{
-    const { t } = this.props;
+  DownloadInvoicefile = async (id, type) => {
+    const {t} = this.props;
     try {
-      
       const axios = require('axios');
       const token = await getData(async_keys.userId);
 
@@ -426,17 +420,15 @@ class MyBookingScreen extends Component {
       this.setState({showProcessingLoader: true});
       // calling api
       let url = `invoice-download/${id}`;
-      if(type == 'qrcodes') {
+      if (type == 'qrcodes') {
         url = `qrcode-download/${id}`;
       }
-      
+
       console.log(BASE_URL + url);
-      
-      await axios
-      .get(BASE_URL + url,axiosConfig)
-      .then(response => {
+
+      await axios.get(BASE_URL + url, axiosConfig).then(response => {
         this.setState({showProcessingLoader: false});
-        if(response.status && response?.data?.data) {
+        if (response.status && response?.data?.data) {
           console.log('hello download invoice please', response?.data);
           Download(response?.data?.data, t);
         }
@@ -444,14 +436,14 @@ class MyBookingScreen extends Component {
     } catch (error) {
       this.setState({showProcessingLoader: false});
       console.log(error?.response?.data);
-      if(error?.response?.data?.message) {
+      if (error?.response?.data?.message) {
         console.log(error?.response?.data);
         showToast(error?.response?.data?.message);
       }
     }
-  }
+  };
 
-  getQr = async(id) =>{
+  getQr = async id => {
     console.log('getQr', id);
     try {
       const axios = require('axios');
@@ -468,92 +460,96 @@ class MyBookingScreen extends Component {
       // calling api
       let url = `get-qrcode`;
       let data = {
-        "booking_id": id,
-      }
-      
-      await axios
-      .post(BASE_URL + url, data,axiosConfig)
-      .then(response => {
+        booking_id: id,
+      };
+
+      await axios.post(BASE_URL + url, data, axiosConfig).then(response => {
         console.log('get-qrcode', response);
         this.setState({showProcessingLoader: false});
-        if(response.status && response?.data?.qrcode_file) {
-          this.setState({ checkModal: true, qrCodeFile: response.data.qrcode_file, barCodeFile: response.data.barcode_file, qrCodeOrderNumber: response.data.qrcode_data.order_number });
+        if (response.status && response?.data?.qrcode_file) {
+          this.setState({
+            checkModal: true,
+            qrCodeFile: response.data.qrcode_file,
+            barCodeFile: response.data.barcode_file,
+            qrCodeOrderNumber: response.data.qrcode_data.order_number,
+          });
         } else {
-          console.log(response?.data,'////');
+          console.log(response?.data, '////');
           showToast();
         }
       });
     } catch (error) {
       this.setState({showProcessingLoader: false});
       console.log('get-qrcode error', error);
-      if(error?.response?.data?.data){
+      if (error?.response?.data?.data) {
         showToast(error?.response?.data?.data);
       }
     }
-  }
+  };
 
-  
-  DownloadTicketfile = async({order_number,attendees}) =>{
-    console.log('dwnlaoda alciet', attendees?.[0].booking_id+'odrrrr-->'+order_number);
-    const { t } = this.props;
+  DownloadTicketfile = async ({order_number, attendees}) => {
+    console.log(
+      'dwnlaoda alciet',
+      attendees?.[0].booking_id + 'odrrrr-->' + order_number,
+    );
+    const {t} = this.props;
 
     try {
-    this.setState({showProcessingLoader: true});
-    const axios = require('axios');
-    const token = await getData(async_keys.userId);
+      this.setState({showProcessingLoader: true});
+      const axios = require('axios');
+      const token = await getData(async_keys.userId);
 
-    // creating custom header
-    let axiosConfig = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    };
+      // creating custom header
+      let axiosConfig = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      };
       // starting loader
-      
+
       // calling api
       let url = `ticket-download`;
       let data = {
-        "booking_id": `${attendees?.[0].booking_id}`,
-        "order_number": `${order_number}`
-      }
-      
-      await axios
-        .post(BASE_URL + url, data,axiosConfig)
-        .then(response => {
-          console.log('downloadticket', response);
-          this.setState({showProcessingLoader: false});
-          if(response.status && response?.data?.data) {
-            console.log('hello download please', response?.data);
-            Download(response?.data?.data, t);
-          }
-        });
+        booking_id: `${attendees?.[0].booking_id}`,
+        order_number: `${order_number}`,
+      };
+
+      await axios.post(BASE_URL + url, data, axiosConfig).then(response => {
+        console.log('downloadticket', response);
+        this.setState({showProcessingLoader: false});
+        if (response.status && response?.data?.data) {
+          console.log('hello download please', response?.data);
+          Download(response?.data?.data, t);
+        }
+      });
     } catch (error) {
       this.setState({showProcessingLoader: false});
       console.log('downloadticket error', error);
-      if(error?.response?.data?.message) {
+      if (error?.response?.data?.message) {
         console.log(error?.response?.data);
         showToast(error?.response?.data?.message);
       }
     }
-  }
-
-  handleClosePopUp = () => {
-    this.setState({ checkModal: false, qrCodeFile: null, barCodeFile: null, qrCodeOrderNumber: null });
   };
 
+  handleClosePopUp = () => {
+    this.setState({
+      checkModal: false,
+      qrCodeFile: null,
+      barCodeFile: null,
+      qrCodeOrderNumber: null,
+    });
+  };
 
   render() {
-    const { t } = this.props;
+    const {t} = this.props;
 
     const {isLoading} = this.state;
-
-    if (isLoading) {
-      return <CustomLoader />;
-    }
 
     if (this.state.checkBookingStatus === null) {
       return (
         <SafeAreaView style={styles.container}>
+          {isLoading && <CustomLoader />}
           <HeaderComponent
             title={t('my_bookings')}
             navAction="back"
@@ -565,7 +561,9 @@ class MyBookingScreen extends Component {
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
                   {this.state.bookingDate === '' ? (
-                    <Text style={styles.descriptionText}>{t('booking_date')}</Text>
+                    <Text style={styles.descriptionText}>
+                      {t('booking_date')}
+                    </Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.bookingDate}
@@ -607,7 +605,7 @@ class MyBookingScreen extends Component {
                   }))}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
-                  placeholder={{label: t('select_item'),value: null}}
+                  placeholder={{label: t('select_item'), value: null}}
                 />
               </View>
 
@@ -615,7 +613,9 @@ class MyBookingScreen extends Component {
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleEventDate}>
                   {this.state.eventDate === '' ? (
-                    <Text style={styles.descriptionText}>{t('event_date')}</Text>
+                    <Text style={styles.descriptionText}>
+                      {t('event_date')}
+                    </Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.eventDate}
@@ -637,7 +637,9 @@ class MyBookingScreen extends Component {
               <View style={styles.downloadNotificationContainer}>
                 <View style={styles.downloadNotification}>
                   <Text style={styles.orderIdText}>
-                    { (Platform.OS === 'ios') ? t('download_ios') : t('download_android')}
+                    {Platform.OS === 'ios'
+                      ? t('download_ios')
+                      : t('download_android')}
                   </Text>
                 </View>
               </View>
@@ -646,7 +648,9 @@ class MyBookingScreen extends Component {
                 return (
                   <View style={styles.bookedTicketContainer}>
                     <View style={styles.orderIdWrapper}>
-                      <Text style={styles.orderIdText}>{t('order_id')} #{item.order_number}</Text>
+                      <Text style={styles.orderIdText}>
+                        {t('order_id')} #{item.order_number}
+                      </Text>
                     </View>
 
                     <Text style={styles.eventTitleText}>{t('event')}</Text>
@@ -657,7 +661,9 @@ class MyBookingScreen extends Component {
                     </Text>
 
                     <Text style={styles.eventTimeText}>
-                      @{item.event_start_date} ({item.event_start_time.split(':').slice(0, 2).join(':')} - {item.event_end_time.split(':').slice(0, 2).join(':')})
+                      @{item.event_start_date} (
+                      {item.event_start_time.split(':').slice(0, 2).join(':')} -{' '}
+                      {item.event_end_time.split(':').slice(0, 2).join(':')})
                     </Text>
 
                     <View style={styles.lineContainer}></View>
@@ -670,24 +676,32 @@ class MyBookingScreen extends Component {
                         </Text>
                       </View>
                       <View>
-                        <Text style={styles.eventTitleText}>{t('order_total')}</Text>
+                        <Text style={styles.eventTitleText}>
+                          {t('order_total')}
+                        </Text>
                         <Text style={styles.eventTimeText}>
                           {item.net_price} {this.state.currency}
                         </Text>
                       </View>
                       <View>
-                        <Text style={styles.eventTitleText}>{t('payment')}</Text>
+                        <Text style={styles.eventTitleText}>
+                          {t('payment')}
+                        </Text>
                         <Text style={styles.eventTimeText}>
-                          {item.payment_type} / 
+                          {item.payment_type} /
                           {item.is_paid === 0 ? (
-                            <Text style={styles.paymentProcessText}>{t('pending')}</Text>
+                            <Text style={styles.paymentProcessText}>
+                              {t('pending')}
+                            </Text>
                           ) : (
-                            <Text style={styles.paymentProcessText}>{t('paid')}</Text>
+                            <Text style={styles.paymentProcessText}>
+                              {t('paid')}
+                            </Text>
                           )}
                         </Text>
                       </View>
                     </View>
-                    
+
                     <View style={styles.lineContainer}></View>
 
                     <View style={styles.twoColumns}>
@@ -696,19 +710,32 @@ class MyBookingScreen extends Component {
                           {t('discount')}
                         </Text>
                         <Text style={styles.eventTimeText}>
-                            {item.promocode != null && item.promocode != '' ? item.promocode : 0} {this.state.currency}
+                          {item.promocode != null && item.promocode != ''
+                            ? item.promocode
+                            : 0}{' '}
+                          {this.state.currency}
                         </Text>
                       </View>
                       <View>
-                        <Text style={styles.eventTitleText}>{t('booked_on')}</Text>
-                        <Text style={styles.eventTimeText}>{moment(item.created_at).format('DD-MMM-YYYY')}</Text>
+                        <Text style={styles.eventTitleText}>
+                          {t('booked_on')}
+                        </Text>
+                        <Text style={styles.eventTimeText}>
+                          {moment(item.created_at).format('DD-MMM-YYYY')}
+                        </Text>
                       </View>
                       <View>
-                        <Text style={styles.eventTitleText}>{t('checked_in')}</Text>
+                        <Text style={styles.eventTitleText}>
+                          {t('checked_in')}
+                        </Text>
                         {item.checked_in === 0 ? (
-                          <Text style={[styles.checkedInTextNo]}>{t('no')}</Text>
+                          <Text style={[styles.checkedInTextNo]}>
+                            {t('no')}
+                          </Text>
                         ) : (
-                          <Text style={[styles.checkedInTextYes]}>{t('yes')}</Text>
+                          <Text style={[styles.checkedInTextYes]}>
+                            {t('yes')}
+                          </Text>
                         )}
                       </View>
                     </View>
@@ -719,117 +746,182 @@ class MyBookingScreen extends Component {
                       <View>
                         <Text style={styles.eventTitleText}>{t('status')}</Text>
                         {item.status === 1 ? (
-                          <Text style={styles.checkedInTextYes}>{t('enabled')}</Text>
+                          <Text style={styles.checkedInTextYes}>
+                            {t('enabled')}
+                          </Text>
                         ) : (
-                          <Text style={styles.checkedInTextNo}>{t('disabled')}</Text>
+                          <Text style={styles.checkedInTextNo}>
+                            {t('disabled')}
+                          </Text>
                         )}
                       </View>
                       <View>
-                        <Text style={styles.eventTitleText}>{t('expired')}</Text>
-                        
-                        {(moment(item.event_end_date+' '+item.event_end_time, 'YYYY-MM-DD HH:mm:ss') <= moment()) ? (
+                        <Text style={styles.eventTitleText}>
+                          {t('expired')}
+                        </Text>
+
+                        {moment(
+                          item.event_end_date + ' ' + item.event_end_time,
+                          'YYYY-MM-DD HH:mm:ss',
+                        ) <= moment() ? (
                           <Text style={styles.checkedInTextNo}>{t('yes')}</Text>
                         ) : (
                           <Text style={styles.checkedInTextYes}>{t('no')}</Text>
                         )}
                       </View>
-                      
                     </View>
 
                     <View style={styles.lineContainer}></View>
 
                     {item.is_paid != 1 ? null : (
-                    <View style={styles.twoColumns}>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('check_in')}</Text>
-                        <TouchableOpacity
-                          onPress={() => {(!this.state.showProcessingLoader) ? this.getQr(item.id) : true;}}
-                          style={styles.checkInButtonContainer}>
-                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
-                          <Image
-                            source={ic_check_in}
-                            resizeMode="cover"
-                            style={styles.downloadIconStyle}
-                          />
-                          <Text style={styles.ticketText}>{t('check_in')}</Text>
-                        </TouchableOpacity>
+                      <View style={styles.twoColumns}>
+                        <View>
+                          <Text style={styles.eventTitleText}>
+                            {t('check_in')}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              !this.state.showProcessingLoader
+                                ? this.getQr(item.id)
+                                : true;
+                            }}
+                            style={styles.checkInButtonContainer}>
+                            {this.state.showProcessingLoader && (
+                              <ActivityIndicator size="small" color="black" />
+                            )}
+                            <Image
+                              source={ic_check_in}
+                              resizeMode="cover"
+                              style={styles.downloadIconStyle}
+                            />
+                            <Text style={styles.ticketText}>
+                              {t('check_in')}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        <View>
+                          <Text style={styles.eventTitleText}>
+                            {t('download')}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              !this.state.showProcessingLoader
+                                ? this.DownloadTicketfile(item)
+                                : true;
+                            }}
+                            style={styles.ticketContainerBtn}>
+                            {this.state.showProcessingLoader && (
+                              <ActivityIndicator size="small" color="black" />
+                            )}
+                            <Image
+                              source={ic_download}
+                              resizeMode="cover"
+                              style={styles.downloadIconStyle}
+                            />
+                            <Text style={styles.ticketText}>{t('ticket')}</Text>
+                          </TouchableOpacity>
+                        </View>
+                        <View>
+                          <Text style={styles.eventTitleText}>
+                            {t('download')}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              !this.state.showProcessingLoader
+                                ? this.DownloadInvoicefile(item.id, 'invoice')
+                                : true;
+                            }}
+                            style={styles.ticketContainerBtn}>
+                            {this.state.showProcessingLoader && (
+                              <ActivityIndicator size="small" color="black" />
+                            )}
+                            <Image
+                              source={ic_download}
+                              resizeMode="cover"
+                              style={styles.downloadIconStyle}
+                            />
+                            <Text style={styles.ticketText}>
+                              {t('invoice')}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity 
-                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadTicketfile(item) : true;}}
-                          style={styles.ticketContainerBtn}
-                        >
-                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
-                          <Image
-                            source={ic_download}
-                            resizeMode="cover"
-                            style={styles.downloadIconStyle}
-                          />
-                          <Text style={styles.ticketText}>{t('ticket')}</Text>
-                        </TouchableOpacity>
-                      </View>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity 
-                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadInvoicefile(item.id, 'invoice') : true;}}
-                          style={styles.ticketContainerBtn}>
-                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
-                          <Image
-                            source={ic_download}
-                            resizeMode="cover"
-                            style={styles.downloadIconStyle}
-                          />
-                          <Text style={styles.ticketText}>{t('invoice')}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
                     )}
 
                     <View style={styles.lineContainer}></View>
 
                     {item.is_paid != 1 ? null : (
-                    <View style={styles.twoColumns}>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('checkout_countdown')}</Text>
-                        
-                        {(checkoutCountDown(item.attendees[0]) > 0 && checkoutCountDown(item.attendees[0]) != 'checkout') ? (
-                          <CountDown
-                          until={ checkoutCountDown(item.attendees[0])}
-                          size={12}
-                          digitTxtStyle={styles.digitTxtStyle}
-                          digitStyle={styles.digitStyle}
-                          timeLabelStyle={styles.timeLabelStyle}
-                          timeToShow={['H','M','S']}
-                          timeLabels={{h:t('hours'),m: t('minutes'), s: t('seconds')}}
-                        />  
-                        ) : null}
+                      <View style={styles.twoColumns}>
+                        <View>
+                          <Text style={styles.eventTitleText}>
+                            {t('checkout_countdown')}
+                          </Text>
 
-                        {(checkoutCountDown(item.attendees[0]) == 'checkout') ? (
-                          <Text style={styles.checkedInTextNo}>{t('checked_out')}</Text>
-                        ) : null}
+                          {/* {checkoutCountDown(item.attendees[0]) > 0 &&
+                          checkoutCountDown(item.attendees[0]) != 'checkout' ? (
+                            <CountdownCircleTimer
+                              isPlaying
+                              duration={7}
+                              colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                              colorsTime={[7, 5, 2, 0]}
+                            >
+                              {({ remainingTime }) => <Text>{remainingTime}</Text>}
+                            </CountdownCircleTimer>
+                            
+                            <CountDown
+                              until={checkoutCountDown(item.attendees[0])}
+                              size={12}
+                              digitTxtStyle={styles.digitTxtStyle}
+                              digitStyle={styles.digitStyle}
+                              timeLabelStyle={styles.timeLabelStyle}
+                              timeToShow={['H', 'M', 'S']}
+                              timeLabels={{
+                                h: t('hours'),
+                                m: t('minutes'),
+                                s: t('seconds'),
+                              }}
+                            />
+                          ) : null} */}
 
-                        {(checkoutCountDown(item.attendees[0]) != 'checkout' && checkoutCountDown(item.attendees[0]) <= 0) ? (
-                          <Text style={styles.checkedInTextNo}>{t('n/a')}</Text>
-                        ) : null}
-                        
+                          {checkoutCountDown(item.attendees[0]) ==
+                          'checkout' ? (
+                            <Text style={styles.checkedInTextNo}>
+                              {t('checked_out')}
+                            </Text>
+                          ) : null}
+
+                          {checkoutCountDown(item.attendees[0]) != 'checkout' &&
+                          checkoutCountDown(item.attendees[0]) <= 0 ? (
+                            <Text style={styles.checkedInTextNo}>
+                              {t('n/a')}
+                            </Text>
+                          ) : null}
+                        </View>
+                        <View>
+                          <Text style={styles.eventTitleText}>
+                            {t('download')}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              !this.state.showProcessingLoader
+                                ? this.DownloadInvoicefile(item.id, 'qrcodes')
+                                : true;
+                            }}
+                            style={styles.ticketContainerBtn2}>
+                            {this.state.showProcessingLoader && (
+                              <ActivityIndicator size="small" color="black" />
+                            )}
+                            <Image
+                              source={ic_download}
+                              resizeMode="cover"
+                              style={styles.downloadIconStyle}
+                            />
+                            <Text style={styles.ticketText}>
+                              {t('all_qrcodes')}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                      <View>
-                        <Text style={styles.eventTitleText}>{t('download')}</Text>
-                        <TouchableOpacity 
-                          onPress={() => {(!this.state.showProcessingLoader) ? this.DownloadInvoicefile(item.id, 'qrcodes') : true;}}
-                          style={styles.ticketContainerBtn2}
-                        >
-                          {this.state.showProcessingLoader && <ActivityIndicator size="small" color="black" />}
-                          <Image
-                            source={ic_download}
-                            resizeMode="cover"
-                            style={styles.downloadIconStyle}
-                          />
-                          <Text style={styles.ticketText}>{t('all_qrcodes')}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
                     )}
                   </View>
                 );
@@ -840,16 +932,17 @@ class MyBookingScreen extends Component {
             style={styles.modalStyle}
             isVisible={this.state.checkModal}
             onBackdropPress={this.handleClosePopUp}>
-            
             <View style={styles.qrCodeModalContainer}>
-              <Text style={styles.qrCodeModalText}>#{this.state.qrCodeOrderNumber}</Text>
+              <Text style={styles.qrCodeModalText}>
+                #{this.state.qrCodeOrderNumber}
+              </Text>
               <Image
-                source={{ uri: STORAGE_URL + this.state.qrCodeFile }}
+                source={{uri: STORAGE_URL + this.state.qrCodeFile}}
                 resizeMode="contain"
                 style={styles.qrCodeModalImage}
               />
               <Image
-                source={{ uri: STORAGE_URL + this.state.barCodeFile }}
+                source={{uri: STORAGE_URL + this.state.barCodeFile}}
                 resizeMode="contain"
                 style={styles.barCodeModalImage}
               />
@@ -870,7 +963,6 @@ class MyBookingScreen extends Component {
           />
           <ScrollView>
             <View style={styles.homeContainer}>
-
               <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
                 <RNPickerSelect
@@ -878,15 +970,17 @@ class MyBookingScreen extends Component {
                   items={[{label: t('all_events'), value: t('all_events')}]}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
-                  placeholder={{label: t('select_item'),value: null}}
+                  placeholder={{label: t('select_item'), value: null}}
                 />
               </View>
-              
+
               <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
                   {this.state.bookingDate === '' ? (
-                    <Text style={styles.descriptionText}>{t('booking_date')}</Text>
+                    <Text style={styles.descriptionText}>
+                      {t('booking_date')}
+                    </Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.bookingDate}
@@ -922,7 +1016,9 @@ class MyBookingScreen extends Component {
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleEventDate}>
                   {this.state.eventDate === '' ? (
-                    <Text style={styles.descriptionText}>{t('event_date')}</Text>
+                    <Text style={styles.descriptionText}>
+                      {t('event_date')}
+                    </Text>
                   ) : (
                     <Text style={styles.descriptionText}>
                       {this.state.eventDate}
@@ -1036,7 +1132,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000',
     marginTop: hp(1),
-    marginBottom: hp(.5),
+    marginBottom: hp(0.5),
     marginHorizontal: wp(2),
   },
   inputContainer: {
@@ -1055,7 +1151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: wp(1),
     color: '#000',
-    textAlign :  I18nManager.isRTL ? 'right' : 'left',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   descriptionText: {
     fontSize: wp(3.5),
@@ -1194,7 +1290,7 @@ const styles = StyleSheet.create({
   cancellationContainer: {
     flexDirection: 'row',
     height: hp(6),
-    width: LayoutSize.window.width/4,
+    width: LayoutSize.window.width / 4,
     borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
@@ -1243,7 +1339,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: wp(2),
     marginVertical: hp(0.5),
   },
-  
+
   downloadIconStyle: {
     width: hp(2),
     aspectRatio: 1 / 1,
@@ -1268,7 +1364,7 @@ const styles = StyleSheet.create({
   ticketContainerBtn2: {
     flexDirection: 'row',
     height: hp(6),
-    width: LayoutSize.window.width/3,
+    width: LayoutSize.window.width / 3,
     borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
@@ -1279,7 +1375,7 @@ const styles = StyleSheet.create({
   ticketContainerBtn: {
     flexDirection: 'row',
     height: hp(6),
-    width: LayoutSize.window.width/4,
+    width: LayoutSize.window.width / 4,
     borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
@@ -1290,7 +1386,7 @@ const styles = StyleSheet.create({
   checkInButtonContainer: {
     flexDirection: 'row',
     height: hp(6),
-    width: LayoutSize.window.width/4,
+    width: LayoutSize.window.width / 4,
     borderRadius: wp(2),
     alignItems: 'center',
     justifyContent: 'center',
@@ -1327,17 +1423,17 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   digitStyle: {
-    backgroundColor: '#ff0084'
+    backgroundColor: '#ff0084',
   },
   timeLabelStyle: {
     fontWeight: '700',
-    color: '#ff0084', 
+    color: '#ff0084',
   },
   modalStyle: {
     flex: 1,
     width: 'auto',
     maxHeight: hp(80),
-    overflow: "scroll",
+    overflow: 'scroll',
     // alignItems: 'center',
     justifyContent: 'center',
     top: hp(10),
@@ -1363,13 +1459,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'center',
     alignItems: 'center',
-  },  
+  },
   qrCodeModalText: {
-    flex: .2,
+    flex: 0.2,
     fontSize: wp(5),
     fontWeight: '500',
     alignSelf: 'center',
     textAlign: 'center',
     marginTop: hp(2),
-  },  
+  },
 });

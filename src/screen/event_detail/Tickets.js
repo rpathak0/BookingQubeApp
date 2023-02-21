@@ -14,7 +14,7 @@ import {
 } from 'react-native-responsive-screen';
 import moment from 'moment';
 import { convertTimeZone, getSaleExpirationSeconds } from '../../Helper/dateConverter';
-import CountDown from 'react-native-countdown-component';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { withTranslation } from 'react-i18next';
 
@@ -108,7 +108,15 @@ class Tickets extends Component {
         {tickets?.length > 0 && tickets[0]?.sale_end_date != null && this.checkSaleIslive(tickets[0]) && (
           <View style={styles.eventSaleContainer}>
             <Text style={styles.eventSaleText}>{t('on_sale')}</Text>
-            <CountDown
+            {/* <CountdownCircleTimer
+              isPlaying
+              duration={7}
+              colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+              colorsTime={[7, 5, 2, 0]}
+            >
+              {({ remainingTime }) => <Text>{remainingTime}</Text>}
+            </CountdownCircleTimer> */}
+            {/* <CountDown
               until={getSaleExpirationSeconds(tickets[0].sale_end_date)}
               size={12}
               onFinish={() => this.saleFinished()}
@@ -117,7 +125,7 @@ class Tickets extends Component {
               timeLabelStyle={styles.timeLabelStyle}
               timeToShow={['D', 'H', 'M', 'S']}
               timeLabels={{ d: t('days'), h: t('hours'), m: t('minutes'), s: t('seconds') }}
-            />
+            /> */}
           </View>
         )}
         <View style={styles.firstTicketContainer}>

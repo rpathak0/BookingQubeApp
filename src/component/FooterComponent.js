@@ -7,14 +7,14 @@ import {
   Image,
   StyleSheet,
   AppState,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import { withTranslation } from 'react-i18next';
+import {withTranslation} from 'react-i18next';
 
 // Icon
 import ic_home from '../assets/icon/ic_home.png';
@@ -45,8 +45,6 @@ class FooterComponent extends PureComponent {
     AppState.addEventListener('change', this.handleCheckLogin);
   }
 
-
-
   handleCheckLogin = async nextAppState => {
     // getting token from AsyncStorage
     const token = await getData(async_keys.userId);
@@ -60,21 +58,27 @@ class FooterComponent extends PureComponent {
   };
 
   handleHome = () => {
-    this.props.nav.navigate('Home');
+    this.props.nav.navigate('DrawerHome', {
+      screen: 'Home',
+    });
   };
 
   handleEvent = async () => {
-    this.props.nav.navigate('EventList');
+    this.props.nav.navigate('DrawerHome', {
+      screen: 'EventList',
+    });
   };
-  
+
   handleMore = async () => {
     this.props.nav.openDrawer();
   };
-  
+
   handleMovies = async () => {
-    this.props.nav.navigate('Movies');
+    this.props.nav.navigate('DrawerHome', {
+      screen: 'Movies',
+    });
   };
-  
+
   setUserInfo = async () => {
     const organizer = await getData(async_keys.userInfo);
     this.setState({userRoleId: organizer});
@@ -85,7 +89,7 @@ class FooterComponent extends PureComponent {
     const token = await getData(async_keys.userId);
 
     if (token === null) {
-      this.props.nav.navigate('Login');
+      this.props.nav.navigate('DrawerLogin');
     } else {
       this.props.nav.navigate('MyBooking');
     }
@@ -93,9 +97,9 @@ class FooterComponent extends PureComponent {
 
   render() {
     const {tab} = this.props;
-    const { t } = this.props;
+    const {t} = this.props;
     const selectedTabStyle = [styles.footerMenu, {backgroundColor: '#ECEFFF'}];
-    
+
     return (
       <SafeAreaView
         style={[
@@ -119,7 +123,7 @@ class FooterComponent extends PureComponent {
             </Text>
           </View>
         </TouchableHighlight>
-        
+
         <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleMovies}
@@ -137,28 +141,28 @@ class FooterComponent extends PureComponent {
           </View>
         </TouchableHighlight>
 
-        {(this.state.userRoleId == 2) ? (
-        <TouchableHighlight
-          underlayColor="transparent"
-          onPress={this.handleCategory}
-          style={tab === 'Game' ? selectedTabStyle : styles.footerMenu}>
-          <View style={styles.singleMenu}>
-            <Image
-              source={ic_footer_category}
-              style={styles.footerNavigatorIcon}
-            />
-            <Text
-              style={[
-                this.state.checkDarkMode === 1
-                  ? styles.footerMenuTextBlack
-                  : styles.footerMenuText,
-              ]}>
-              {t('my_bookings')}
-            </Text>
-          </View>
-        </TouchableHighlight>
+        {this.state.userRoleId == 2 ? (
+          <TouchableHighlight
+            underlayColor="transparent"
+            onPress={this.handleCategory}
+            style={tab === 'Game' ? selectedTabStyle : styles.footerMenu}>
+            <View style={styles.singleMenu}>
+              <Image
+                source={ic_footer_category}
+                style={styles.footerNavigatorIcon}
+              />
+              <Text
+                style={[
+                  this.state.checkDarkMode === 1
+                    ? styles.footerMenuTextBlack
+                    : styles.footerMenuText,
+                ]}>
+                {t('my_bookings')}
+              </Text>
+            </View>
+          </TouchableHighlight>
         ) : null}
-        
+
         <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleEvent}
@@ -178,16 +182,13 @@ class FooterComponent extends PureComponent {
             </Text>
           </View>
         </TouchableHighlight>
-        
+
         <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleMore}
           style={tab === 'Profile' ? selectedTabStyle : styles.footerMenu}>
           <View style={styles.singleMenu}>
-            <Image
-              source={ic_menu}
-              style={styles.footerNavigatorIcon}
-            />
+            <Image source={ic_menu} style={styles.footerNavigatorIcon} />
             <Text
               style={[
                 this.state.checkDarkMode === 1
@@ -198,8 +199,6 @@ class FooterComponent extends PureComponent {
             </Text>
           </View>
         </TouchableHighlight>
-
-        
       </SafeAreaView>
     );
   }
