@@ -75,7 +75,7 @@ class ContactScreen extends Component {
           </View>
         </ScrollView>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }

@@ -26,15 +26,13 @@ class MoviesScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('movies')}
-          navAction="back"
-          nav={this.props.navigation}
         />
 
         <View style={styles.homeContainer}>
           <Text>{t('coming_soon')}</Text>
         </View>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }

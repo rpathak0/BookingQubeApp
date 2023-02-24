@@ -104,7 +104,7 @@ class AttendeeScreen extends Component {
           </TouchableOpacity>
         </View>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }

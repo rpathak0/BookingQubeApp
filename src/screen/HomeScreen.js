@@ -186,12 +186,12 @@ class HomeScreen extends Component {
 
     const slug = item.slug;
     // console.log(slug);
-    // this.props.navigation.navigate('ViewEvent', {
-    //   slugTitle: {slug, imageUrlPrefix},
-    // });
+    this.props.navigation.navigate('ViewEvent', {
+      slugTitle: {slug, imageUrlPrefix},
+    });
 
     // open WebViewDirect
-    this.handleWebView(slug);
+    // this.handleWebView(slug);
   };
 
   handleBannerClick = item => {
@@ -229,11 +229,13 @@ class HomeScreen extends Component {
     const imageUrl = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar
+            barStyle="dark-content"
+            backgroundColor="light"
+        />
         {isLoading && <CustomLoader />}
         <HeaderComponent title={t('home')} nav={this.props.navigation} />
-        <ScrollView
-        // contentContainerStyle={{flex: 1}}
-        >
+        <ScrollView>
           <View style={styles.homeContainer}>
             <View>
               <SliderBox
@@ -334,7 +336,7 @@ class HomeScreen extends Component {
           </View>
         </ScrollView>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }

@@ -633,7 +633,7 @@ class ProfileScreen extends Component {
           </View>
         </ScrollView>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
 
         {this.state.showProcessingLoader && <ProcessingLoader />}
       </SafeAreaView>

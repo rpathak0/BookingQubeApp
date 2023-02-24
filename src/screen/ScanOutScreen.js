@@ -357,7 +357,7 @@ class ScanTicketScreen extends Component {
             ))}
           </View>
 
-          <FooterComponent nav={this.props.navigation} />
+          {/* <FooterComponent nav={this.props.navigation} /> */}
 
           {this.state.showProcessingLoader && <ProcessingLoader />}
         </SafeAreaView>

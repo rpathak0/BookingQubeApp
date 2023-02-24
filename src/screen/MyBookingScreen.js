@@ -328,9 +328,9 @@ class MyBookingScreen extends Component {
   handleGotoEvent = async item => {
     const slug = item.event_title;
 
-    this.handleWebView(slug);
+    // this.handleWebView(slug);
 
-    // this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
+    this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
   confirmCancelBooking = async item => {
@@ -958,7 +958,7 @@ class MyBookingScreen extends Component {
 
             {this.state.showModalProcessingLoader && <ProcessingLoader />}
           </Modal>
-          <FooterComponent nav={this.props.navigation} />
+          {/* <FooterComponent nav={this.props.navigation} /> */}
         </SafeAreaView>
       );
     } else {
@@ -1052,7 +1052,7 @@ class MyBookingScreen extends Component {
           </ScrollView>
 
           {this.state.showProcessingLoader && <ProcessingLoader />}
-          <FooterComponent nav={this.props.navigation} />
+          {/* <FooterComponent nav={this.props.navigation} /> */}
         </SafeAreaView>
       );
     }

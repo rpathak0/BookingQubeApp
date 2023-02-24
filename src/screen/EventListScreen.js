@@ -353,9 +353,9 @@ class EventListScreen extends Component {
   handleEvent = item => {
     const slug = item.slug;
     // open WebViewDirect
-    this.handleWebView(slug);
+    // this.handleWebView(slug);
 
-    // this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
+    this.props.navigation.navigate('ViewEvent', {slugTitle: {slug}});
   };
 
   handleReset = async () => {
@@ -408,8 +408,8 @@ class EventListScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('events')}
-          navAction="back"
-          nav={this.props.navigation}
+          // navAction="back"
+          // nav={this.props.navigation}
         />
         <ScrollView>
           <View style={styles.homeContainer}>
@@ -546,7 +546,7 @@ class EventListScreen extends Component {
           </View>
         </ScrollView>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }
