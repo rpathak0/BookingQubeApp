@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import {Image, StyleSheet, ScrollView, View, Text, Alert} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {Image, StyleSheet, ScrollView, View, Text, Alert, StatusBar} from 'react-native';
 import {withTranslation, useTranslation} from 'react-i18next';
 
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {version} from '../../package.json';
 import LayoutSize from '../Helper/LayoutSize';
@@ -16,7 +17,6 @@ import LoginScreen from '../screen/LoginScreen';
 import SignUpScreen from '../screen/SignUpScreen';
 import WebViewScreen from '../screen/WebViewScreen';
 import WebViewDirectScreen from '../screen/WebViewDirectScreen';
-
 import ForgetPasswordScreen from '../screen/ForgetPasswordScreen';
 
 // Home Screen
@@ -54,6 +54,7 @@ import {showToast} from '../component/CustomToast';
 // Logo
 import logo from '../assets/image/logo.png';
 import homeIcon from '../assets/icon/ic_home.png';
+import moviesIcon from '../assets/icon/ic_movies.png';
 import eventIcon from '../assets/icon/ic_footer_event.png';
 import loginIcon from '../assets/icon/login.png';
 import faqIcon from '../assets/icon/faq.png';
@@ -68,62 +69,16 @@ import mybookingsIcon from '../assets/icon/mybookings.png';
 
 // User Preference
 import {clearData} from '../api/UserPreference';
-import {CommonActions, DrawerActions} from '@react-navigation/native';
+import {CommonActions, DrawerActions, NavigationContainer} from '@react-navigation/native';
+import { useLoginContext } from '../context/LoginContext';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-// Style Sheet
-const styles = StyleSheet.create({
-  drawerItemIcon: {
-    width: wp(5),
-    height: wp(5),
-    tintColor: '#fff',
-    marginRight: -wp(5),
-  },
-  drawerItemStyle: {
-    marginHorizontal: 0,
-  },
-  drawerContentContainer: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  drawerHeader: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#000000',
-    paddingBottom: 20,
-  },
-  profileImage: {
-    height: 50,
-    width: 'auto',
-    marginTop: 20,
-  },
-  drawerTitle: {
-    color: '#fff',
-    marginLeft: wp(2),
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  drawerLabel: {
-    fontSize: wp(3.5),
-    color: '#fff',
-  },
-  versionView: {
-    position: 'absolute',
-    top: LayoutSize.window.height - 50,
-    right: 10,
-    zIndex: 999999,
-  },
-  footerNavigatorIcon: {
-    height: wp(6),
-    aspectRatio: 1 / 1,
-    
-  },
-});
-
 const Routes = ({checkScanning, guestCheckoutSuccess}) => {
   const {t} = useTranslation();
+
+  const {isLogin, type} = useLoginContext();
 
   const setDrawerItemIcon = itemIcon => (
     <Image source={itemIcon} resizeMode="cover" style={styles.drawerItemIcon} />
@@ -336,10 +291,10 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
   };
 
   // this is showing after organizer login
-  const LoggedOutNavigator1 = () => {
+  const OrganizerNavigator = () => {
     return (
       <Drawer.Navigator
-        id="LoggedOutNavigator1"
+        id="OrganizerNavigator"
         initialRouteName="DrawerHome"
         screenOptions={{
           unmountOnBlur: true,
@@ -394,7 +349,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
             drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
-
         <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
@@ -439,13 +393,12 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
     );
   };
 
-  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
 
   // this is showing after customer login
-  const LoggedOutNavigator2 = () => {
+  const CustomerNavigator = () => {
     return (
       <Drawer.Navigator
-        id="LoggedOutNavigator2"
+        id="CustomerNavigator"
         initialRouteName="DrawerHome"
         screenOptions={{
           unmountOnBlur: true,
@@ -492,7 +445,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
             drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
-
         <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
@@ -536,12 +488,11 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
       </Drawer.Navigator>
     );
   };
-  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator2 ======-=-=-=-=-=-=-=-=-= */
 
-  const AfterGuestLoginNavigator = () => {
+  const GuestNavigator = () => {
     return (
       <Drawer.Navigator
-        id="AfterGuestLoginNavigator"
+        id="GuestNavigator"
         initialRouteName="DrawerMyBookings"
         screenOptions={{
           unmountOnBlur: true,
@@ -588,7 +539,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
             drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
-
         <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
@@ -633,8 +583,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
     );
   };
 
-  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
-
+  /* ==================== LoggedOutNavigator ================== */
   const LoggedOutNavigator = () => {
     return (
       <Drawer.Navigator
@@ -669,7 +618,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
             drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
-
         <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
@@ -714,44 +662,124 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
     );
   };
 
-  /* ======-=-=-=-=-=-=-=-=-= LoggedOutNavigator ======-=-=-=-=-=-=-=-=-= */
+  // let initialRouteName = 'LoggedOut';
+  // if (guestCheckoutSuccess == 'yes') {
+  //   initialRouteName = 'GuestNavigator';
+  // } else {
+  //   if (checkScanning == 3) {
+  //     initialRouteName = 'OrganizerNavigator';
+  //   } else if (checkScanning == 2) {
+  //     initialRouteName = 'CustomerNavigator';
+  //   } else {
+  //     initialRouteName = 'LoggedOut';
+  //   }
+  // };
 
-  let initialRouteName = 'LoggedOut';
-  if (guestCheckoutSuccess == 'yes') {
-    initialRouteName = 'AfterGuestLoginNavigator';
-  } else {
-    if (checkScanning == 3) {
-      initialRouteName = 'LoggedOutNavigator1';
-    } else if (checkScanning == 2) {
-      initialRouteName = 'LoggedOutNavigator2';
-    } else {
-      initialRouteName = 'LoggedOut';
-    }
-  }
+  useEffect(() => {
+     console.log("Login:", isLogin);
+     console.log("Type:", type)
+  }, [])
+
+  const Tab = createBottomTabNavigator();
 
   return (
     <Stack.Navigator
-      id="MainNavigator"
-      initialRouteName={initialRouteName}
+      id='MainNavigator'
+      initialRouteName={type == 3 ? 'OrganizerNavigator' : type == 2 ? 'CustomerNavigator' : 'LoggedOut'}
       screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen name={'LoggedOut'} component={LoggedOutNavigator} />
-      <Stack.Screen name={'LoggedIn'} component={LoggedOutNavigator} />
       <Stack.Screen
-        name={'LoggedOutNavigator1'}
-        component={LoggedOutNavigator1}
+        name={'OrganizerNavigator'}
+        component={OrganizerNavigator}
       />
       <Stack.Screen
-        name={'LoggedOutNavigator2'}
-        component={LoggedOutNavigator2}
+        name={'CustomerNavigator'}
+        component={CustomerNavigator}
       />
       <Stack.Screen
-        name={'AfterGuestLoginNavigator'}
-        component={AfterGuestLoginNavigator}
+        name={'GuestNavigator'}
+        component={GuestNavigator}
       />
     </Stack.Navigator>
+    // <Tab.Navigator 
+    //   screenOptions={{
+    //     headerShown: false,
+    //     tabBarStyle: {
+    //       backgroundColor: '#000',
+    //     },
+    //     tabBarActiveTintColor: '#fff',
+    //     tabBarLabelStyle: {
+    //       fontSize: 12
+    //     }
+    //   }}>
+    //   <Tab.Screen name="Home" component={HomeNavigator} options={({navigation}) => ({
+    //     tabBarIcon: () => (
+    //       <Image source={homeIcon} style={styles.tabIcon}/>
+    //     )
+    //   })}/>
+    //   <Tab.Screen name="Movies" component={MoviesScreen} options={({navigation}) => ({
+    //     tabBarIcon: () => (
+    //       <Image source={moviesIcon} style={styles.tabIcon}/>
+    //     )
+    //   })}/>
+    //   <Tab.Screen name="Activities" component={EventListScreen} options={({navigation}) => ({
+    //     tabBarIcon: () => (
+    //       <Image source={eventIcon} style={styles.tabIcon}/>
+    //     )
+    //   })}/>
+    // </Tab.Navigator>
   );
 };
 
 export default withTranslation()(Routes);
+
+const styles = StyleSheet.create({
+  drawerItemIcon: {
+    width: wp(5),
+    height: wp(5),
+    tintColor: '#fff',
+    marginRight: -wp(5),
+  },
+  drawerItemStyle: {
+    marginHorizontal: 0,
+  },
+  drawerContentContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  drawerHeader: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#000000',
+    paddingBottom: 20,
+  },
+  profileImage: {
+    height: 50,
+    width: 'auto',
+    marginTop: 20,
+  },
+  drawerTitle: {
+    color: '#fff',
+    marginLeft: wp(2),
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  drawerLabel: {
+    fontSize: wp(3.5),
+    color: '#fff',
+  },
+  versionView: {
+    position: 'absolute',
+    top: LayoutSize.window.height - 50,
+    right: 10,
+    zIndex: 999999,
+  },
+  tabIcon: {
+    height: wp(6),
+    aspectRatio: 1 / 1,
+    marginTop: 10,
+    marginBottom: 5
+  },
+});
