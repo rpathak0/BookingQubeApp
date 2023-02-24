@@ -1,4 +1,5 @@
 import React, {createContext, Component} from 'react';
+import { async_keys, getData } from '../api/UserPreference';
 import {User} from './../utils/user';
 
 
@@ -11,15 +12,22 @@ class LoginContextProvider extends Component {
   };
 
   setLogin = isLogin => {
-    new User().setLogin(isLogin);
+    // new User().setLogin(isLogin);
     this.setState({isLogin: isLogin});
   };
 
-  
-
   setType = type => {
-    new User().setType(type);
+    // new User().setType(type);
     this.setState({type: type});
+  };
+
+  componentDidMount() {
+    this.initialSetup();
+  }
+
+  initialSetup = async () => {
+    const type = await getData(async_keys.userInfo);
+    type && this.setState({type: type});
   };
 
   render() {
@@ -37,5 +45,7 @@ class LoginContextProvider extends Component {
 }
 
 export default LoginContextProvider;
+
+export const useLoginContext = () => React.useContext(LoginContext);
 
 export const LoginConsumer = LoginContext.Consumer;

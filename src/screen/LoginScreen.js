@@ -118,26 +118,30 @@ const LoginScreen = ({navigation}) => {
           // stopping processing loader
           setLoginForm({...loginFrom, showProcessingLoader: false});
           new User().setToken(token);
-          setType(auth?.role_id);
+          // setType(auth?.role_id);
           setLogin('true');
+          setType(response.data.role_id);
 
-          console.log('async_keys.userId', async_keys.userId);
-          console.log('token', token);
-
-          console.log('async_keys.userInfo', async_keys.userInfo);
-          console.log('response.data.role_id', response.data.role_id);
-
-          console.log('response.data.avatar', response.data.avatar);
+          console.log('Token:', token);
+          console.log('RoleID:', response.data.role_id);
+          console.log('Avatar URL:', response.data.avatar);
 
           await storeData(async_keys.userId, token);
           await storeData(async_keys.userInfo, response.data.role_id);
           await storeData('avatar', response.data.avatar);
 
-          RNRestart.Restart();
-          // this.forceUpdate();
-          // this.props.navigation.navigate('LoggedOut');
+          // navigation.navigate('Home');
+          if (response.data.role_id == 1) {
+            navigation.navigate('Home');
+          } else if (response.data.role_id == 2) {
+            navigation.navigate('CustomerNavigator', {screen: 'DrawerHome'})
+          } else if (response.data.role_id == 3) {
+            navigation.navigate('OrganizerNavigator', 
+            {screen: 'DrawerHome'});
+          }
+
         } else {
-          console.log('errorrrrs', errors);
+          console.error('Error:', errors);
           const {username} = errors;
 
           // stopping processing loader
