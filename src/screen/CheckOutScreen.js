@@ -11,8 +11,10 @@ import {
   I18nManager,
   SafeAreaView,
   Dimensions,
+  Button,
 } from 'react-native';
 import React, {Component} from 'react';
+import ReactNativePickerModule from 'react-native-picker-module';
 
 import RenderHtml from 'react-native-render-html';
 import Signature from 'react-native-signature-canvas';
@@ -21,8 +23,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-// import {Picker} from '@react-native-picker/picker';
-import RNPickerSelect from 'react-native-picker-select';
 import Modal from 'react-native-modal';
 import Toast from 'react-native-toast-message';
 import RNRestart from 'react-native-restart';
@@ -143,7 +143,7 @@ class CheckOutScreen extends Component {
       ],
       checked: 0,
       timeslots: [],
-      timeslot_id: 0,
+      timeslot_id: this.props.route.params?.timeslot?.id,
 
       subscribe: null,
       waiver: null,
@@ -154,10 +154,14 @@ class CheckOutScreen extends Component {
       waiver_email: null,
       waiver_phone: null,
       waiver_signature: null,
+
+      free_tickets: []
     };
     this.eventInfo = this.props.route.params.eventInfo;
-    
+    this.timeslot = this.props.route.params?.timeslot;
     this.signature = React.createRef();
+    this.pickerRef = React.createRef();
+    this.pickerValue = null;
   }
 
   componentDidMount() {
@@ -219,6 +223,7 @@ class CheckOutScreen extends Component {
 
             let timeslots = [];
             if (success === true) {
+              console.log("Response:", newResponse.data.data.free_tickets);
               newResponse.data.data.event.slots.map(item => {
                 let startdatetime = null;
                 let currentdatetime = null;
@@ -253,7 +258,9 @@ class CheckOutScreen extends Component {
                 isLoading: false,
                 userId: userId,
                 timeslots: timeslots,
+                free_tickets: newResponse.data.data.free_tickets
               });
+
             }
           }
         });
@@ -318,7 +325,7 @@ class CheckOutScreen extends Component {
         // processing response
         .then(response => {
           let newResponse = response.data;
-          console.log('custom fields', response);
+          // console.log('custom fields', response);
           if (newResponse?.status) {
             this.setState({
               customFiled: newResponse.custom_fields,
@@ -1209,6 +1216,50 @@ class CheckOutScreen extends Component {
                     <View style={styles.ticketPricingContainer}>
                       <View style={styles.ticketNameWrapper}>
                         <Text style={styles.ticketName}>{item?.title}</Text>
+                          {this.state.free_tickets[i]?.race_category 
+                          && this.state.free_tickets[i]?.race_type
+                          && this.state.free_tickets[i]?.age && 
+                          <Text style={{
+                            marginVertical: 2,
+                            fontSize: wp(3)
+                          }}>
+                            {this.state.free_tickets[i]?.race_category} 
+                            {" >> "}
+                            {this.state.free_tickets[i]?.race_type}
+                            {" >> "}
+                            {this.state.free_tickets[i]?.age}
+                          </Text>
+                          }
+                          {this.state.free_tickets[i]?.race_type === "Inflata Monster" && 
+                            <Text style={{
+                              fontWeight: 'bold',
+                              color: '#424242',
+                              marginVertical: 2,
+                              fontSize: wp(3)
+                            }}>
+                              18 March, 2023
+                            </Text>
+                          }
+                          {this.state.free_tickets[i]?.race_type === "Inflata Sprint" && 
+                            <Text style={{
+                              fontWeight: 'bold',
+                              color: '#424242',
+                              marginVertical: 2,
+                              fontSize: wp(3)
+                            }}>
+                              11 March, 2023
+                            </Text>
+                          }
+                          {this.state.free_tickets[i]?.race_type === "Monster + Sprint Combo" && 
+                            <Text style={{
+                              fontWeight: 'bold',
+                              color: '#424242',
+                              marginVertical: 2,
+                              fontSize: wp(3)
+                            }}>
+                              11 March & 18 March, 2023
+                            </Text>
+                          }
                         <View style={styles.ticketQtyWrapper}>
                           <Text>
                             {!item?.sale_start_date
@@ -1228,7 +1279,7 @@ class CheckOutScreen extends Component {
                             {item?.price} {this.eventInfo.currency}
                           </Text>
                         </View>
-                        {item?.sale_start_date && (
+                        {item?.sale_start_date &&( 
                           <View>
                             <View style={styles.ticketQtyWrapper}>
                               <Text>{this.getQtyText(item)}</Text>
@@ -1247,37 +1298,54 @@ class CheckOutScreen extends Component {
                       </View>
                       {!item?.show_sheat_chart ? (
                         <View style={styles.selectPickerWrapper}>
-                          <RNPickerSelect
-                            placeholder={{
-                              label: t('qty'),
-                              value: 0,
-                            }}
-                            onValueChange={value => {
-                              this.handleSelectValue(value, item, '');
-                            }}
-                            fixAndroidTouchableBug={true}
-                            items={getListTicketQuantity(item).map(
-                              (list, i) => ({
-                                label: list.label + ' ' + t('tickets'),
-                                value: list.value,
-                                key: i,
-                              }),
-                            )}
-                            style={{
-                              ...pickerStyle,
-                              iconContainer: {
-                                top: 8,
-                                right: 8,
-                              },
-                            }}
-                            useNativeAndroidPickerStyle={false}
-                            // Icon={() => {
-                            //   return <Image
-                            //     source={dropDown}
-                            //     style={styles.dropDownIcon}
-                            //   />
-                            // }}
-                          />
+                          <View style={{
+                            width: '100%',
+                            height: 40,
+                            borderWidth: 1,
+                            borderColor: '#ccc',
+                            borderRadius: 5,
+                            justifyContent: 'center',
+                            paddingHorizontal: 10,
+                          }}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.pickerRef.current.show();
+                              }}
+                              style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              }}>
+                              <Text style={{fontSize: 15}}>
+                                {t('qty')}
+                              </Text>
+                              <Image
+                                source={dropDown}
+                                style={styles.dropDownIcon}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                          <ReactNativePickerModule
+                              ref={this.pickerRef}
+                              value={this.pickerValue}
+                              title={t('qty')}
+                              items={getListTicketQuantity(item).map(
+                                (list, i) => ({
+                                  label: list.label + ' ' + t('tickets'),
+                                  value: list.value,
+                                  key: i,
+                                }),
+                              )}
+                              titleStyle={{fontSize: 18, color: 'black'}}
+                              selectedColor="#1E88E5"
+                              confirmButtonDisabledTextStyle={{color: 'grey'}}
+                              onCancel={() => {
+                                  console.log('Cancelled');
+                              }}
+                              onValueChange={value => {
+                                this.handleSelectValue(value, item, '');
+                                this.pickerValue = value;
+                              }}
+                            />
                         </View>
                       ) : (
                         <View>
@@ -1492,32 +1560,9 @@ class CheckOutScreen extends Component {
                   <Text style={styles.headerText}>{t('timeslots')}</Text>
                 </View>
                 <View style={styles.ticketContainer}>
-                  <RNPickerSelect
-                    placeholder={{
-                      label: t('select_timeslot'),
-                      value: 0,
-                    }}
-                    onValueChange={value => {
-                      this.handleTimeslotSelectValue(value);
-                    }}
-                    fixAndroidTouchableBug={true}
-                    items={this.state.timeslots.map((list, i) => ({
-                      label:
-                        this.hourMinute(list.ts_start_time) +
-                        ' - ' +
-                        this.hourMinute(list.ts_end_time),
-                      value: list.id,
-                      key: i,
-                    }))}
-                    style={{
-                      ...pickerStyle,
-                      iconContainer: {
-                        top: 8,
-                        right: 8,
-                      },
-                    }}
-                    useNativeAndroidPickerStyle={false}
-                  />
+                 <Text>
+                  {this.timeslot.slot}
+                 </Text>
                 </View>
               </View>
             ) : null}
@@ -1861,7 +1906,7 @@ class CheckOutScreen extends Component {
         {/* Waiver Modal */}
 
         <Toast position="bottom" bottomOffset={70} />
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
 
         {this.state.showProcessingLoader && <ProcessingLoader />}
       </SafeAreaView>
@@ -2340,4 +2385,9 @@ const styles = StyleSheet.create({
     paddingVertical: hp(4),
     paddingHorizontal: wp(2),
   },
+  ticketText: {
+    fontSize: wp(3.5),
+    fontWeight: '700',
+    color: '#000',
+  }
 });
