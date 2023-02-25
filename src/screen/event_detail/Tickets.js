@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { Component } from 'react';
+import React, { Component, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import ReactNativePickerModule, {PickerRef} from 'react-native-picker-module';
 import moment from 'moment';
 import { convertTimeZone, getSaleExpirationSeconds } from '../../Helper/dateConverter';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { withTranslation } from 'react-i18next';
-
+import { getData } from '../../api/UserPreference';
+import axios from 'axios';
+import { BASE_URL } from '../../api/ApiInfo';
 
 class Tickets extends Component {
   constructor(props) {
@@ -27,7 +30,10 @@ class Tickets extends Component {
       eventSchedulesDatesForMonth: this.props.eventSchedulesDatesForMonth,
       scrollToSchedulesPos: 0,
       scroller: this.props.scroller,
+      timeslots: [],
+      pickerValue: '',
     }
+    this.pickerRef = React.createRef();
   }
 
   scrollToSchedules = () => {
@@ -54,8 +60,11 @@ class Tickets extends Component {
     return currentTime.isBetween(saleStartDate, saleEndDate, 'seconds', '[]')
   }
 
-  handleGetTicket = async (date) => {
-    this.props.handleGetTicket(date);
+  handleGetTicket = async (data) => {
+    this.props.handleGetTicket({
+      date: data.date,
+      timeslot: data.timeslot,
+    });
   }
   CanBookTicket(eventStartDate) {
     var eventdate = moment(eventStartDate);
@@ -71,7 +80,7 @@ class Tickets extends Component {
   isMonthExpired(eventMonthYear) {
     var todayDate = new Date();
     
-    var currentMonth = todayDate.getMonth()+1;
+    var currentMonth = todayDate.getMonth() + 1;
     var currentYear = todayDate.getFullYear();
     
     eventMonthYear = eventMonthYear.split(",").map(function(item) {
@@ -87,6 +96,87 @@ class Tickets extends Component {
     return true;
   }
 
+  initialSetup = async () => {
+    const { start_date, end_date, start_time, end_time } = this.props.data.event;
+    const { eventId } = this.props;
+    try {
+      const params = {
+        event_id: eventId,
+        startDate: start_date,
+        endDate: end_date,
+        startTime: start_time,
+        endTime: end_time,
+      };
+      console.log(params);
+      // creating custom header
+      let axiosConfig = {};
+      // calling api
+      await axios
+        .post(BASE_URL + 'events/details', params, axiosConfig)
+        .then(response => {
+          let newResponse = response;
+
+          if (newResponse) {
+            const {success} = newResponse.data;
+
+            let timeslots = [];
+            if (success === true) {
+              newResponse.data.data.event.slots.map(item => {
+                let startdatetime = null;
+                let currentdatetime = null;
+                startdatetime = moment(
+                  params.startDate + ' ' + item.ts_start_time,
+                );
+                currentdatetime = moment();
+                // skip expired/ended timeslot
+                // check event start datetime <= current datetime
+                if (currentdatetime.isSameOrBefore(startdatetime) == true) {
+                  if (newResponse.data.data.event.repetitive <= 0) {
+                    // Non-Repetitive event
+                    // take all timeslots
+                    timeslots.push(item);
+                  } else {
+                    // Repetitive event
+                    // take timeslots date-wise
+                    if (
+                      this.yearMonth(this.eventInfo.startDate) ==
+                      this.yearMonth(item.from_date)
+                    ) {
+                      timeslots.push(item);
+                    }
+                  }
+                }
+              });
+              
+
+              this.setState({
+                timeslots: timeslots,
+              });
+              console.log("Timeslots:", timeslots);
+            }
+          }
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  componentDidMount() {
+    this.initialSetup();
+  }
+
+  hourMinute = time => {
+    let timeArray = time.split(':');
+    // return time with AM/PM
+    return (
+      timeArray[0] +
+      ':' +
+      timeArray[1] +
+      ' ' +
+      (timeArray[0] >= 12 ? 'PM' : 'AM')
+    );
+  };
+
   render() {
     const {
       repetitive_type, start_time_format,
@@ -97,6 +187,7 @@ class Tickets extends Component {
     let tickets = this.props.data.tickets;
     
     const { t } = this.props;
+    this.state.pickerRef = React.createRef(PickerRef);
 
     return (
       <>
@@ -161,7 +252,7 @@ class Tickets extends Component {
                       style={styles.listCountingContainer}
                       onPress={() => this.handleGetTicket(date.date_value)}>
                       <View style={styles.listDateContainer} >
-                        <Text style={styles.listDateText} >{date.date_format_text}</Text>
+                        <Text style={styles.listDateText}>{date.date_format_text}</Text>
                       </View>
                       <View style={styles.listTimeContainer}>
                         <Text style={styles.listTimeText}>
@@ -179,10 +270,10 @@ class Tickets extends Component {
             <View style={styles.thirdTicketContainer}>
               <TouchableOpacity
                 style={styles.listCountingContainer}
-                onPress={() => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
+                // onPress={() => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
+                onPress={() => this.pickerRef.current.show()}
               >
                 <Text style={styles.listDateText}> {start_date_format} - {end_date_format} </Text>
-
                 <View style={styles.listTimeContainer}>
                   <Text style={styles.listTimeText}>
                     {/* {start_time_format} - {end_time_format}  */}
@@ -191,9 +282,39 @@ class Tickets extends Component {
                     {convertTimeZone(`${end_date} ${end_time}`).formattedTime}
                   </Text>
                 </View>
+                <View style={styles.ticketContainer}>
+                <ReactNativePickerModule
+                        ref={this.pickerRef}
+                        value={this.state.pickerValue}
+                        title={t('select_timeslot')}
+                        items={this.state.timeslots.map((item, index) => {
+                          const timeslot = {
+                              slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                              id: item.id,
+                          }
+                          return {
+                            label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                            value: JSON.stringify(timeslot),
+                            id: item.id,
+                          };
+                        })}
+                        titleStyle={{fontSize: 18, color: 'black'}}
+                        selectedColor="#1E88E5"
+                        confirmButtonDisabledTextStyle={{color: 'grey'}}
+                        onCancel={() => {
+                            console.log('Cancelled');
+                        }}
+                        onValueChange={value => {
+                            console.log('Value:', JSON.parse(value));
+                            this.setState({pickerValue: value});
+                            this.handleGetTicket({ 
+                              date: {'start_date': start_date, 'end_date': end_date, start_time, end_time}, 
+                              timeslot: JSON.parse(value),
+                            })
+                        }}
+                />
+              </View>
               </TouchableOpacity>
-
-
             </View>
           )}
 
@@ -205,10 +326,69 @@ class Tickets extends Component {
 
 export default withTranslation()(Tickets);
 
+const pickerStyle = StyleSheet.create({
+  inputIOS: {
+    height: 10,
+    minWidth: 70,
+    fontSize: 12,
+    fontWeight: '500',
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    color: 'black',
+  },
+  inputAndroid: {
+    height: 10,
+    minWidth: 70,
+    fontSize: 12,
+    fontWeight: '500',
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    color: 'black',
+  },
+});
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f1f1f1',
+  },
+  headerContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingVertical: hp(0.5),
+    paddingHorizontal: wp(2),
+    borderBottomColor: '#eeeeee',
+    borderBottomWidth: 2,
+  },
+  ticketContainer: {
+    backgroundColor: '#fff',
+    // marginHorizontal: wp(2),
+    // paddingVertical: wp(2),
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  pickerSelectStyles: {
+    inputIOS: {
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 4,
+      color: 'black',
+      paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 0.5,
+      borderColor: 'purple',
+      borderRadius: 8,
+      color: 'black',
+      paddingRight: 30, // to ensure the text is never behind the icon
+    },
   },
   homeContainer: {
     flex: 1,
@@ -361,14 +541,15 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
   },
   listCountingContainer: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     flex: 1,
-    borderRadius: wp(3),
+    borderRadius: wp(2),
     flexWrap: 'wrap',
     backgroundColor: '#000000',
     marginVertical: hp(1),
     alignContent: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: 5,
     paddingBottom: 5,
     paddingRight: 5,
