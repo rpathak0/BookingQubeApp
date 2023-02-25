@@ -103,7 +103,7 @@ class ViewEventScreen extends Component {
     }
   };
 
-  handleGetTicket = async date => {
+  handleGetTicket = async ({date, timeslot}) => {
     const {t} = this.props;
 
     const organizer = await getData(async_keys.userInfo);
@@ -126,6 +126,7 @@ class ViewEventScreen extends Component {
 
       this.props.navigation.navigate('Checkout', {
         eventInfo: checkOutScreenData,
+        timeslot: timeslot,
       });
     }
   };
@@ -172,8 +173,8 @@ class ViewEventScreen extends Component {
               />
             </View>
             {!isLoading && <LocationTimimg data={this.state.data} />}
+            
             {/* Ticket month wise */}
-
             {this.state.data.event?.seatingchart_image && (
               <SeatChart data={this.state.data} />
             )}
@@ -194,6 +195,7 @@ class ViewEventScreen extends Component {
                   selectedSchdeuleMonthId={this.state.selectedSchdeuleMonthId}
                   handleGetTicket={date => this.handleGetTicket(date)}
                   scroller={this.scroller}
+                  eventId={this.state.data.event.id}
                 />
               </TouchableOpacity>
             )}
@@ -226,7 +228,7 @@ class ViewEventScreen extends Component {
           </View>
         </ScrollView>
 
-        <FooterComponent nav={this.props.navigation} />
+        {/* <FooterComponent nav={this.props.navigation} /> */}
       </SafeAreaView>
     );
   }
