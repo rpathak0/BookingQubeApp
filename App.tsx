@@ -77,8 +77,12 @@ class App extends Component {
     return (
       <LoginContextProvider>
         <SafeAreaProvider style={styles.container}>
+          <SafeAreaView style={{
+            flex: 0,
+            backgroundColor: 'black',
+          }} />
           <SafeAreaView style={styles.container}>
-            <StatusBar animated={true} />
+            <StatusBar animated={true} barStyle="light-content" />
             {/* <AppContainer ref={this.setNavigatorRef} screenProps={{ t, i18n }} /> */}
             <NavigationContainer>
               <Routes

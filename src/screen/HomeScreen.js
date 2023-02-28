@@ -229,10 +229,7 @@ class HomeScreen extends Component {
     const imageUrl = STORAGE_URL;
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar
-            barStyle="dark-content"
-            backgroundColor="light"
-        />
+        <StatusBar barStyle="light-content" />
         {isLoading && <CustomLoader />}
         <HeaderComponent title={t('home')} nav={this.props.navigation} />
         <ScrollView>
