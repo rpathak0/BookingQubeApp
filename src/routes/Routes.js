@@ -342,14 +342,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           })}
         />
         <Drawer.Screen
-          name={'DrawerLogout'}
-          component={'NA'}
-          options={() => ({
-            title: t('logout', {order: 6}),
-            drawerIcon: () => setDrawerItemIcon(logoutIcon),
-          })}
-        />
-        <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
           options={() => ({
@@ -387,6 +379,14 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           options={() => ({
             title: t('faq', {order: 11}),
             drawerIcon: () => setDrawerItemIcon(faqIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={'NA'}
+          options={() => ({
+            title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
       </Drawer.Navigator>
@@ -430,22 +430,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           })}
         />
         <Drawer.Screen
-          name={'DrawerProfile'}
-          component={ProfileNavigator}
-          options={() => ({
-            title: t('profile', {order: 5}),
-            drawerIcon: () => setDrawerItemIcon(loginIcon),
-          })}
-        />
-        <Drawer.Screen
-          name={'DrawerLogout'}
-          component={() => null}
-          options={() => ({
-            title: t('logout', {order: 6}),
-            drawerIcon: () => setDrawerItemIcon(logoutIcon),
-          })}
-        />
-        <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
           options={() => ({
@@ -483,6 +467,22 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           options={() => ({
             title: t('faq', {order: 11}),
             drawerIcon: () => setDrawerItemIcon(faqIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerProfile'}
+          component={ProfileNavigator}
+          options={() => ({
+            title: t('profile', {order: 5}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={() => null}
+          options={() => ({
+            title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
       </Drawer.Navigator>
@@ -524,22 +524,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           })}
         />
         <Drawer.Screen
-          name={'DrawerProfile'}
-          component={ProfileNavigator}
-          options={() => ({
-            title: t('profile', {order: 5}),
-            drawerIcon: () => setDrawerItemIcon(loginIcon),
-          })}
-        />
-        <Drawer.Screen
-          name={'DrawerLogout'}
-          component={() => null}
-          options={() => ({
-            title: t('logout', {order: 6}),
-            drawerIcon: () => setDrawerItemIcon(logoutIcon),
-          })}
-        />
-        <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
           options={() => ({
@@ -577,6 +561,22 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           options={() => ({
             title: t('faq', {order: 11}),
             drawerIcon: () => setDrawerItemIcon(faqIcon),
+          })}
+        />
+         <Drawer.Screen
+          name={'DrawerProfile'}
+          component={ProfileNavigator}
+          options={() => ({
+            title: t('profile', {order: 5}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogout'}
+          component={() => null}
+          options={() => ({
+            title: t('logout', {order: 6}),
+            drawerIcon: () => setDrawerItemIcon(logoutIcon),
           })}
         />
       </Drawer.Navigator>
@@ -611,14 +611,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           })}
         />
         <Drawer.Screen
-          name={'DrawerLogin'}
-          component={AdminNavigator}
-          options={() => ({
-            title: t('login', {order: 3}),
-            drawerIcon: () => setDrawerItemIcon(loginIcon),
-          })}
-        />
-        <Drawer.Screen
           name={'DrawerAbout'}
           component={AboutScreen}
           options={() => ({
@@ -656,6 +648,14 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
           options={() => ({
             title: t('faq', {order: 11}),
             drawerIcon: () => setDrawerItemIcon(faqIcon),
+          })}
+        />
+        <Drawer.Screen
+          name={'DrawerLogin'}
+          component={AdminNavigator}
+          options={() => ({
+            title: t('login', {order: 3}),
+            drawerIcon: () => setDrawerItemIcon(loginIcon),
           })}
         />
       </Drawer.Navigator>
