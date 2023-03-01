@@ -159,9 +159,9 @@ class CustomField extends Component {
       console.log('err', e);
     }
   };
-  renderTextInput = item => {
+  renderTextInput = (item, index) => {
     return (
-      <View>
+      <View key={index}>
         <Text style={{padding: 5, paddingLeft: 0}}>
           {item.label + (item.is_required ? ' *' : '')}
         </Text>
@@ -198,9 +198,9 @@ class CustomField extends Component {
       </View>
     );
   };
-  renderTextArea = item => {
+  renderTextArea = (item, index) => {
     return (
-      <View>
+      <View key={index}>
         <Text style={{padding: 5, paddingLeft: 0}}>
           {item.label + (item.is_required ? ' *' : '')}
         </Text>
@@ -238,10 +238,10 @@ class CustomField extends Component {
       </View>
     );
   };
-  renderDropdown = item => {
+  renderDropdown = (item, index) => {
     const {t} = this.props;
     return (
-      <View style={{marginBottom: 20}}>
+      <View style={{marginBottom: 20}} key={index}>
         <Text style={{padding: 5, paddingLeft: 0}}>
           {item.label + (item.is_required ? ' *' : '')}
         </Text>
@@ -281,7 +281,7 @@ class CustomField extends Component {
       </View>
     );
   };
-  renderRadioInput = item => {
+  renderRadioInput = (item, index) => {
     let dt = {
       id: 5,
       label: 'Cost',
@@ -304,13 +304,90 @@ class CustomField extends Component {
       file_type: null,
     };
     return (
-      <View style={{marginBottom: 20}}>
+      <View style={{marginBottom: 20}} key={index}>
+        <Text style={{padding: 5, paddingLeft: 0}}>
+          {item.label + (item.is_required ? ' *' : '')}
+        </Text>
+        {JSON.parse(item.field_options).map((ite, idx) => {
+          return (
+            <TouchableOpacity
+              key={idx}
+              onPress={() => {
+                let newDt = this.state.custom_fields.map((it, idx) => {
+                  if (it.id === item.id) {
+                    return {
+                      ...it,
+                      value: ite,
+                    };
+                  }
+                  return it;
+                });
+                this.setState({custom_fields: newDt});
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 5,
+              }}>
+              <View
+                style={[
+                  {
+                    width: 20,
+                    height: 20,
+                    borderRadius: 20,
+                    borderWidth: 1.5,
+                    borderColor: 'black',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                ]}>
+                <View
+                  style={[
+                    {width: 12, height: 12, borderRadius: 15},
+                    item.value === ite
+                      ? Styles.activeRadio
+                      : Styles.inactiveRadio,
+                  ]}
+                />
+              </View>
+              <Text style={{color: '#000'}}> {ite}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
+  renderCheckboxInput = (item, index) => {
+    let dt = {
+      id: 5,
+      label: 'Cost',
+      field_type: 'radio',
+      field_options: [
+        '$695 *Weekdays',
+        '$895 *Weekends',
+        '$100 per hours (additional hours)',
+      ],
+      field_opt:
+        '["$695 *Weekdays","$895 *Weekends","$100 per hours (additional hours)"]',
+      is_required: 1,
+      event_id: 3,
+      status: 1,
+      show_on_ticket: 1,
+      created_at: '2022-05-25T11:27:49.000000Z',
+      updated_at: '2022-05-25T11:27:49.000000Z',
+      field_name: 'nWG6GbAgtaK4PQeceD1B',
+      file_size: '0',
+      file_type: null,
+    };
+    return (
+      <View style={{marginBottom: 20}} key={index}>
         <Text style={{padding: 5, paddingLeft: 0}}>
           {item.label + (item.is_required ? ' *' : '')}
         </Text>
         {JSON.parse(item.field_options).map(ite => {
           return (
             <TouchableOpacity
+              key={ite}
               onPress={() => {
                 let newDt = this.state.custom_fields.map(it => {
                   if (it.id === item.id) {
@@ -356,85 +433,10 @@ class CustomField extends Component {
       </View>
     );
   };
-  renderCheckboxInput = item => {
-    let dt = {
-      id: 5,
-      label: 'Cost',
-      field_type: 'radio',
-      field_options: [
-        '$695 *Weekdays',
-        '$895 *Weekends',
-        '$100 per hours (additional hours)',
-      ],
-      field_opt:
-        '["$695 *Weekdays","$895 *Weekends","$100 per hours (additional hours)"]',
-      is_required: 1,
-      event_id: 3,
-      status: 1,
-      show_on_ticket: 1,
-      created_at: '2022-05-25T11:27:49.000000Z',
-      updated_at: '2022-05-25T11:27:49.000000Z',
-      field_name: 'nWG6GbAgtaK4PQeceD1B',
-      file_size: '0',
-      file_type: null,
-    };
-    return (
-      <View style={{marginBottom: 20}}>
-        <Text style={{padding: 5, paddingLeft: 0}}>
-          {item.label + (item.is_required ? ' *' : '')}
-        </Text>
-        {JSON.parse(item.field_options).map(ite => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                let newDt = this.state.custom_fields.map(it => {
-                  if (it.id === item.id) {
-                    return {
-                      ...it,
-                      value: ite,
-                    };
-                  }
-                  return it;
-                });
-                this.setState({custom_fields: newDt});
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 5,
-              }}>
-              <View
-                style={[
-                  {
-                    width: 20,
-                    height: 20,
-                    borderRadius: 20,
-                    borderWidth: 1.5,
-                    borderColor: 'black',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  },
-                ]}>
-                <View
-                  style={[
-                    {width: 12, height: 12, borderRadius: 15},
-                    item.value === ite
-                      ? Styles.activeRadio
-                      : Styles.inactiveRadio,
-                  ]}
-                />
-              </View>
-              <Text style={{color: '#000'}}> {ite}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    );
-  };
-  renderFileInput = item => {
+  renderFileInput = (item, index) => {
     const { t } = this.props;
     return (
-      <View style={{marginBottom: 10}}>
+      <View style={{marginBottom: 10}} key={index}>
         <Text style={{padding: 5, paddingLeft: 0}}>
           {item.label + (item.is_required ? ' *' : '')}
         </Text>
@@ -464,24 +466,24 @@ class CustomField extends Component {
   renderInputBoxes = () => {
     return (
       <View>
-        {this.state.custom_fields.map(item => {
+        {this.state.custom_fields.map((item, index) => {
           if (item.field_type === 'text') {
-            return this.renderTextInput(item);
+            return this.renderTextInput(item, index);
           }
           if (item.field_type === 'radio') {
-            return this.renderRadioInput(item);
+            return this.renderRadioInput(item, index);
           }
           if (item.field_type === 'checkbox') {
-            return this.renderCheckboxInput(item);
+            return this.renderCheckboxInput(item, index);
           }
           if (item.field_type === 'textarea') {
-            return this.renderTextArea(item);
+            return this.renderTextArea(item, index);
           }
           if (item.field_type === 'dropdown') {
-            return this.renderDropdown(item);
+            return this.renderDropdown(item, index);
           }
           if (item.field_type === 'file') {
-            return this.renderFileInput(item);
+            return this.renderFileInput(item, index);
           }
         })}
       </View>
