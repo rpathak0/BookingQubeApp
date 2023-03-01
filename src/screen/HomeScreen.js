@@ -318,8 +318,9 @@ class HomeScreen extends Component {
 
             {this.state.categoryEvents.length > 0
               ? this.state.categoryEvents.map((cevent, cindex) => (
-                  <View>
+                  <View key={cindex}>
                     <Events
+                      key={cindex}
                       eventList={cevent.events}
                       handleEvent={item => {
                         this.handleEvent(item);
