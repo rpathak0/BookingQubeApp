@@ -116,7 +116,7 @@ class CheckOutScreen extends Component {
       showSingleTicketPrice: 0,
       seatTicketValue: [],
       quantity: [],
-      customFiled: [],
+      customField: [],
       checkModal: false,
       checkSecondModal: false,
       checkPaymentModal: false,
@@ -154,7 +154,7 @@ class CheckOutScreen extends Component {
       subscribe: null,
       waiver: null,
       is_subscribe: 0,
-
+ 
       waiverModal: false,
       waiver_first_name: null,
       waiver_last_name: null,
@@ -184,6 +184,7 @@ class CheckOutScreen extends Component {
       Gender: 'Male', 
       OpenGender: false,
     };
+
     this.eventInfo = this.props.route.params.eventInfo;
     this.timeslot = this.props.route.params?.timeslot;
     this.signature = React.createRef();
@@ -325,6 +326,14 @@ class CheckOutScreen extends Component {
     }
   };
 
+  weekDay = date => {
+    if (date) {
+      let dateArray = date.split('-');
+      let dateObj = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+      return dateObj.toString().split(' ')[0];
+    }
+  };
+
   hourMinute = time => {
     let timeArray = time.split(':');
     return timeArray[0] + ':' + timeArray[1];
@@ -452,11 +461,11 @@ class CheckOutScreen extends Component {
     let cfData = this.state.finalData;
     let custom_feilds = [];
     cfData.forEach((cfValues, i) => {
-      // console.log(Object.entries(cfValues),this.state.customFiled);
+      // console.log(Object.entries(cfValues),this.state.customField);
       const cfValuesArray = Object.entries(cfValues);
       cfValuesArray.forEach(cf => {
         if (cf[0] !== undefined) {
-          const findCFData = this.state.customFiled.find(
+          const findCFData = this.state.customField.find(
             x => x.field_name == cf[0],
           );
           if (findCFData !== undefined) {
@@ -504,11 +513,11 @@ class CheckOutScreen extends Component {
           // console.log('custom fields', response);
           if (newResponse?.status) {
             this.setState({
-              customFiled: newResponse.custom_fields,
+              customField: newResponse.custom_fields,
               custom_fields_response: newResponse,
             });
           } else {
-            this.setState({customFiled: []});
+            this.setState({customField: []});
           }
         });
     } catch (error) {
@@ -711,7 +720,7 @@ class CheckOutScreen extends Component {
     let c_fields = this.manageData();
 
     // custom field validation
-    if (this.state.customFiled.length > 0) {
+    if (this.state.customField.length > 0) {
       if (c_fields.length <= 0) {
         showToast(t('attendee_details'));
         return false;
@@ -1253,7 +1262,7 @@ class CheckOutScreen extends Component {
     const totalTicketSelected = (item, type) => {
       // console.log('item',JSON.stringify(item,null,4));
       let selected_tickets = this.state.ticketList;
-      console.log('selected_tickets:=', selected_tickets);
+      console.log('Selected Tickets:', selected_tickets);
       if (
         selected_tickets.length &&
         selected_tickets.filter(i => i.ticketId === item.id).length
@@ -1331,7 +1340,7 @@ class CheckOutScreen extends Component {
     const renderCustomFieldInputs = item => {
       const selected_tickets = totalTicketSelected(item);
 
-      const iscustomFields = this.state.customFiled;
+      const iscustomFields = this.state.customField;
 
       if (!selected_tickets) {
         return null;
@@ -1344,11 +1353,11 @@ class CheckOutScreen extends Component {
           {Array.from({length: selected_tickets}, (v, k) => k + 1).map(
             (ite, index) => {
               return (
-                <View>
+                <View key={index}>
                   <CustomField
                     key={index}
                     title={`#${ite} ` + t('attendee_details')}
-                    customFieldsData={this.state.customFiled}
+                    customFieldsData={this.state.customField}
                     ticket={item}
                     seat={this.state.currentSelectedSeat}
                     onChange={data => {
@@ -1556,16 +1565,16 @@ class CheckOutScreen extends Component {
                                 const {quantity, item} = JSON.parse(value);
                                 this.handleSelectValue(quantity, JSON.parse(item), '');
                                 console.log("Quantity:" + quantity + " Item:" + item)
-                                this.pickerValue = value;
+                                this.pickerValue = JSON.stringify(value);
                               }}
                             />
                         </View>
                       ) : (
                         <View>
-                          {this.state.quantity.map(q => {
+                          {this.state.quantity.map((q, i) => {
                             if (q.qId === item.id) {
                               return (
-                                <Text style={styles.totalPriceText1}>
+                                <Text key={i} tyle={styles.totalPriceText1}>
                                   {q?.baseQuantity}
                                 </Text>
                               );
@@ -1683,7 +1692,7 @@ class CheckOutScreen extends Component {
                         {this.getTicketTaxes(item)}
                       </View>
                     )}
-                    {this.state.customFiled.length > 0 && (
+                    {this.state.customField.length > 0 && (
                       <View style={{marginVertical: wp(1)}}>
                         {renderCustomFieldInputs(item)}
                       </View>
@@ -1735,31 +1744,30 @@ class CheckOutScreen extends Component {
               </Text>
 
               <Text style={styles.eventCategoryText}>
-                {t('start_end_date')}
+                {t('Selected Date')}
               </Text>
               <Text style={styles.eventCategoryTitle}>
                 {convertTimeZoneFormatted(
-                  this.eventInfo.finalDate.start_date,
+                  this.props.route?.params?.eventInfo?.selectedDate,
                   '',
                   'dddd MMM DD, YYYY',
                 )}{' '}
-                -
-                {convertTimeZoneFormatted(
+                {/* - */}
+                {/* {convertTimeZoneFormatted(
                   this.eventInfo.finalDate.end_date,
                   '',
                   ' dddd MMM DD, YYYY',
-                )}
+                )} */}
               </Text>
 
               <Text style={styles.eventCategoryText}>{t('timings')}</Text>
               <Text style={styles.eventCategoryTitle}>
                 {
+                  this.weekDay(this.props.route?.params?.eventInfo?.selectedDate) == "Fri" ? 
+                  "1:00 PM - 11:00 PM" :
                   convertTimeZone(
                     `${this.eventInfo.finalDate.start_date} ${this.eventInfo.finalDate.start_time}`,
-                  ).formattedTime
-                }{' '}
-                -{' '}
-                {
+                  ).formattedTime + '-' + 
                   convertTimeZone(
                     `${this.eventInfo.finalDate.end_date} ${this.eventInfo.finalDate.end_time}`,
                   ).formattedTime
