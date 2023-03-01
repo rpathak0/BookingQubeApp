@@ -67,6 +67,8 @@ import {
 import moment from 'moment';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import {NavigationActions, StackActions} from '@react-navigation/native';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import DropDownPicker from 'react-native-dropdown-picker';
 // import { NavigationActions, StackActions } from '@react-navigation/stack';
 
 const data = {
@@ -82,12 +84,15 @@ const data = {
   file_field: [],
 };
 
+const countryCodes = require("../static/CountryCodes.json");
+
 var paymentOption = [
   {label: 'QPay', value: 7},
   {label: 'Master Card', value: 8},
 ];
 var rsvpOption = [{label: 'Free (R.S.V.P)', value: 'on'}];
 const axios = require('axios');
+
 class CheckOutScreen extends Component {
   constructor(props) {
     super(props);
@@ -115,7 +120,8 @@ class CheckOutScreen extends Component {
       checkModal: false,
       checkSecondModal: false,
       checkPaymentModal: false,
-      name: '',
+      firstname: '',
+      lastname: '',
       email: '',
       phone: '',
       showModalProcessingLoader: false,
@@ -150,12 +156,33 @@ class CheckOutScreen extends Component {
       is_subscribe: 0,
 
       waiverModal: false,
-      waiver_name: null,
+      waiver_first_name: null,
+      waiver_last_name: null,
       waiver_email: null,
       waiver_phone: null,
       waiver_signature: null,
+      waiver_country: 'Qatar',
+      waiver_country_id: 179,
 
-      free_tickets: []
+      free_tickets: [],
+      OpenCountryCallingCode: false,
+      CountryCallingCode: '+974',
+      CountryCode: 'QA',
+      CountryCodes: [],
+      LoadingCountryCode: false,
+
+      OpenCountry: false,
+      Country: 'Qatar',
+      Countries: [],
+      LoadingCountry: false,
+      CountryId: 179,
+
+      ItemsGender: [
+        { label: 'Male', value: "male" },
+        { label: 'Female', value: "female" },
+      ],
+      Gender: 'Male', 
+      OpenGender: false,
     };
     this.eventInfo = this.props.route.params.eventInfo;
     this.timeslot = this.props.route.params?.timeslot;
@@ -171,11 +198,117 @@ class CheckOutScreen extends Component {
     });
 
     setTimeout(this.initialSetup, 500);
+    setTimeout(this.getCountries, 2000);
   }
 
-  handleNameChange = name => {
-    this.setState({name});
+  setOpenCountryCallingCode = (OpenCountryCallingCode) => {
+    this.setState({
+      OpenCountryCallingCode
+    });
+  }
+
+  setLoadingCountryCode = (LoadingCountryCode) => {
+    this.setState({
+      LoadingCountryCode
+    });
+  }
+
+  setCountryCallingCode = (callback) => {
+    this.setState(state => ({
+      CountryCallingCode: callback(state.CountryCallingCode)
+    }));
+  }
+
+  setItemsCountryCode = (countries) => {
+    this.setState(state => ({
+      CountryCodes: countries
+    }));
+  }
+
+  handleFirstNameChange = name => {
+    this.setState({
+      firstname: name,
+    });
   };
+
+  handleLastNameChange = name => {
+    this.setState({
+      lastname: name,
+    });
+  };
+
+  setOpenCountry = (OpenCountry) => {
+    this.setState({
+      OpenCountry
+    });
+  }
+
+  setCountryCode = (callback) => {
+    this.setState(state => ({
+      CountryCode: callback(state.CountryCode)
+    }));
+  }
+
+  setCountry = (callback) => {
+    this.setState(state => ({
+      Country: callback(state.Country)
+    }));
+  }
+
+  setCountries = (countries) => {
+    this.setState(state => ({
+      Countries: countries
+    }));
+  }
+
+  setLoadingCountry = (LoadingCountry) => {
+    this.setState({
+      LoadingCountry
+    });
+  }
+
+  setOpenGender = (OpenGender) => {
+    this.setState({
+      OpenGender
+    });
+  }
+
+  setGender = (callback) => {
+    this.setState(state => ({
+      Gender: callback(state.ValueGender)
+    }));
+  }
+
+  setItemsGender = (callback) => {
+    this.setState(state => ({
+      ItemsGender: callback(state.ItemsGender)
+    }));
+  }
+
+  setOpenWaiverCountry = (OpenWaiverCountry) => {
+    this.setState({
+      OpenWaiverCountry
+    });
+  }
+
+  setWaiverCountry = (callback) => {
+    this.setState(state => ({
+      waiver_country: callback(state.waiver_country)
+    }));
+  }
+
+  setWaiverCountries = (countries) => {
+    this.setState(state => ({
+      waiver_countries: countries
+    }));
+  }
+
+  setWaiverLoadingCountry = (waiver_loading_country) => {
+    this.setState({
+      waiver_loading_country
+    });
+  }
+
   saleFinished() {}
   handleEmailChange = email => {
     this.setState({email});
@@ -261,6 +394,15 @@ class CheckOutScreen extends Component {
                 free_tickets: newResponse.data.data.free_tickets
               });
 
+              let CountryCodes = [];
+              countryCodes.map((item, index) => {
+                // do not push country code which are already in the array
+                if (CountryCodes.findIndex(code => code.value === item.dial_code) === -1)
+                  CountryCodes.push({ id: index, label: `(${item.dial_code}) ${item.name}`, value: item.dial_code, code: item.code });
+              })
+
+            this.setState({ CountryCodes: CountryCodes });
+
             }
           }
         });
@@ -268,6 +410,40 @@ class CheckOutScreen extends Component {
       this.getCustomField();
     } catch (error) {
       console.log(error.message);
+    }
+  };
+
+  getCountries = async () => {
+    // getting userId from asyncStorage
+    try {
+      this.setLoadingCountry(true);
+      // calling api
+      await axios
+        .get(BASE_URL + 'get-countries')
+        .then(response => {
+          let newResponse = response;
+
+          if (newResponse) {
+            const { status, countries } = newResponse.data;
+            let ItemsCountry = [];
+
+            if (status === true) {
+              countries.map(item => {
+                ItemsCountry.push({ label: item.country_name, value: item.id });
+              });
+
+              this.setState({
+                Countries: ItemsCountry,
+                waiver_countries: ItemsCountry
+              })
+              this.setLoadingCountry(false);
+            }
+          }
+        });
+
+    } catch (error) {
+      console.log(error.message);
+      this.setLoadingCountry(false);
     }
   };
 
@@ -340,7 +516,7 @@ class CheckOutScreen extends Component {
     }
   };
 
-  openTost = (type, title, message) => {
+  showToast = (type, title, message) => {
     Toast.show({
       type: type,
       text1: title,
@@ -400,7 +576,7 @@ class CheckOutScreen extends Component {
                 t.ticketId == ticketId ? newTikcetList : t,
               );
             } else {
-              this.openTost('error', t('limit_over'), t('limit_over_ie'));
+              this.showToast('error', t('limit_over'), t('limit_over_ie'));
               return false;
             }
           }
@@ -518,8 +694,8 @@ class CheckOutScreen extends Component {
     // sign waiver required
     if (this.state.waiver != null && this.state.waiver != '') {
       if (
-        this.state.waiver_name == null ||
-        this.state.waiver_name == '' ||
+        this.state.waiver_first_name == null ||
+        this.state.waiver_last_name == '' ||
         this.state.waiver_email == null ||
         this.state.waiver_email == '' ||
         this.state.waiver_phone == null ||
@@ -583,9 +759,9 @@ class CheckOutScreen extends Component {
         promocode: promocodes,
         c_fields: c_fields,
         slots: this.state.timeslot_id,
-        waiver_name: this.state.waiver_name,
+        waiver_name: this.state.waiver_first_name + ' ' + this.state.waiver_last_name,
         waiver_email: this.state.waiver_email,
-        waiver_phone: this.state.waiver_phone,
+        waiver_phone: this.state.CountryCallingCode + this.state.waiver_phone,
         waiver_signature: this.state.waiver_signature,
       };
 
@@ -654,7 +830,7 @@ class CheckOutScreen extends Component {
           // stopping loader
           console.log('booktickets ERR', ERR);
           this.setState({showProcessingLoader: false});
-          this.openTost(
+          this.showToast(
             'error',
             'Booking Cancelled',
             ERR.response.data?.message
@@ -665,7 +841,7 @@ class CheckOutScreen extends Component {
           );
         });
     } catch (error) {
-      this.openTost('error', t('booking_cancelled'), error.message);
+      this.showToast('error', t('booking_cancelled'), error.message);
     }
   };
 
@@ -728,7 +904,7 @@ class CheckOutScreen extends Component {
                 this.handleSelectValue(currentSelectedTicket.value, ticket, '');
               }
               this.setState({showProcessingLoader: false});
-              this.openTost(
+              this.showToast(
                 'success',
                 t('promocode_discount'),
                 t('login_to_promocode'),
@@ -737,10 +913,10 @@ class CheckOutScreen extends Component {
           })
           .catch(ERR => {
             this.setState({showProcessingLoader: false});
-            this.openTost('error', 'Error', ERR.response.data.message);
+            this.showToast('error', 'Error', ERR.response.data.message);
           });
       } catch (error) {
-        this.openTost('error', 'Error', error.message);
+        this.showToast('error', 'Error', error.message);
       }
     }
   };
@@ -791,10 +967,10 @@ class CheckOutScreen extends Component {
     try {
       Keyboard.dismiss();
 
-      const {name, email, phone} = this.state;
+      const { firstname, lastname, email, phone, CountryCallingCode, CountryCode, CountryId, Gender } = this.state;
 
       // validation
-      if (name.trim() === '') {
+      if (firstname.trim() === '' || lastname.trim() === '') {
         Alert.alert('', t('enter_name_first'), [{text: t('ok')}], {
           cancelable: false,
         });
@@ -808,20 +984,39 @@ class CheckOutScreen extends Component {
         return;
       }
 
-      if (!isMobileNumber(phone)) {
+      // if (!isMobileNumber(phone)) {
+      //   Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
+      //     cancelable: false,
+      //   });
+      //   return;
+      // }
+
+      const parsedPhone = parsePhoneNumber(CountryCallingCode + phone, CountryCode);
+      if (parsedPhone) {
+        console.log("Phone Number Valid:", parsedPhone.isValid())
+        if (!parsedPhone.isValid()) {
+            Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
+            cancelable: false,
+          });
+          return;
+        }
+      } else {
         Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
           cancelable: false,
         });
         return;
       }
+
       try {
         // starting processing loader
         this.setState({showModalProcessingLoader: true});
         // preparing params
         const params = {
-          name: name,
+          name: firstname + ' ' + lastname,
           email: email,
-          phone: phone,
+          phone: CountryCallingCode + phone,
+          country_id: CountryId,
+          gender: Gender
         };
         // calling api
         const response = await makeRequest(
@@ -842,10 +1037,10 @@ class CheckOutScreen extends Component {
           }
         }
       } catch (error) {
-        this.openTost('error', 'Error', error.message);
+        this.showToast('error', 'Error', error.message);
       }
     } catch (error) {
-      this.openTost('error', 'Error', error.message);
+      this.showToast('error', 'Error', error.message);
     }
   };
 
@@ -988,7 +1183,7 @@ class CheckOutScreen extends Component {
       RNRestart.Restart();
     } else {
       showToast(response.message);
-      this.openTost('error', 'Payment Cancelled', response.message);
+      this.showToast('error', 'Payment Cancelled', response.message);
     }
   };
 
@@ -1058,6 +1253,7 @@ class CheckOutScreen extends Component {
     const totalTicketSelected = (item, type) => {
       // console.log('item',JSON.stringify(item,null,4));
       let selected_tickets = this.state.ticketList;
+      console.log('selected_tickets:=', selected_tickets);
       if (
         selected_tickets.length &&
         selected_tickets.filter(i => i.ticketId === item.id).length
@@ -1076,7 +1272,7 @@ class CheckOutScreen extends Component {
 
     const handleConfirm = () => {
       console.log('handleConfirm');
-      this.signature.readSignature();
+      // this.signature.readSignature();
     };
 
     const handleClear = () => {
@@ -1084,26 +1280,26 @@ class CheckOutScreen extends Component {
       this.signature.clearSignature();
     };
 
-    const submitWaiver = async signature => {
+    const submitWaiver = async () => {
       const {t} = this.props;
 
       try {
         Keyboard.dismiss();
 
         // validation
-        if (this.state.waiver_name == null || this.state.waiver_name == '') {
+        if (this.state.waiver_first_name == null || this.state.waiver_last_name == null) {
           Alert.alert('', t('enter_name_first'), [{text: t('ok')}], {
             cancelable: false,
           });
           return;
         }
 
-        if (signature == null) {
-          Alert.alert('', t('please_enter_sign'), [{text: t('ok')}], {
-            cancelable: false,
-          });
-          return;
-        }
+        // if (signature == null) {
+        //   Alert.alert('', t('please_enter_sign'), [{text: t('ok')}], {
+        //     cancelable: false,
+        //   });
+        //   return;
+        // }
 
         if (!isEmailAddress(this.state.waiver_email)) {
           Alert.alert('', t('enter_email_first'), [{text: t('ok')}], {
@@ -1112,10 +1308,17 @@ class CheckOutScreen extends Component {
           return;
         }
 
-        if (!isMobileNumber(this.state.waiver_phone)) {
-          Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
-            cancelable: false,
-          });
+        // if (!isMobileNumber(this.state.waiver_phone)) {
+        //   Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
+        //     cancelable: false,
+        //   });
+        //   return;
+        // }
+
+        const parsedPhoneNumber = parsePhoneNumber(this.state.CountryCallingCode + this.state.waiver_phone, this.state.CountryCode);
+        console.log("Phone Number valid:", parsedPhoneNumber.isValid());
+        if (!parsedPhoneNumber.isValid()) {
+          Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], { cancelable: false });
           return;
         }
 
@@ -1143,6 +1346,7 @@ class CheckOutScreen extends Component {
               return (
                 <View>
                   <CustomField
+                    key={index}
                     title={`#${ite} ` + t('attendee_details')}
                     customFieldsData={this.state.customFiled}
                     ticket={item}
@@ -1279,7 +1483,7 @@ class CheckOutScreen extends Component {
                             {item?.price} {this.eventInfo.currency}
                           </Text>
                         </View>
-                        {item?.sale_start_date &&( 
+                        {item?.sale_start_date && ( 
                           <View>
                             <View style={styles.ticketQtyWrapper}>
                               <Text>{this.getQtyText(item)}</Text>
@@ -1287,12 +1491,14 @@ class CheckOutScreen extends Component {
                                 {item?.sale_price} {this.eventInfo.currency}
                               </Text>
                             </View>
-                            <View>
-                              <Text style={styles.admits}>
-                                {t('admits')}:{' '}
-                                {item.admits * this.getAdmits(item)}
-                              </Text>
+                            {item.admits && (
+                              <View>
+                                <Text style={styles.admits}>
+                                  {t('admits')}:{' '}
+                                  {item.admits * this.getAdmits(item)}
+                                </Text>
                             </View>
+                            )}
                           </View>
                         )}
                       </View>
@@ -1331,7 +1537,12 @@ class CheckOutScreen extends Component {
                               items={getListTicketQuantity(item).map(
                                 (list, i) => ({
                                   label: list.label + ' ' + t('tickets'),
-                                  value: list.value,
+                                  value: JSON.stringify({
+                                    quantity: list.value,
+                                    item: JSON.stringify({
+                                      ...this.state.tickets[i],
+                                    }),
+                                  }),
                                   key: i,
                                 }),
                               )}
@@ -1342,7 +1553,9 @@ class CheckOutScreen extends Component {
                                   console.log('Cancelled');
                               }}
                               onValueChange={value => {
-                                this.handleSelectValue(value, item, '');
+                                const {quantity, item} = JSON.parse(value);
+                                this.handleSelectValue(quantity, JSON.parse(item), '');
+                                console.log("Quantity:" + quantity + " Item:" + item)
                                 this.pickerValue = value;
                               }}
                             />
@@ -1554,18 +1767,19 @@ class CheckOutScreen extends Component {
               </Text>
             </View>
 
-            {this.state.timeslots.length > 0 ? (
+            {this.state.timeslots.length > 0 && (
               <View>
                 <View style={styles.headerContainer}>
                   <Text style={styles.headerText}>{t('timeslots')}</Text>
                 </View>
                 <View style={styles.ticketContainer}>
-                 <Text>
-                  {this.timeslot.slot}
-                 </Text>
+                 {this.timeslot?.slot && 
+                  <Text>
+                    {this.timeslot?.slot}
+                 </Text>}
                 </View>
               </View>
-            ) : null}
+            )}
 
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>{t('payment_summary')}</Text>
@@ -1768,17 +1982,32 @@ class CheckOutScreen extends Component {
           style={styles.modalStyle}
           isVisible={this.state.checkModal}
           onBackdropPress={this.handleClosePopUp}>
-          <Text style={styles.textInputText}>{t('name')}*</Text>
+
+          <Text style={styles.textInputText}>{t('First Name')}*</Text>
 
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('name')}
+              placeholder={t('First Name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
               underlineColorAndroid="transparent"
-              value={this.state.name}
-              onChangeText={this.handleNameChange}
+              value={this.state.firstname}
+              onChangeText={this.handleFirstNameChange}
+            />
+          </View>
+
+          <Text style={styles.textInputText}>{t('Last Name')}*</Text>
+
+					<View style={styles.modalInputContainer}>
+            <TextInput
+              placeholder={t('Last Name')}
+              placeholderTextColor="#838383"
+              style={styles.modalLoginFormTextInput}
+              keyboardType="default"
+              underlineColorAndroid="transparent"
+              value={this.state.lastname}
+              onChangeText={this.handleLastNameChange}
             />
           </View>
 
@@ -1797,21 +2026,149 @@ class CheckOutScreen extends Component {
           </View>
 
           <Text style={styles.textInputText}>{t('phone_number')}*</Text>
+          <View style={{
+            flexDirection: 'row',
+            width: '100%',
+            alignItems: 'center',
+          }}>
+              <View style={{
+                flexDirection: 'row',
+                height: hp(6),
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: '#fff',
+                borderRadius: wp(2),
+                marginHorizontal: wp(2),
+                height: hp(7),
+                width: 100,
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenCountryCallingCode}
+                  value={this.state.CountryCallingCode}
+                  items={this.state.CountryCodes}
+                  setOpen={this.setOpenCountryCallingCode}
+                  setValue={this.setCountryCallingCode}
+                  setItems={this.setItemsCountryCode}
+                  loading={this.setLoadingCountryCode}
+                  searchable={true}
+                  zIndex={1000}
+                  theme="LIGHT"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={"Select Country Code"}
+                  placeholder={"(+974)"}
+                  searchPlaceholder={"Search Country Code"}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
+                  textStyle={{ fontSize: 12}}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      CountryCode: item.code
+                    })
+                  }}
+                />
+              </View>
 
-          <View style={styles.modalInputContainer}>
-            <TextInput
-              placeholder={t('phone_number')}
-              placeholderTextColor="#838383"
-              style={styles.modalLoginFormTextInput}
-              keyboardType="number-pad"
-              underlineColorAndroid="transparent"
-              value={this.state.phone}
-              onChangeText={this.handleNumberChange}
-            />
+            <View style={{
+              ...styles.modalInputContainer,
+              width: '60%',
+              marginLeft: 0,
+            }}>
+              <TextInput
+                placeholder={t('phone_number')}
+                placeholderTextColor="#838383"
+                style={styles.modalLoginFormTextInput}
+                keyboardType="number-pad"
+                underlineColorAndroid="transparent"
+                value={this.state.phone}
+                onChangeText={this.handleNumberChange}
+              />
+            </View>
           </View>
 
+          <Text style={styles.textInputText}>{t('Nationality')}*</Text>
+          <View style={{
+                flexDirection: 'row',
+                height: hp(6),
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: '#fff',
+                borderRadius: wp(2),
+                marginHorizontal: wp(2),
+                height: hp(7),
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenCountry}
+                  value={this.state.CountryCode}
+                  items={this.state.Countries}
+                  setOpen={this.setOpenCountry}
+                  setValue={this.setCountryCode}
+                  setItems={this.setCountries}
+                  loading={this.setLoadingCountry}
+                  searchable={true}
+                  zIndex={1000}
+                  theme="LIGHT"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={"Select Country"}
+                  placeholder={"Qatar"}
+                  searchPlaceholder={"Search Country"}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
+                  textStyle={{ fontSize: 12}}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      CountryId: item.value
+                    })
+                  }}
+                />
+              </View>
+
+              <Text style={styles.textInputText}>{t('Gender')}*</Text>
+              <View style={{
+                flexDirection: 'row',
+                height: hp(6),
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: '#fff',
+                borderRadius: wp(2),
+                marginHorizontal: wp(2),
+                height: hp(7),
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenGender}
+                  value={this.state.Gender}
+                  items={this.state.ItemsGender}
+                  setOpen={this.setOpenGender}
+                  setValue={this.setGender}
+                  setItems={this.setItemsGender}
+                  zIndex={1000}
+                  theme="LIGHT"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={t('select_gender')}
+                  placeholder={t('select_gender')}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent', borderWidth: 2, borderColor: '#ccc' }}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      Gender: item.value
+                    })
+                  }}
+                />
+              </View>
+
           <TouchableOpacity
-            style={styles.buttonContainer}
+            style={{
+              ...styles.buttonContainer,
+              marginBottom: hp(2),
+            }}
             onPress={this.handleCheckoutAsGuestContinue}>
             <Text style={styles.saveProfileText}>{t('continue')}</Text>
           </TouchableOpacity>
@@ -1831,24 +2188,129 @@ class CheckOutScreen extends Component {
             />
           </ScrollView>
 
-          <Text style={styles.textInputText}>{t('name')}*</Text>
+          <Text style={styles.textInputText}>{t('First Name')}*</Text>
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('name')}
+              placeholder={t('First Name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
               underlineColorAndroid="transparent"
-              value={this.state.waiver_name}
+              value={this.state.waiver_first_name}
               onChangeText={value => {
-                this.setState({waiver_name: value});
+                this.setState({waiver_first_name: value});
               }}
             />
           </View>
 
+           <Text style={styles.textInputText}>{t('Last Name')}*</Text>
+          <View style={styles.modalInputContainer}>
+            <TextInput
+              placeholder={t('Last Name')}
+              placeholderTextColor="#838383"
+              style={styles.modalLoginFormTextInput}
+              keyboardType="default"
+              underlineColorAndroid="transparent"
+              value={this.state.waiver_last_name}
+              onChangeText={value => {
+                this.setState({waiver_last_name: value});
+              }}
+            />
+          </View>
+
+          <Text style={styles.textInputText}>{t('Nationality')}*</Text>
+          <View style={{
+                flexDirection: 'row',
+                height: hp(6),
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: '#fff',
+                borderRadius: wp(2),
+                marginHorizontal: wp(2),
+                height: hp(7),
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenCountry}
+                  value={this.state.CountryCode}
+                  items={this.state.Countries}
+                  setOpen={this.setOpenCountry}
+                  setValue={this.setCountry}
+                  setItems={this.setCountries}
+                  loading={this.setLoadingCountry}
+                  searchable={true}
+                  zIndex={1000}
+                  theme="LIGHT"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={"Select Country"}
+                  placeholder={"Qatar"}
+                  searchPlaceholder={"Search Country"}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
+                  textStyle={{ fontSize: 12}}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      waiver_country_id: item.value
+                    })
+                  }}
+                />
+              </View>
+
           <Text style={styles.textInputText}>{t('phone_number')}*</Text>
 
-          <View style={styles.modalInputContainer}>
+          <View style={{
+            flexDirection: 'row',
+            // justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+
+          <View style={{
+                flexDirection: 'row',
+                height: hp(6),
+                alignItems: 'center',
+                borderWidth: 2,
+                borderColor: '#fff',
+                borderRadius: wp(2),
+                marginHorizontal: wp(2),
+                height: hp(7),
+                width: 100,
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenCountryCallingCode}
+                  value={this.state.CountryCallingCode}
+                  items={this.state.CountryCodes}
+                  setOpen={this.setOpenCountryCallingCode}
+                  setValue={this.setCountryCallingCode}
+                  setItems={this.setItemsCountryCode}
+                  loading={this.setLoadingCountryCode}
+                  searchable={true}
+                  zIndex={1000}
+                  theme="LIGHT"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={"Select Country Code"}
+                  placeholder={"(+974)"}
+                  searchPlaceholder={"Search Country Code"}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
+                  textStyle={{ fontSize: 12}}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      CountryCode: item.code
+                    })
+                  }}
+                />
+              </View>
+
+          <View style={{
+            ...styles.modalInputContainer,
+            width: "60%",
+            marginLeft: 0,
+          }}>
             <TextInput
               placeholder={t('phone_number')}
               placeholderTextColor="#838383"
@@ -1860,6 +2322,8 @@ class CheckOutScreen extends Component {
                 this.setState({waiver_phone: value});
               }}
             />
+          </View>
+
           </View>
 
           <Text style={styles.textInputText}>{t('email')}*</Text>
@@ -1878,7 +2342,7 @@ class CheckOutScreen extends Component {
             />
           </View>
 
-          <Text style={styles.textInputText}>{t('signature')}*</Text>
+          {/* <Text style={styles.textInputText}>{t('signature')}*</Text>
           <View style={[styles.modalInputContainer, {height: 150}]}>
             <Signature
               ref={signature => {
@@ -1893,11 +2357,11 @@ class CheckOutScreen extends Component {
               onPress={handleClear}>
               <Text style={styles.saveProfileTextSign}>{t('clear_sign')}</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <TouchableOpacity
             style={styles.buttonContainer}
-            onPress={handleConfirm}>
+            onPress={submitWaiver}>
             <Text style={styles.saveProfileText}>{t('submit')}</Text>
           </TouchableOpacity>
 
@@ -2226,12 +2690,11 @@ const styles = StyleSheet.create({
   modalStyle: {
     flex: 1,
     width: 'auto',
-    maxHeight: hp(60),
+    maxHeight: hp(75),
     overflow: 'scroll',
-    // alignItems: 'center',
     justifyContent: 'center',
     top: hp(10),
-    marginVertical: wp(2),
+    // marginVertical: wp(2),
     backgroundColor: '#fff',
     borderRadius: wp(2),
   },
@@ -2260,7 +2723,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ccc',
     borderRadius: wp(2),
-    // marginVertical: hp(1),
     marginHorizontal: wp(4),
   },
   modalLoginFormTextInput: {

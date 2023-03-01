@@ -24,6 +24,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import DropDownPicker from 'react-native-dropdown-picker';
+import parsePhoneNumber, { parse } from 'libphonenumber-js'
 
 import { async_keys, getData } from '../api/UserPreference';
 const axios = require('axios');
@@ -49,14 +50,19 @@ import { isEmailAddress } from '../validation/FormValidator';
 
 import { withTranslation } from 'react-i18next';
 import { t } from 'i18next';
+import { ScrollView } from 'react-native-gesture-handler';
+
+const countryCodes = require("../static/CountryCodes.json");
 
 class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      firstname: '',
+      lastname: '',
       email: '',
       password: '',
+      phone: '',
       hidePassword: true,
       showProcessingLoader: false,
 
@@ -69,8 +75,14 @@ class SignUpScreen extends Component {
 
       OpenCountry: false,
       ValueCountry: '',
-      LodingCountry: false,
+      LoadingCountry: false,
       ItemsCountry: [],
+
+      OpenCountryCallingCode: false,
+      CountryCallingCode: '+974',
+      CountryCode: '',
+      CountryCodes: [],
+      LoadingCountryCode: false,
     };
   }
 
@@ -78,12 +90,24 @@ class SignUpScreen extends Component {
     setTimeout(this.getCountries, 2000);
   }
 
-  handleNameChange = name => {
-    this.setState({ name });
+  handleFirstNameChange = name => {
+    this.setState({
+      firstname: name,
+    });
+  };
+
+  handleLastNameChange = name => {
+    this.setState({ 
+      lastname: name,
+     });
   };
 
   handleEmailChange = email => {
     this.setState({ email });
+  };
+
+   handlePhoneChange = phone => {
+    this.setState({ phone });
   };
 
   handlePasswordChange = password => {
@@ -118,15 +142,33 @@ class SignUpScreen extends Component {
     });
   }
 
-  setLodingCountry = (LodingCountry) => {
+  setOpenCountryCallingCode = (OpenCountryCallingCode) => {
     this.setState({
-      LodingCountry
+      OpenCountryCallingCode
+    });
+  }
+
+  setLoadingCountry = (LoadingCountry) => {
+    this.setState({
+      LoadingCountry
+    });
+  }
+
+  setLoadingCountryCode = (LoadingCountryCode) => {
+    this.setState({
+      LoadingCountryCode
     });
   }
 
   setValueCountry = (callback) => {
     this.setState(state => ({
       ValueCountry: callback(state.ValueCountry)
+    }));
+  }
+
+  setCountryCallingCode = (callback) => {
+    this.setState(state => ({
+      CountryCallingCode: callback(state.CountryCallingCode)
     }));
   }
 
@@ -137,10 +179,17 @@ class SignUpScreen extends Component {
     }));
   }
 
+  setItemsCountryCode = (countries) => {
+
+    this.setState(state => ({
+      CountryCodes: countries
+    }));
+  }
+
   getCountries = async () => {
     // getting userId from asyncStorage
     try {
-      this.setLodingCountry(true);
+      this.setLoadingCountry(true);
       // calling api
       await axios
         .get(BASE_URL + 'get-countries')
@@ -158,14 +207,23 @@ class SignUpScreen extends Component {
               });
 
               this.setItemsCountry(ItemsCountry);
-              this.setLodingCountry(false);
+              this.setLoadingCountry(false);
             }
+
+            let CountryCodes = [];
+            countryCodes.map((item, index) => {
+              // do not push country code which are already in the array
+              if (CountryCodes.findIndex(code => code.value === item.dial_code) === -1)
+                CountryCodes.push({ id: index, label: `(${item.dial_code}) ${item.name}`, value: item.dial_code, code: item.code });
+            })
+
+            this.setState({ CountryCodes: CountryCodes });
           }
         });
 
     } catch (error) {
       console.log(error.message);
-      this.setLodingCountry(false);
+      this.setLoadingCountry(false);
     }
   };
 
@@ -173,11 +231,32 @@ class SignUpScreen extends Component {
     const { t } = this.props;
     Keyboard.dismiss();
 
-    const { name, email, password, ValueGender, ValueCountry } = this.state;
+    const { 
+      firstname, 
+      lastname, 
+      email, 
+      password, 
+      ValueGender, 
+      ValueCountry, 
+      phone, 
+      CountryCallingCode, 
+      CountryCode } = this.state;
+
+    console.log({
+      firstname,
+      lastname,
+      email,
+      password,
+      ValueGender,
+      ValueCountry,
+      phone,
+      CountryCallingCode,
+      CountryCode
+    })
 
 
     // validation
-    if (name.trim() === '') {
+    if (firstname.trim() === '' || lastname.trim() === '') {
       Alert.alert('', t('enter_name_first'), [{ text: t('ok') }], {
         cancelable: false,
       });
@@ -212,21 +291,38 @@ class SignUpScreen extends Component {
       return;
     }
 
+    if (phone.trim() === '') {
+      Alert.alert('', t('enter_phone'), [{ text: t('ok') }], {
+        cancelable: false,
+      });
+      return;
+    }
+
+    const parsedPhone = parsePhoneNumber(CountryCallingCode + phone, CountryCode);
+    if (parsedPhone) {
+      console.log("Phone Number Valid:", parsedPhone.isValid())
+      if (!parsedPhone.isValid()) {
+        Alert.alert('', t('enter_valid_phone'), [{ text: t('ok') }], {
+          cancelable: false,
+        });
+        return;
+      }
+    }
+
     try {
       // starting processing loader
       // this.setState({showProcessingLoader: true});
 
       // preparing params
       const params = {
-        name: name,
+        name: firstname + ' ' + lastname,
         email: email,
         password: password,
         gender: ValueGender,
         country_id: ValueCountry,
+        phone: CountryCallingCode + phone,
         accept: 'true',
       };
-
-
 
       // calling api
       const response = await makeRequest(BASE_URL + 'register', params, true);
@@ -281,19 +377,31 @@ class SignUpScreen extends Component {
             navAction="back"
             nav={this.props.navigation}
           />
-
+        <ScrollView>
           <View style={styles.homeContainer}>
             <Text style={styles.loginTextStyle}>{t('register')}</Text>
 
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder={t('name')}
+                placeholder={t('First Name')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 underlineColorAndroid="transparent"
-                value={this.state.name}
-                onChangeText={this.handleNameChange}
+                value={this.state.firstname}
+                onChangeText={this.handleFirstNameChange}
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.loginFormTextInput}
+                placeholder={t('Last Name')}
+                placeholderTextColor="#c4c3cb"
+                keyboardType="default"
+                underlineColorAndroid="transparent"
+                value={this.state.lastname}
+                onChangeText={this.handleLastNameChange}
               />
             </View>
 
@@ -345,13 +453,14 @@ class SignUpScreen extends Component {
                 setOpen={this.setOpenGender}
                 setValue={this.setValueGender}
                 setItems={this.setItemsGender}
-                zIndex={99999}
+                zIndex={1000}
                 theme="DARK"
                 listMode='MODAL'
                 modalProps={{ animationType: "fade" }}
                 modalTitle={t('select_gender')}
                 placeholder={t('select_gender')}
                 modalTitleStyle={{ fontWeight: "bold" }}
+                style={{ backgroundColor: 'transparent' }}
               />
             </View>
 
@@ -363,9 +472,9 @@ class SignUpScreen extends Component {
                 setOpen={this.setOpenCountry}
                 setValue={this.setValueCountry}
                 setItems={this.setItemsCountry}
-                loading={this.setLodingCountry}
+                loading={this.setLoadingCountry}
                 searchable={true}
-                zIndex={99999}
+                zIndex={1000}
                 theme="DARK"
                 listMode='MODAL'
                 modalProps={{ animationType: "fade" }}
@@ -373,14 +482,69 @@ class SignUpScreen extends Component {
                 placeholder={t('select_country')}
                 searchPlaceholder={t('search_country')}
                 modalTitleStyle={{ fontWeight: "bold" }}
+                style={{ backgroundColor: 'transparent' }}
               />
+            </View>
+
+            <View style={{
+              flexDirection: 'row',
+              width: '100%',
+            }}>
+              <View style={{
+                ...styles.inputContainerDropdown,
+                height: hp(7),
+                width: 100,
+                alignSelf: 'flex-start',
+              }}>
+                <DropDownPicker
+                  open={this.state.OpenCountryCallingCode}
+                  value={this.state.CountryCallingCode}
+                  items={this.state.CountryCodes}
+                  setOpen={this.setOpenCountryCallingCode}
+                  setValue={this.setCountryCallingCode}
+                  setItems={this.setItemsCountryCode}
+                  loading={this.setLoadingCountryCode}
+                  searchable={true}
+                  zIndex={1000}
+                  theme="DARK"
+                  listMode='MODAL'
+                  modalProps={{ animationType: "fade" }}
+                  modalTitle={"Select Country Code"}
+                  placeholder={"(+974)"}
+                  searchPlaceholder={"Search Country Code"}
+                  modalTitleStyle={{ fontWeight: "bold" }}
+                  style={{ backgroundColor: 'transparent' }}
+                  onSelectItem={(item) => {
+                    console.log(item);
+                    this.setState({
+                      CountryCode: item.code
+                    })
+                  }}
+                />
+              </View>
+
+              <View style={{
+                ...styles.inputContainer,
+                width: '65%',
+              }}>
+                <TextInput
+                  style={styles.loginFormTextInput}
+                  placeholder={t('Phone Number')}
+                  autoCapitalize="none"
+                  placeholderTextColor="#c4c3cb"
+                  keyboardType="phone-pad"
+                  underlineColorAndroid="transparent"
+                  value={this.state.phone}
+                  onChangeText={this.handlePhoneChange}
+                />
+              </View>
             </View>
 
             <Text style={styles.agreeTextStyle}>
               By clicking "Register", I accept the{' '}
-              <Text style={{ color: '#000000' }}>Terms of Service</Text> and have
-              read the <Text style={{ color: '#000000' }}>Privacy Policy</Text>.{' '}
-              {'\n'} I agree that bookingqube may share my information with event
+              Terms of Service and have
+              read the Privacy Policy.{' '}
+              {'\n\n'}I agree that bookingqube may share my information with event
               organizers.
             </Text>
 
@@ -434,6 +598,7 @@ class SignUpScreen extends Component {
           </View>
 
           {this.state.showProcessingLoader && <ProcessingLoader />}
+        </ScrollView>
         </ImageBackground>
       </SafeAreaView>
     );
@@ -509,6 +674,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     marginTop: hp(2),
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',

@@ -70,6 +70,7 @@ class ViewEventScreen extends Component {
 
     try {
       // calling api
+      console.log('Slug:', this.slugTitle.slug)
 
       await axios
         .get(BASE_URL + 'events/show/' + this.slugTitle.slug)
@@ -78,6 +79,7 @@ class ViewEventScreen extends Component {
 
           if (newResponse) {
             const {success} = newResponse.data;
+            console.log("Response:", newResponse.data.data)
 
             if (success === true) {
               this.setState({
@@ -103,8 +105,10 @@ class ViewEventScreen extends Component {
     }
   };
 
-  handleGetTicket = async ({date, timeslot}) => {
+  handleGetTicket = async ({ date, timeslot }) => {
     const {t} = this.props;
+
+    console.log('Date:', date)
 
     const organizer = await getData(async_keys.userInfo);
     if (organizer == 3) {

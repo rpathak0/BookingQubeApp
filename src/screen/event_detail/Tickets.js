@@ -61,11 +61,13 @@ class Tickets extends Component {
   }
 
   handleGetTicket = async (data) => {
+    console.log("Event Info:", data);
     this.props.handleGetTicket({
-      date: data.date,
+      date: data.date ?? data,
       timeslot: data.timeslot,
     });
   }
+
   CanBookTicket(eventStartDate) {
     var eventdate = moment(eventStartDate);
     var todaysdate = moment();
@@ -107,7 +109,7 @@ class Tickets extends Component {
         startTime: start_time,
         endTime: end_time,
       };
-      console.log(params);
+      console.log("Params:", params);
       // creating custom header
       let axiosConfig = {};
       // calling api
@@ -130,7 +132,7 @@ class Tickets extends Component {
                 currentdatetime = moment();
                 // skip expired/ended timeslot
                 // check event start datetime <= current datetime
-                if (currentdatetime.isSameOrBefore(startdatetime) == true) {
+                if (currentdatetime.isSameOrBefore(startdatetime)) {
                   if (newResponse.data.data.event.repetitive <= 0) {
                     // Non-Repetitive event
                     // take all timeslots
@@ -138,16 +140,12 @@ class Tickets extends Component {
                   } else {
                     // Repetitive event
                     // take timeslots date-wise
-                    if (
-                      this.yearMonth(this.eventInfo.startDate) ==
-                      this.yearMonth(item.from_date)
-                    ) {
+                    if (this.yearMonth(start_date) == this.yearMonth(item.from_date)) {
                       timeslots.push(item);
                     }
                   }
                 }
               });
-              
 
               this.setState({
                 timeslots: timeslots,
@@ -167,14 +165,21 @@ class Tickets extends Component {
 
   hourMinute = time => {
     let timeArray = time.split(':');
-    // return time with AM/PM
+    // return time in 12 hour format with AM/PM
     return (
-      timeArray[0] +
+      (timeArray[0] > 12 ? timeArray[0] - 12 : timeArray[0]) +
       ':' +
       timeArray[1] +
       ' ' +
       (timeArray[0] >= 12 ? 'PM' : 'AM')
     );
+  };
+
+  yearMonth = date => {
+    if (date) {
+      let dateArray = date.split('-');
+      return dateArray[0] + '-' + dateArray[1];
+    }
   };
 
   render() {
@@ -250,16 +255,53 @@ class Tickets extends Component {
                     <TouchableOpacity
                       key={i}
                       style={styles.listCountingContainer}
-                      onPress={() => this.handleGetTicket(date.date_value)}>
+                      // onPress={() => this.handleGetTicket(date.date_value)}>
+                      onPress={this.state.timeslots.length ? () => this.pickerRef.current.show() : () => this.handleGetTicket(date.date_value)}>
+
                       <View style={styles.listDateContainer} >
-                        <Text style={styles.listDateText}>{date.date_format_text}</Text>
+                        {date.date_format_text == "11 Mar 2023" ? <Text style={styles.listDateText}>Inflata Sprint - 11 Mar 2023</Text>
+                        : date.date_format_text == "18 Mar 2023" ? <Text style={styles.listDateText}>Inflata Monster - 18 Mar 2023</Text> 
+                        : <Text style={styles.listDateText}>{date.date_format_text}</Text>}
                       </View>
+
                       <View style={styles.listTimeContainer}>
                         <Text style={styles.listTimeText}>
                           {convertTimeZone(`${date?.date_value?.start_date} ${date?.date_value?.start_time}`).formattedTime}
                           -
                           {convertTimeZone(`${date?.date_value?.end_date} ${date?.date_value?.end_time}`).formattedTime}
                         </Text>
+                        <View style={styles.ticketContainer}>
+                          <ReactNativePickerModule
+                                  ref={this.pickerRef}
+                                  value={this.state.pickerValue}
+                                  title={t('select_timeslot')}
+                                  items={this.state.timeslots.map((item, index) => {
+                                    const timeslot = {
+                                        slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                                        id: item.id,
+                                    }
+                                    return {
+                                      label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                                      value: JSON.stringify(timeslot),
+                                      id: item.id,
+                                    };
+                                  })}
+                                  titleStyle={{fontSize: 18, color: 'black'}}
+                                  selectedColor="#1E88E5"
+                                  confirmButtonDisabledTextStyle={{color: 'grey'}}
+                                  onCancel={() => {
+                                      console.log('Cancelled');
+                                  }}
+                                  onValueChange={value => {
+                                      console.log('Value:', JSON.parse(value));
+                                      this.setState({pickerValue: value});
+                                      this.handleGetTicket({ 
+                                        date: {'start_date': start_date, 'end_date': end_date, start_time, end_time}, 
+                                        timeslot: JSON.parse(value),
+                                      })
+                                  }}
+                          />
+                        </View>
                       </View>
                     </TouchableOpacity>
                   ) : null
@@ -271,7 +313,7 @@ class Tickets extends Component {
               <TouchableOpacity
                 style={styles.listCountingContainer}
                 // onPress={() => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
-                onPress={() => this.pickerRef.current.show()}
+                onPress={this.state.timeslots ? () => this.pickerRef.current.show() : () => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
               >
                 <Text style={styles.listDateText}> {start_date_format} - {end_date_format} </Text>
                 <View style={styles.listTimeContainer}>
