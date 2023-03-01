@@ -126,6 +126,7 @@ class ViewEventScreen extends Component {
         finalDate: date,
         maxQuantity: this.state.data.max_ticket_qty,
         currency: this.state.data.currency,
+        selectedDate: date.selectedDate,
       };
 
       this.props.navigation.navigate('Checkout', {

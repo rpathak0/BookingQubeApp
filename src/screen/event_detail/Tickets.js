@@ -32,6 +32,7 @@ class Tickets extends Component {
       scroller: this.props.scroller,
       timeslots: [],
       pickerValue: '',
+      selectedDate: '',
     }
     this.pickerRef = React.createRef();
   }
@@ -182,6 +183,15 @@ class Tickets extends Component {
     }
   };
 
+  getWeekDay = date => {
+    if (date) {
+      let dateArray = date.split('-');
+      let dateObj = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+      // return only week day name (Mon, Tue, Wed, etc.)
+      return dateObj.toString().split(' ')[0];
+    }
+  };
+
   render() {
     const {
       repetitive_type, start_time_format,
@@ -250,25 +260,37 @@ class Tickets extends Component {
             >
               {this.state.eventSchedulesDatesForMonth.map((date, i) => {
                 let canBookTicket = this.CanBookTicket(date.date_value.start_date);
+                {/* console.log("Date Info:", date.date_value); */}
                 return (
                   canBookTicket ? (
                     <TouchableOpacity
                       key={i}
                       style={styles.listCountingContainer}
                       // onPress={() => this.handleGetTicket(date.date_value)}>
-                      onPress={this.state.timeslots.length ? () => this.pickerRef.current.show() : () => this.handleGetTicket(date.date_value)}>
-
+                      onPress={this.state.timeslots.length ? 
+                        () => {
+                          this.pickerRef.current.show();
+                          this.setState({
+                            selectedDate: date?.date_value?.start_date,
+                          });
+                        } : 
+                        () => {
+                          this.handleGetTicket(date.date_value);
+                          this.setState({
+                            selectedDate: date?.date_value?.start_date,
+                          })
+                        }}>
                       <View style={styles.listDateContainer} >
-                        {date.date_format_text == "11 Mar 2023" ? <Text style={styles.listDateText}>Inflata Sprint - 11 Mar 2023</Text>
-                        : date.date_format_text == "18 Mar 2023" ? <Text style={styles.listDateText}>Inflata Monster - 18 Mar 2023</Text> 
+                        {this.props?.eventId == "14" && date.date_format_text == "11 Mar 2023" ? <Text style={styles.listDateText}>Inflata Sprint - 11 Mar 2023</Text>
+                        : this.props?.eventId == "14" && date.date_format_text == "18 Mar 2023" ? <Text style={styles.listDateText}>Inflata Monster - 18 Mar 2023</Text> 
                         : <Text style={styles.listDateText}>{date.date_format_text}</Text>}
                       </View>
 
                       <View style={styles.listTimeContainer}>
                         <Text style={styles.listTimeText}>
-                          {convertTimeZone(`${date?.date_value?.start_date} ${date?.date_value?.start_time}`).formattedTime}
-                          -
-                          {convertTimeZone(`${date?.date_value?.end_date} ${date?.date_value?.end_time}`).formattedTime}
+                          {this.getWeekDay(date?.date_value?.start_date) == "Fri" ? "1:00 PM - 11:00 PM" : 
+                          convertTimeZone(`${date?.date_value?.start_date} ${date?.date_value?.start_time}`).formattedTime
+                          + ' - ' + convertTimeZone(`${date?.date_value?.end_date} ${date?.date_value?.end_time}`).formattedTime}
                         </Text>
                         <View style={styles.ticketContainer}>
                           <ReactNativePickerModule
@@ -296,7 +318,13 @@ class Tickets extends Component {
                                       console.log('Value:', JSON.parse(value));
                                       this.setState({pickerValue: value});
                                       this.handleGetTicket({ 
-                                        date: {'start_date': start_date, 'end_date': end_date, start_time, end_time}, 
+                                        date: {
+                                            'selectedDate': this.state.selectedDate,
+                                            'start_date': start_date, 
+                                            'end_date': end_date, 
+                                            start_time, 
+                                            end_time
+                                          },
                                         timeslot: JSON.parse(value),
                                       })
                                   }}
@@ -319,9 +347,9 @@ class Tickets extends Component {
                 <View style={styles.listTimeContainer}>
                   <Text style={styles.listTimeText}>
                     {/* {start_time_format} - {end_time_format}  */}
-                    {convertTimeZone(`${start_date} ${start_time}`).formattedTime}
-                    -
-                    {convertTimeZone(`${end_date} ${end_time}`).formattedTime}
+                    {this.getWeekDay(start_date) == "Fri" ? "1:00 PM - 11:00 PM" : 
+                    convertTimeZone(`${start_date} ${start_time}`).formattedTime + 
+                    ' - ' + convertTimeZone(`${end_date} ${end_time}`).formattedTime}
                   </Text>
                 </View>
                 <View style={styles.ticketContainer}>
@@ -350,7 +378,11 @@ class Tickets extends Component {
                             console.log('Value:', JSON.parse(value));
                             this.setState({pickerValue: value});
                             this.handleGetTicket({ 
-                              date: {'start_date': start_date, 'end_date': end_date, start_time, end_time}, 
+                              date: {
+                                  'start_date': start_date, 
+                                  'end_date': end_date, 
+                                  start_time, 
+                                  end_time}, 
                               timeslot: JSON.parse(value),
                             })
                         }}
