@@ -384,7 +384,7 @@ class SignUpScreen extends Component {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder={t('First Name')}
+                placeholder={t('first_name')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 underlineColorAndroid="transparent"
@@ -396,7 +396,7 @@ class SignUpScreen extends Component {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.loginFormTextInput}
-                placeholder={t('Last Name')}
+                placeholder={t('last_name')}
                 placeholderTextColor="#c4c3cb"
                 keyboardType="default"
                 underlineColorAndroid="transparent"
@@ -509,9 +509,9 @@ class SignUpScreen extends Component {
                   theme="DARK"
                   listMode='MODAL'
                   modalProps={{ animationType: "fade" }}
-                  modalTitle={"Select Country Code"}
+                  modalTitle={t('select_country_code')}
                   placeholder={"(+974)"}
-                  searchPlaceholder={"Search Country Code"}
+                  searchPlaceholder={t('search_country_code')}
                   modalTitleStyle={{ fontWeight: "bold" }}
                   style={{ backgroundColor: 'transparent' }}
                   onSelectItem={(item) => {
@@ -529,7 +529,7 @@ class SignUpScreen extends Component {
               }}>
                 <TextInput
                   style={styles.loginFormTextInput}
-                  placeholder={t('Phone Number')}
+                  placeholder={t('phone_number')}
                   autoCapitalize="none"
                   placeholderTextColor="#c4c3cb"
                   keyboardType="phone-pad"

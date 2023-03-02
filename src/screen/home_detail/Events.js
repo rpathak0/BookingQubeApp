@@ -30,10 +30,9 @@ import {
 // Component
 
 import FastImage from 'react-native-fast-image'
-
 import {withTranslation} from 'react-i18next';
-
 import Carousel from 'react-native-snap-carousel';
+
 
 class Events extends Component {
   constructor(props) {
@@ -278,7 +277,19 @@ class Events extends Component {
 
     return (
       <View style={styles.featuredEventContainer}>
-        <Text style={styles.featuredEventText}>{this.props.name}</Text>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 10,
+        }}>
+          <Text style={styles.featuredEventText}>{this.props.name}</Text>
+          {this.props.route !== "EventList" && (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EventList')}>
+              <Text style={{ marginTop: 20, fontSize: 12 }}>{t('view_all')}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <Carousel
           ref={c => {
             this._carousel = c;
@@ -360,8 +371,9 @@ const styles = StyleSheet.create({
     fontSize: wp(6),
     fontWeight: '700',
     color: '#000000',
-    textAlign: 'center',
-    marginTop: 0,
+    // textAlign: 'center',
+    marginTop: 20,
+    marginLeft: 20,
   },
   gridView: {
     // marginTop: 10,

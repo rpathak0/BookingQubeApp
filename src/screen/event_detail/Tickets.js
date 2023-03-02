@@ -1,12 +1,13 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { Component, useRef } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -14,8 +15,8 @@ import {
 } from 'react-native-responsive-screen';
 import ReactNativePickerModule, {PickerRef} from 'react-native-picker-module';
 import moment from 'moment';
-import { convertTimeZone, getSaleExpirationSeconds } from '../../Helper/dateConverter';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { convertTimeZone } from '../../Helper/dateConverter';
+// import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 import { withTranslation } from 'react-i18next';
 import { getData } from '../../api/UserPreference';
@@ -97,6 +98,29 @@ class Tickets extends Component {
     }
 
     return true;
+  }
+
+  isTimeGreaterThan7PM = () => {
+    let time = new Date().toLocaleTimeString();
+    let timeArray = time.split(':');
+    if (timeArray[0] >= 19) {
+      return true;
+    }
+    return false;
+  }
+
+  isTimeGreaterThanCurrentTime = (time) => {
+    let currentTime = new Date().toLocaleTimeString();
+    let timeArray = time.split(':');
+    let currentTimeArray = currentTime.split(':');
+    if (timeArray[0] > currentTimeArray[0]) {
+      return true;
+    } else if (timeArray[0] == currentTimeArray[0]) {
+      if (timeArray[1] > currentTimeArray[1]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   initialSetup = async () => {
@@ -236,11 +260,12 @@ class Tickets extends Component {
         )}
         <View style={styles.firstTicketContainer}>
 
-          {repetitive_type != null && repititive_schedule?.map((schedule) => (
+          {repetitive_type != null && repititive_schedule?.map((schedule, index) => (
             <>
               { (schedule?.schedule_dates.formatted_schedule_dates.length > 0 && this.isMonthExpired(schedule.event_schedule_formatted)) && (
                 <TouchableOpacity
                   onPress={() => this.onSelectScheduleMonth(schedule)}
+                  key={schedule?.id}
                 >
                   <View key={schedule?.id} style={(this.state.selectedSchdeuleMonthId == schedule?.id) ? styles.selectedsecondTicketContainer : styles.secondTicketContainer}>
                     <Text style={styles.dateText}>{schedule?.event_schedule_formatted}</Text>
@@ -260,26 +285,35 @@ class Tickets extends Component {
             >
               {this.state.eventSchedulesDatesForMonth.map((date, i) => {
                 let canBookTicket = this.CanBookTicket(date.date_value.start_date);
-                {/* console.log("Date Info:", date.date_value); */}
                 return (
                   canBookTicket ? (
                     <TouchableOpacity
                       key={i}
                       style={styles.listCountingContainer}
                       // onPress={() => this.handleGetTicket(date.date_value)}>
-                      onPress={this.state.timeslots.length ? 
+                      onPress={
+                        // check if current time is greater than 7 PM
+                        // if yes, then show alert
+                        // else, show ticket selection screen
+                        this.isTimeGreaterThan7PM() ? 
                         () => {
-                          this.pickerRef.current.show();
-                          this.setState({
-                            selectedDate: date?.date_value?.start_date,
-                          });
-                        } : 
-                        () => {
-                          this.handleGetTicket(date.date_value);
-                          this.setState({
-                            selectedDate: date?.date_value?.start_date,
-                          })
-                        }}>
+                            Alert.alert('', 'Ticket booking is only available before 7 PM', [{ text: 'OK' }], { cancelable: false });
+                            return;
+                          } : 
+                        this.state.timeslots.length ? 
+                          () => {
+                            this.pickerRef.current.show();
+                            this.setState({
+                              selectedDate: date?.date_value?.start_date,
+                            });
+                          } : 
+                          () => {
+                            this.handleGetTicket(date.date_value);
+                            this.setState({
+                              selectedDate: date?.date_value?.start_date,
+                            })
+                          }
+                      }>
                       <View style={styles.listDateContainer} >
                         {this.props?.eventId == "14" && date.date_format_text == "11 Mar 2023" ? <Text style={styles.listDateText}>Inflata Sprint - 11 Mar 2023</Text>
                         : this.props?.eventId == "14" && date.date_format_text == "18 Mar 2023" ? <Text style={styles.listDateText}>Inflata Monster - 18 Mar 2023</Text> 
@@ -297,16 +331,20 @@ class Tickets extends Component {
                                   ref={this.pickerRef}
                                   value={this.state.pickerValue}
                                   title={t('select_timeslot')}
-                                  items={this.state.timeslots.map((item, index) => {
-                                    const timeslot = {
-                                        slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
-                                        id: item.id,
-                                    }
-                                    return {
-                                      label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
-                                      value: JSON.stringify(timeslot),
-                                      id: item.id,
-                                    };
+                                  // return timeslots that are greater than current time
+                                  items={this.state.timeslots.filter((timeslot) => {
+                                    if (this.isTimeGreaterThanCurrentTime(timeslot.ts_start_time)) {
+                                      return timeslot;
+                                    }}).map((item) => {
+                                        const timeslot = {
+                                            slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                                            id: item.id,
+                                        }
+                                        return {
+                                          label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                                          value: JSON.stringify(timeslot),
+                                          id: item.id,
+                                        };
                                   })}
                                   titleStyle={{fontSize: 18, color: 'black'}}
                                   selectedColor="#1E88E5"
@@ -340,9 +378,16 @@ class Tickets extends Component {
             <View style={styles.thirdTicketContainer}>
               <TouchableOpacity
                 style={styles.listCountingContainer}
-                // onPress={() => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
-                onPress={this.state.timeslots ? () => this.pickerRef.current.show() : () => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
-              >
+                onPress={
+                      this.isTimeGreaterThan7PM() ? 
+                        () => {
+                            Alert.alert('', 'Ticket booking is only available before 7 PM', [{ text: 'OK' }], { cancelable: false });
+                            return;
+                          } : 
+                      this.state.timeslots ? 
+                      () => this.pickerRef.current.show() : 
+                      () => this.handleGetTicket({ 'start_date': start_date, 'end_date': end_date, start_time, end_time })}
+                >
                 <Text style={styles.listDateText}> {start_date_format} - {end_date_format} </Text>
                 <View style={styles.listTimeContainer}>
                   <Text style={styles.listTimeText}>
@@ -354,44 +399,47 @@ class Tickets extends Component {
                 </View>
                 <View style={styles.ticketContainer}>
                 <ReactNativePickerModule
-                        ref={this.pickerRef}
-                        value={this.state.pickerValue}
-                        title={t('select_timeslot')}
-                        items={this.state.timeslots.map((item, index) => {
-                          const timeslot = {
-                              slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                    ref={this.pickerRef}
+                    value={this.state.pickerValue}
+                    title={t('select_timeslot')}
+                    items={this.state.timeslots.filter((timeslot) => {
+                        if (this.isTimeGreaterThanCurrentTime(timeslot.ts_start_time)) {
+                          return timeslot;
+                        }}).map((item) => {
+                            const timeslot = {
+                                slot: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                                id: item.id,
+                            }
+                            return {
+                              label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
+                              value: JSON.stringify(timeslot),
                               id: item.id,
-                          }
-                          return {
-                            label: this.hourMinute(item.ts_start_time) + ' - ' + this.hourMinute(item.ts_end_time),
-                            value: JSON.stringify(timeslot),
-                            id: item.id,
-                          };
-                        })}
-                        titleStyle={{fontSize: 18, color: 'black'}}
-                        selectedColor="#1E88E5"
-                        confirmButtonDisabledTextStyle={{color: 'grey'}}
-                        onCancel={() => {
-                            console.log('Cancelled');
-                        }}
-                        onValueChange={value => {
-                            console.log('Value:', JSON.parse(value));
-                            this.setState({pickerValue: value});
-                            this.handleGetTicket({ 
-                              date: {
-                                  'start_date': start_date, 
-                                  'end_date': end_date, 
-                                  start_time, 
-                                  end_time}, 
-                              timeslot: JSON.parse(value),
-                            })
-                        }}
+                            };
+                        }
+                    )}
+                    titleStyle={{fontSize: 18, color: 'black'}}
+                    selectedColor="#1E88E5"
+                    confirmButtonDisabledTextStyle={{color: 'grey'}}
+                    onCancel={() => {
+                        console.log('Cancelled');
+                    }}
+                    onValueChange={value => {
+                        console.log('Value:', JSON.parse(value));
+                        this.setState({pickerValue: value});
+                        this.handleGetTicket({ 
+                          date: {
+                              'start_date': start_date, 
+                              'end_date': end_date, 
+                              start_time, 
+                              end_time}, 
+                          timeslot: JSON.parse(value),
+                        })
+                    }}
                 />
               </View>
               </TouchableOpacity>
             </View>
           )}
-
         </View>
       </>
     );

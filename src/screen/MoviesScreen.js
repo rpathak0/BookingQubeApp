@@ -26,6 +26,8 @@ class MoviesScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('movies')}
+          nav={this.props.navigation}
+          navAction="back"
         />
 
         <View style={styles.homeContainer}>

@@ -15,9 +15,7 @@ import {
 } from 'react-native';
 import React, {Component} from 'react';
 import ReactNativePickerModule from 'react-native-picker-module';
-
 import RenderHtml from 'react-native-render-html';
-import Signature from 'react-native-signature-canvas';
 
 import {
   widthPercentageToDP as wp,
@@ -1744,7 +1742,7 @@ class CheckOutScreen extends Component {
               </Text>
 
               <Text style={styles.eventCategoryText}>
-                {t('Selected Date')}
+                {t('selected_date')}
               </Text>
               <Text style={styles.eventCategoryTitle}>
                 {convertTimeZoneFormatted(
@@ -1991,11 +1989,11 @@ class CheckOutScreen extends Component {
           isVisible={this.state.checkModal}
           onBackdropPress={this.handleClosePopUp}>
 
-          <Text style={styles.textInputText}>{t('First Name')}*</Text>
+          <Text style={styles.textInputText}>{t('first_name')}*</Text>
 
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('First Name')}
+              placeholder={t('first_name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
@@ -2005,11 +2003,11 @@ class CheckOutScreen extends Component {
             />
           </View>
 
-          <Text style={styles.textInputText}>{t('Last Name')}*</Text>
+          <Text style={styles.textInputText}>{t('last_name')}*</Text>
 
 					<View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('Last Name')}
+              placeholder={t('last_name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
@@ -2064,9 +2062,9 @@ class CheckOutScreen extends Component {
                   theme="LIGHT"
                   listMode='MODAL'
                   modalProps={{ animationType: "fade" }}
-                  modalTitle={"Select Country Code"}
+                  modalTitle={t('select_country_code')}
                   placeholder={"(+974)"}
-                  searchPlaceholder={"Search Country Code"}
+                  searchPlaceholder={t('search_country_code')}
                   modalTitleStyle={{ fontWeight: "bold" }}
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}
@@ -2121,9 +2119,9 @@ class CheckOutScreen extends Component {
                   theme="LIGHT"
                   listMode='MODAL'
                   modalProps={{ animationType: "fade" }}
-                  modalTitle={"Select Country"}
+                  modalTitle={t('select_country')}
                   placeholder={"Qatar"}
-                  searchPlaceholder={"Search Country"}
+                  searchPlaceholder={t('search_country')}
                   modalTitleStyle={{ fontWeight: "bold" }}
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}
@@ -2196,10 +2194,10 @@ class CheckOutScreen extends Component {
             />
           </ScrollView>
 
-          <Text style={styles.textInputText}>{t('First Name')}*</Text>
+          <Text style={styles.textInputText}>{t('first_name')}*</Text>
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('First Name')}
+              placeholder={t('first_name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
@@ -2211,10 +2209,10 @@ class CheckOutScreen extends Component {
             />
           </View>
 
-           <Text style={styles.textInputText}>{t('Last Name')}*</Text>
+           <Text style={styles.textInputText}>{t('last_name')}*</Text>
           <View style={styles.modalInputContainer}>
             <TextInput
-              placeholder={t('Last Name')}
+              placeholder={t('last_name')}
               placeholderTextColor="#838383"
               style={styles.modalLoginFormTextInput}
               keyboardType="default"
@@ -2251,9 +2249,9 @@ class CheckOutScreen extends Component {
                   theme="LIGHT"
                   listMode='MODAL'
                   modalProps={{ animationType: "fade" }}
-                  modalTitle={"Select Country"}
+                  modalTitle={t('select_country')}
                   placeholder={"Qatar"}
-                  searchPlaceholder={"Search Country"}
+                  searchPlaceholder={t('search_country')}
                   modalTitleStyle={{ fontWeight: "bold" }}
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}
@@ -2299,9 +2297,9 @@ class CheckOutScreen extends Component {
                   theme="LIGHT"
                   listMode='MODAL'
                   modalProps={{ animationType: "fade" }}
-                  modalTitle={"Select Country Code"}
+                  modalTitle={"select_"}
                   placeholder={"(+974)"}
-                  searchPlaceholder={"Search Country Code"}
+                  searchPlaceholder={t('search_')}
                   modalTitleStyle={{ fontWeight: "bold" }}
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}

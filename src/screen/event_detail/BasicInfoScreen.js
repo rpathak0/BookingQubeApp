@@ -39,6 +39,9 @@ import onlineBar from '../../assets/image/bar.png';
 class BasicInfoScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      eventName: this.props.data.event.title,
+    }
   }
 
   handleFacebook = async () => {
@@ -205,10 +208,9 @@ class BasicInfoScreen extends Component {
 
         <Text style={styles.eventTitleTextStyle}>{title}</Text>
         <Text style={styles.eventOrganiserTextStyle}>
-          {t('organizer')} {orgainser}
+          {orgainser}
         </Text>
-
-        <View style={styles.eventTypeContainer}>
+        {/* <View style={styles.eventTypeContainer}>
           <FlatList
             keyExtractor={item => item.thumb}
             horizontal={false}
@@ -216,7 +218,7 @@ class BasicInfoScreen extends Component {
             data={listItems}
             renderItem={({item}) => this.getRenderView(item)}
           />
-        </View>
+        </View> */}
 
         <View style={styles.shareEventContainer}>
           <Text style={styles.shareEventText}>{t('share_event')}</Text>
@@ -281,6 +283,18 @@ class BasicInfoScreen extends Component {
             />
           </TouchableOpacity>
         </View>
+        {this.state.eventName === "InflataRun" &&
+        <View style={{
+          flex: 1,
+          elevation: 5,
+          marginTop: hp(2),
+        }}>
+          <Image source={{uri: STORAGE_URL + "users/1674635048977.png"}} resizeMode="cover"
+            style={{
+              ...styles.eventImageStyle,
+            }} />
+          </View>
+         }
       </>
     );
   }
@@ -356,6 +370,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(2),
   },
   shareEventContainer: {
+    marginTop: hp(2),
     flexDirection: 'row',
     alignItems: 'center',
   },

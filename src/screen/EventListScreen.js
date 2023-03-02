@@ -16,7 +16,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import RNPickerSelect from 'react-native-picker-select';
+import ReactNativePickerModule from 'react-native-picker-module';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
@@ -24,7 +24,6 @@ import {withTranslation} from 'react-i18next';
 
 // Component
 import HeaderComponent from '../component/HeaderComponent';
-import FooterComponent from '../component/FooterComponent';
 
 // Icon
 import ic_reset from '../assets/icon/ic_reset.png';
@@ -38,6 +37,7 @@ import {BASE_URL} from '../api/ApiInfo';
 import {async_keys, getData} from '../api/UserPreference';
 import Events from './home_detail/Events';
 import axios from 'axios';
+import FooterComponent from '../component/FooterComponent';
 
 class EventListScreen extends Component {
   constructor(props) {
@@ -56,11 +56,18 @@ class EventListScreen extends Component {
       eventData: [],
       featureEventList: [],
       cityCheck: true,
+      showFilters: false,
     };
 
     // fetching navigation props
     this.searchData = this.props.route.params?.searchData;
     this.searchInfo = this.props.route.params?.searchInfo;
+
+    this.categoryPicker = React.createRef();
+    this.pricePicker = React.createRef();
+    this.countryPicker = React.createRef();
+    this.cityPicker = React.createRef();
+    this.datePicker = React.createRef();
   }
 
   componentDidMount() {
@@ -284,7 +291,7 @@ class EventListScreen extends Component {
     let countryCode = country.find(i => {
       return i.country_name === value;
     });
-    await this.setState({
+    this.setState({
       selectedCountry: value,
       cityCheck: false,
     });
@@ -408,132 +415,158 @@ class EventListScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('events')}
-          // navAction="back"
-          // nav={this.props.navigation}
+          navAction="back"
+          nav={this.props.navigation}
         />
         <ScrollView>
           <View style={styles.homeContainer}>
             <TouchableOpacity
               style={styles.resetFilterContainer}
-              onPress={this.handleReset}>
-              <Image
-                source={ic_reset}
-                resizeMode="cover"
-                style={styles.resetIconStyle}
-              />
-              <Text style={styles.resetText}>{t('reset_filters')}</Text>
+              onPress={() => this.setState({
+                showFilters: !this.state.showFilters,
+              })}>
+              <Text style={styles.resetText}>{t('show_filters')}</Text>
             </TouchableOpacity>
 
-            <Text style={styles.textInputText}>{t('search_events')}</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder={t('search_events_ie')}
-                placeholderTextColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-                keyboardType="default"
-                underlineColorAndroid="transparent"
-                value={this.state.searchText}
-                onChangeText={v => {
-                  this.handleSearchChange(v);
-                }}
-              />
-            </View>
+            {this.state.showFilters && (
+              <>
+                <TouchableOpacity
+                  style={styles.resetFilterContainer}
+                  onPress={this.handleReset}>
+                  <Image
+                    source={ic_reset}
+                    resizeMode="cover"
+                    style={styles.resetIconStyle}
+                  />
+                  <Text style={styles.resetText}>{t('reset_filters')}</Text>
+                </TouchableOpacity>
+                <Text style={styles.textInputText}>{t('search_events')}</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    placeholder={t('search_events_ie')}
+                    placeholderTextColor="#c4c3cb"
+                    style={styles.loginFormTextInput}
+                    keyboardType="default"
+                    underlineColorAndroid="transparent"
+                    value={this.state.searchText}
+                    onChangeText={v => {
+                      this.handleSearchChange(v);
+                    }}
+                  />
+                </View>
 
-            <Text style={styles.textInputText}>{t('category')}</Text>
-            <View style={styles.inputContainer}>
-              {this.searchData === null ? (
-                <RNPickerSelect
-                  onValueChange={v => {
-                    this.handleSelectedCategory(v);
-                  }}
-                  items={this.state.category.map(item => ({
-                    label: item.name,
-                    value: item.name,
-                  }))}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
-                  value={this.state.selectedCategory}
-                  placeholder={{label: t('select_item'), value: null}}
-                />
-              ) : (
-                <Text onPress={this.handleChangeToCategory}>
-                  {this.state.selectedCategory}
-                </Text>
-              )}
-            </View>
-
-            <Text style={styles.textInputText}>{t('date')}</Text>
-            <View style={styles.inputContainer}>
-              <TouchableOpacity onPress={this.handleShowDatePicker}>
-                {this.state.dateFilter === '' ? (
-                  <Text
-                    style={[styles.descriptionText, styles.dateFilterPadding]}>
-                    {t('date_filter')}
+                <Text style={styles.textInputText}>{t('category')}</Text>
+                <TouchableOpacity style={styles.inputContainer} onPress={() => this.categoryPicker.current.show()}>
+                  {this.state.selectedCategory ? ( 
+                    <Text onPress={this.handleChangeToCategory}>
+                      {this.state.selectedCategory}
+                    </Text>
+                  ) : (
+                    <Text>
+                    {t('select_category')}
                   </Text>
-                ) : (
-                  <Text style={styles.descriptionText}>
-                    {this.state.dateFilter}
+                  )}
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                      ref={this.categoryPicker}
+                      value={this.state.selectedCategory}
+                      title={t('select_category')}
+                      items={this.state.category.map(item => ({
+                        label: item.name,
+                        value: item.name,
+                      }))}
+                      onValueChange={v => this.handleSelectedCategory(v)}
+                  />
+
+                <Text style={styles.textInputText}>{t('date')}</Text>
+                <View style={styles.inputContainer}>
+                  <TouchableOpacity onPress={this.handleShowDatePicker}>
+                    {this.state.dateFilter === '' ? (
+                      <Text
+                        style={[styles.descriptionText, styles.dateFilterPadding]}>
+                        {t('date_filter')}
+                      </Text>
+                    ) : (
+                      <Text style={styles.descriptionText}>
+                        {this.state.dateFilter}
+                      </Text>
+                    )}
+                    <DateTimePickerModal
+                      isVisible={this.state.isDatePickerVisible}
+                      mode="date"
+                      onConfirm={d => this.handleConfirm(d)}
+                      onCancel={this.handleHideDatePicker}
+                      data={this.state.dateFilter}
+                      onDateChange={this.handleDateChange}
+                      place
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <Text style={styles.textInputText}>{t('price')}</Text>
+                <TouchableOpacity style={styles.inputContainer} onPress={() => this.pricePicker.current.show()}>
+                  {this.state.selectedPrice ? (
+                    <Text>{this.state.selectedPrice}</Text>
+                  ) : (
+                    <Text>
+                    {t('select_item')}
                   </Text>
-                )}
+                  )}
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                    ref={this.pricePicker}
+                    value={this.state.selectedPrice}
+                    title={t('select_item')}
+                    items={this.state.price.map(item => ({
+                      label: item.name,
+                      value: item.value,
+                    }))}
+                    onValueChange={v => this.handleSelectedPrice(v)}
+                  />
 
-                <DateTimePickerModal
-                  isVisible={this.state.isDatePickerVisible}
-                  mode="date"
-                  onConfirm={d => this.handleConfirm(d)}
-                  onCancel={this.handleHideDatePicker}
-                  data={this.state.dateFilter}
-                  onDateChange={this.handleDateChange}
-                  place
+                <Text style={styles.textInputText}>{t('country')}</Text>
+                <TouchableOpacity style={styles.inputContainer} onPress={() => this.countryPicker.current.show()}>
+                  {this.state.selectedCountry ? (
+                    <Text>{this.state.selectedCountry}</Text>
+                  ) : (
+                    <Text>
+                    {t('select_item')}
+                  </Text>
+                  )}
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                    ref={this.countryPicker}
+                    value={this.state.selectedCountry}
+                    title={t('select_item')}
+                    items={this.state.country.map(item => ({
+                      label: item.country_name,
+                      value: item.country_name,
+                    }))}
+                    onValueChange={v => this.handleSelectedCountry(v)}
+                  />
+
+                <Text style={styles.textInputText}>{t('city')}</Text>
+                <TouchableOpacity style={[styles.inputContainer, {marginBottom: hp(4)}]} onPress={() => this.cityPicker.current.show()}>
+                  {this.state.selectedCity ? (
+                    <Text>{this.state.selectedCity}</Text>
+                  ) : (
+                    <Text>
+                    {t('select_item')}
+                  </Text>
+                  )}
+                </TouchableOpacity>
+                <ReactNativePickerModule
+                    ref={this.cityPicker}
+                    value={this.state.selectedCity}
+                    title={t('select_item')}
+                    items={this.state.cities.map(item => ({
+                      label: item.city,
+                      value: item.city,
+                    }))}
+                    onValueChange={v => this.handleSelectedCity(v)}
                 />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.textInputText}>{t('price')}</Text>
-            <View style={styles.inputContainer}>
-              <RNPickerSelect
-                onValueChange={v => {
-                  this.handleSelectedPrice(v);
-                }}
-                items={this.state.price.map(item => ({
-                  label: item.name,
-                  value: item.value,
-                }))}
-                style={pickerStyle}
-                useNativeAndroidPickerStyle={false}
-                placeholder={{label: t('select_item'), value: null}}
-              />
-            </View>
-
-            <Text style={styles.textInputText}>{t('country')}</Text>
-            <View style={styles.inputContainer}>
-              <RNPickerSelect
-                items={this.state.country.map(item => ({
-                  label: item.country_name,
-                  value: item.country_name,
-                }))}
-                onValueChange={this.handleSelectedCountry}
-                style={pickerStyle}
-                value={this.state.selectedCountry}
-                useNativeAndroidPickerStyle={false}
-                placeholder={{label: t('select_item'), value: null}}
-              />
-            </View>
-
-            <Text style={styles.textInputText}>{t('city')}</Text>
-            <View style={[styles.inputContainer, {marginBottom: hp(4)}]}>
-              <RNPickerSelect
-                onValueChange={this.handleSelectedCity}
-                items={this.state.cities.map(item => ({
-                  label: item.city,
-                  value: item.city,
-                }))}
-                style={pickerStyle}
-                value={this.state.city}
-                useNativeAndroidPickerStyle={false}
-                disabled={this.state.cityCheck}
-                placeholder={{label: t('select_item'), value: null}}
-              />
-            </View>
+              </>
+            )}
 
             <Events
               eventList={this.state.featureEventList}
@@ -542,6 +575,8 @@ class EventListScreen extends Component {
               }}
               name={t('browse_qube')}
               backGroundImage={false}
+              navigation={this.props.navigation}
+              route={"EventList"}
             />
           </View>
         </ScrollView>
@@ -663,7 +698,7 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     fontSize: wp(3.5),
-    color: '#c9c9c9',
+    // color: '#c9c9c9',
     marginVertical: hp(2),
   },
   dateFilterPadding: {

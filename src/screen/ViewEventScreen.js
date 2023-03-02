@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Dimensions,
   SafeAreaView,
+  ImageBackground,
 } from 'react-native';
 
 import {
@@ -18,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import RenderHtml from 'react-native-render-html';
+import WebView from 'react-native-webview';
 
 import {withTranslation} from 'react-i18next';
 
@@ -41,6 +43,8 @@ import Gallery from './event_detail/Gallery';
 import ReviewRatings from './event_detail/ReviewRatings';
 import SeatChart from './event_detail/SeatChart';
 import {t} from 'i18next';
+import splash_image from '../assets/image/spalsh_image.png';
+import WebDisplay from '../component/WebDisplay';
 
 const width = Dimensions.get('window').width;
 
@@ -171,11 +175,7 @@ class ViewEventScreen extends Component {
             </TouchableOpacity>
 
             <View style={{marginHorizontal: wp(4)}}>
-              <RenderHtml
-                tagsStyles={{p: {fontSize: wp(3.5)}}}
-                contentWidth={width}
-                source={{html: this.state.data?.event?.description}}
-              />
+              <WebDisplay html={this.state.data?.event?.description} />
             </View>
             {!isLoading && <LocationTimimg data={this.state.data} />}
             
@@ -219,21 +219,74 @@ class ViewEventScreen extends Component {
               </View>
             ) : null}
 
+            {this.state.data.event?.title == "InflataRun" && (
+              <ImageBackground
+              source={splash_image}
+              resizeMode="cover"
+              style={{
+                flex: 1,
+                backgroundColor: '#000',
+              }}
+            >
+            <WebView 
+                  scalesPageToFit={true}
+                  bounces={false}
+                  javaScriptEnabled
+                  style={{ height: 400, width: '100%' }}
+                  source={{
+                    html: `
+                          <!DOCTYPE html>
+                          <html>
+                            <head></head>
+                            <body>
+                              <div>
+                                <iframe src="https://inflatarun.com/inflatarun-ticket-categories/"
+                                style="border:0px #ffffff none;" name="myiFrame" scrolling="yes" frameborder="1"
+                                marginheight="0px" marginwidth="0px" height="1000px" width="100%" allowfullscreen></iframe>
+                              </div>
+                            </body>
+                          </html>
+                    `,
+                  }}
+                  automaticallyAdjustContentInsets={false}
+                />
+
+                <Text style={{
+                  fontSize: wp(6),
+                  fontWeight: '700',
+                  color: '#fff',
+                  textAlign: 'center',
+                  marginTop: hp(3),
+                }}>
+                  {t('video_preview')}
+                </Text>
+
+               <WebView
+                  style={{ marginTop: 20, width: '100%', height: 230 }}
+                  javaScriptEnabled={true}
+                  domStorageEnabled={true}
+                  source={{ uri: "https://www.youtube.com/embed/d6ZkgwpfKVY" }}
+                />
+
+            </ImageBackground>
+            )}
+
             {!isLoading && (
               <>
                 {/* Tage Grops (HOST,DANCER,etc)  */}
                 <TagGroups data={this.state.data} />
                 {/* Event gallery  */}
                 <Gallery data={this.state.data} />
-
                 {/* Event Review and rating  */}
-                <ReviewRatings data={this.state.data} />
+                <ReviewRatings data={this.state.data} />                
               </>
             )}
+
+            
           </View>
         </ScrollView>
 
-        {/* <FooterComponent nav={this.props.navigation} /> */}
+        <FooterComponent nav={this.props.navigation} />
       </SafeAreaView>
     );
   }

@@ -277,6 +277,15 @@ class HomeScreen extends Component {
               <Text style={styles.searchEventText}>{t('search_events')}</Text>
             </TouchableOpacity>
 
+            <Text style={{
+              fontSize: wp('7'),
+              fontWeight: '700',
+              marginLeft: 20,
+              marginBottom: 10,
+            }}>
+              {t('things_to_do_in_qatar')}
+            </Text>
+
             {this.state.featureEventList.length > 0 ? (
               <View>
                 <Events
@@ -286,6 +295,7 @@ class HomeScreen extends Component {
                   }}
                   name={t('featured_events')}
                   backGroundImage={false}
+                  navigation={this.props.navigation}
                 />
               </View>
             ) : null}
@@ -299,19 +309,7 @@ class HomeScreen extends Component {
                   }}
                   name={t('upcomming_events')}
                   backGroundImage={false}
-                />
-              </View>
-            ) : null}
-
-            {this.state.topSellingEvents.length > 0 ? (
-              <View>
-                <Events
-                  eventList={this.state.topSellingEvents}
-                  handleEvent={item => {
-                    this.handleEvent(item);
-                  }}
-                  name={t('top_selling')}
-                  backGroundImage={true}
+                  navigation={this.props.navigation}
                 />
               </View>
             ) : null}
@@ -327,14 +325,30 @@ class HomeScreen extends Component {
                       }}
                       name={cevent.name}
                       backGroundImage={false}
+                      navigation={this.props.navigation}
+
                     />
                   </View>
                 ))
               : null}
+
+            {this.state.topSellingEvents.length > 0 ? (
+              <View>
+                <Events
+                  eventList={this.state.topSellingEvents}
+                  handleEvent={item => {
+                    this.handleEvent(item);
+                  }}
+                  name={t('top_selling')}
+                  backGroundImage={true}
+                  navigation={this.props.navigation}
+                />
+              </View>
+            ) : null}
+
           </View>
         </ScrollView>
-
-        {/* <FooterComponent nav={this.props.navigation} /> */}
+        <FooterComponent nav={this.props.navigation} />
       </SafeAreaView>
     );
   }

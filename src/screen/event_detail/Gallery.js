@@ -8,50 +8,73 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  FlatList
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { FlatGrid } from 'react-native-super-grid';
+import ImageView from "react-native-image-viewing";
 import splash_image from '../../assets/image/spalsh_image.png';
-
-import { withTranslation } from 'react-i18next';
-
+import { withTranslation } from 'react-i18next'
 
 class Gallery extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      visible: false,
+      index: 0,
+    };
   }
 
   render() {
 
     const { imageGallery } = this.props.data;
     const { t } = this.props;
+    let images = [];
+    imageGallery.map((item) => {
+      images.push({ uri: item.img });
+    });
 
     return (
-      <View >
+      <View>
         {(imageGallery.length > 0) ? (
           <ImageBackground
             source={splash_image}
             style={styles.eventCategoryContainer}>
             <Text style={styles.DjsText}>{t('event_gallery')}</Text>
-            <FlatList
-              horizontal={false}
-              numColumns={2}
-              data={imageGallery}
-              // style={styles.gridView}
-              spacing={2}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.categoryContainer}>
-                  <ImageBackground
-                    source={{ uri: item.img }}
-                    resizeMode="cover"
-                    style={styles.categoryImageStyle}>
-                  </ImageBackground>
-                </TouchableOpacity>
-              )}
+              {imageGallery.map((item, index) => {
+                if (index % 2 === 0) {
+                  return (
+                    <View style={{ flexDirection: 'row' }} key={index}>
+                      <TouchableOpacity style={styles.categoryContainer} onPress={() => {
+                        this.setState({ visible: true, index: index });
+                      }}>
+                        <ImageBackground
+                          source={{ uri: item.img }}
+                          resizeMode="cover"
+                          style={styles.categoryImageStyle}>
+                        </ImageBackground>
+                      </TouchableOpacity>
+                      {imageGallery[index + 1] && (
+                        <TouchableOpacity style={styles.categoryContainer} 
+                          onPress={() => this.setState({ visible: true, index: index + 1 })}>
+                          <ImageBackground
+                            source={{ uri: imageGallery[index + 1]?.img }}
+                            resizeMode="cover"
+                            style={styles.categoryImageStyle}>
+                          </ImageBackground>
+                      </TouchableOpacity>
+                      )}
+                    </View>
+                  )
+                }
+              })
+              }
+            <ImageView
+              images={images}
+              imageIndex={this.state.index}
+              visible={this.state.visible}
+              onRequestClose={() => this.setState({ visible: false })}
             />
           </ImageBackground>
         ) : null}
@@ -276,7 +299,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
     textAlign: 'center',
-    marginTop: hp(2),
+    marginTop: hp(5),
   },
   djNameText: {
     fontSize: wp(5),
@@ -294,9 +317,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
   categoryContainer: {
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: '#fff',
-    borderRadius: wp(2),
     marginHorizontal: wp(2),
     marginVertical: hp(2),
   },
