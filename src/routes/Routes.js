@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
-import {Image, StyleSheet, ScrollView, View, Text, Alert, StatusBar} from 'react-native';
+import React, { useEffect } from 'react';
+import {Image, StyleSheet, ScrollView, View, Text, Alert} from 'react-native';
 import {withTranslation, useTranslation} from 'react-i18next';
 
 import {createStackNavigator} from '@react-navigation/stack';
@@ -299,6 +299,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         screenOptions={{
           unmountOnBlur: true,
           headerShown: false,
+          drawerPosition: 'right',
         }}
         drawerContent={CustomDrawerContentComponent}>
         <Drawer.Screen
@@ -403,6 +404,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         screenOptions={{
           unmountOnBlur: true,
           headerShown: false,
+          drawerPosition: 'right',
         }}
         drawerContent={CustomDrawerContentComponent}>
         <Drawer.Screen
@@ -497,6 +499,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         screenOptions={{
           unmountOnBlur: true,
           headerShown: false,
+          drawerPosition: 'right',
         }}
         drawerContent={CustomDrawerContentComponent}>
         <Drawer.Screen
@@ -583,7 +586,6 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
     );
   };
 
-  /* ==================== LoggedOutNavigator ================== */
   const LoggedOutNavigator = () => {
     return (
       <Drawer.Navigator
@@ -592,6 +594,7 @@ const Routes = ({checkScanning, guestCheckoutSuccess}) => {
         screenOptions={{
           unmountOnBlur: true,
           headerShown: false,
+          drawerPosition: 'right',
         }}
         drawerContent={CustomDrawerContentComponent}>
         <Drawer.Screen
