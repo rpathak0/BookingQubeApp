@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
   },
   brandIcon: {
     marginTop: 3,
+    marginLeft: 10,
     width: '50%',
     height: hp(4.5),
   },
