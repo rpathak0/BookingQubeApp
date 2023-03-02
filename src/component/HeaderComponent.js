@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -36,6 +36,7 @@ import RNRestart from 'react-native-restart';
 import {STORAGE_URL} from '../api/ApiInfo';
 import {t} from 'i18next';
 import {useNavigation} from '@react-navigation/native';
+
 const HeaderComponent = props => {
   const {i18n} = useTranslation();
   const navigation = useNavigation();
@@ -231,14 +232,23 @@ const HeaderComponent = props => {
 
   return (
     <View style={styles.headerContainer}>
-      <View style={[styles.menuItems]}>
-        <TouchableOpacity
-          onPress={handleNavAction}
-          style={styles.menuIconContainer}>
-          <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
-        </TouchableOpacity>
-        <Image source={brand_logo} style={styles.brandIcon} />
-      </View>
+        {navAction === 'back' && (
+          <View style={[styles.menuItems]}>
+            <TouchableOpacity
+            onPress={handleNavAction}
+            style={styles.menuIconContainer}>
+              <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
+            </TouchableOpacity>
+            <Image source={brand_logo} style={{
+              ...styles.brandIcon,
+              marginLeft: 10
+              }}
+            />
+          </View>
+        )}
+        {navAction !== 'back' && (
+          <Image source={brand_logo} style={styles.brandIcon} />
+        )}
 
       <View style={[styles.menuContainer, styles.menuItems]}>
         <DropDownPicker
@@ -283,6 +293,13 @@ const HeaderComponent = props => {
             />
           )}
         </TouchableOpacity>
+        {navAction != "back" && (
+          <TouchableOpacity
+          onPress={handleNavAction}
+          style={styles.menuIconContainer}>
+          <Image source={navIcon} resizeMode="cover" style={styles.backIcon} />
+        </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -314,7 +331,6 @@ const styles = StyleSheet.create({
   },
   brandIcon: {
     marginTop: 3,
-    marginLeft: 10,
     width: '50%',
     height: hp(4.5),
   },
