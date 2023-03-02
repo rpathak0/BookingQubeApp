@@ -13,8 +13,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
 import {withTranslation} from 'react-i18next';
+import * as Icon from "react-native-feather";
 
 // Icon
 import ic_home from '../assets/icon/ic_home.png';
@@ -112,7 +112,8 @@ class FooterComponent extends PureComponent {
           onPress={this.handleHome}
           style={tab === 'Home' ? selectedTabStyle : styles.footerMenu}>
           <View style={styles.singleMenu}>
-            <Image source={ic_home} style={styles.footerNavigatorIcon} />
+            {/* <Image source={ic_home} style={styles.footerNavigatorIcon} /> */}
+            <Icon.Home stroke={"#000"}/>
             <Text
               style={[
                 this.state.checkDarkMode === 1
@@ -124,7 +125,7 @@ class FooterComponent extends PureComponent {
           </View>
         </TouchableHighlight>
 
-        <TouchableHighlight
+        {/* <TouchableHighlight
           underlayColor="transparent"
           onPress={this.handleMovies}
           style={tab === 'Home' ? selectedTabStyle : styles.footerMenu}>
@@ -139,7 +140,7 @@ class FooterComponent extends PureComponent {
               {t('movies')}
             </Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
 
         {this.state.userRoleId == 2 ? (
           <TouchableHighlight
@@ -147,10 +148,11 @@ class FooterComponent extends PureComponent {
             onPress={this.handleCategory}
             style={tab === 'Game' ? selectedTabStyle : styles.footerMenu}>
             <View style={styles.singleMenu}>
-              <Image
+              {/* <Image
                 source={ic_footer_category}
                 style={styles.footerNavigatorIcon}
-              />
+              /> */}
+              <Icon.CreditCard stroke={"#000"} />
               <Text
                 style={[
                   this.state.checkDarkMode === 1
@@ -168,10 +170,11 @@ class FooterComponent extends PureComponent {
           onPress={this.handleEvent}
           style={tab === 'Profile' ? selectedTabStyle : styles.footerMenu}>
           <View style={styles.singleMenu}>
-            <Image
+            {/* <Image
               source={ic_footer_event}
               style={styles.footerNavigatorIcon}
-            />
+            /> */}
+            <Icon.Calendar stroke={"#000"} />
             <Text
               style={[
                 this.state.checkDarkMode === 1
@@ -188,7 +191,8 @@ class FooterComponent extends PureComponent {
           onPress={this.handleMore}
           style={tab === 'Profile' ? selectedTabStyle : styles.footerMenu}>
           <View style={styles.singleMenu}>
-            <Image source={ic_menu} style={styles.footerNavigatorIcon} />
+            {/* <Image source={ic_menu} style={styles.footerNavigatorIcon} /> */}
+            <Icon.Menu stroke={"#000"} />
             <Text
               style={[
                 this.state.checkDarkMode === 1
@@ -209,7 +213,7 @@ export default withTranslation()(FooterComponent);
 const styles = StyleSheet.create({
   footerContainer: {
     height: hp(8),
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderTopWidth: 1,
@@ -238,7 +242,7 @@ const styles = StyleSheet.create({
   },
   footerMenuText: {
     fontSize: wp(3),
-    color: '#ffffff',
+    color: '#000',
     fontWeight: '500',
   },
   footerMenuTextBlack: {
