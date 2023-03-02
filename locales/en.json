@@ -27,7 +27,6 @@
       "hours"                  : "Hours",
       "minutes"                : "Minutes",
       "seconds"                : "Seconds",
-      "ended"                  : "Ended",
       "online"                 : "Online",
       "event"                  : "Event",
       "events"                 : "Events",
@@ -112,10 +111,8 @@
       "paid"                   : "Paid",
       "checked_in"             : "Checked in",
       "no"                     : "No",
-      "yes"                    : "Yes",
       "status"                 : "Status",
       "enabled"                : "Enabled",
-      "disabled"               : "Disabled",
       "cancellation"           : "Cancellation",
       "cancellation_pending"   : "Pending",
       "approved"               : "Approved",
@@ -124,7 +121,6 @@
       "actions"                : "Actions",
       "invoice"                : "Invoice",
       "download_qrcode"        : "Download QRcode",
-      "check_in"               : "Check in",
       "checkout_countdown"     : "Checkout Countdown",
       "na"                     : "N/A",
       "no_bookings"            : "No Bookings",
@@ -207,8 +203,17 @@
       "clear_sign"         : "Clear Signature",
       "please_enter_sign"         : "Please enter signature!",
       "please_sign_waiver"         : "Please Sign Waiver Info!",
-      
-      
-      "test"                   : "test"
+      "test"                   : "test",
+      "things_to_do_in_qatar"  : "Things to do in Qatar",
+      "view_all": "View All Events",
+      "select_category": "Select Category",
+      "video_preview": "Video Preview",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "selected_date": "Selected Date",
+      "select_country_code": "Select Country Code",
+      "search_country": "Search Country",
+      "search_country_code": "Search Country Code",
+      "show_filters": "Show Filters"
     }
 }
