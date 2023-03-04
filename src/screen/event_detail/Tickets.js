@@ -175,7 +175,7 @@ class Tickets extends Component {
               this.setState({
                 timeslots: timeslots,
               });
-              console.log("Timeslots:", timeslots);
+              console.log("Timeslots:", this.state.timeslots);
             }
           }
         });
@@ -347,7 +347,7 @@ class Tickets extends Component {
                                         };
                                   })}
                                   titleStyle={{fontSize: 18, color: 'black'}}
-                                  selectedColor="#1E88E5"
+                                  // selectedColor="#1E88E5"
                                   confirmButtonDisabledTextStyle={{color: 'grey'}}
                                   onCancel={() => {
                                       console.log('Cancelled');

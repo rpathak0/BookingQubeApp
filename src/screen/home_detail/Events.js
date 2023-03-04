@@ -243,7 +243,7 @@ class Events extends Component {
           }
         })}
 
-        {item.repetitive_type === 1 ? (
+        {/* {item.repetitive_type === 1 ? (
           <View style={styles.eventRoutineContainer}>
             <Text style={styles.eventRoutineText}>{t('repetitive_daily')}</Text>
           </View>
@@ -259,7 +259,7 @@ class Events extends Component {
               {t('repetitive_monthly')}
             </Text>
           </View>
-        ) : item.repetitive_type === null ? null : null}
+        ) : item.repetitive_type === null ? null : null} */}
       </TouchableOpacity>
     );
   };

@@ -867,7 +867,6 @@ class CheckOutScreen extends Component {
     Keyboard.dismiss();
     const axios = require('axios');
     const token = await getData(async_keys.userId);
-
     if (token == 'null') {
       showToast(t('login_to_promocode'));
       return false;
@@ -916,7 +915,7 @@ class CheckOutScreen extends Component {
               this.showToast(
                 'success',
                 t('promocode_discount'),
-                t('login_to_promocode'),
+                t('promocode_applied'),
               );
             }
           })
@@ -1260,9 +1259,8 @@ class CheckOutScreen extends Component {
     };
 
     const totalTicketSelected = (item, type) => {
-      // console.log('item',JSON.stringify(item,null,4));
+      
       let selected_tickets = this.state.ticketList;
-      console.log('Selected Tickets:', selected_tickets);
       if (
         selected_tickets.length &&
         selected_tickets.filter(i => i.ticketId === item.id).length

@@ -215,6 +215,9 @@
       "search_country": "Search Country",
       "search_country_code": "Search Country Code",
       "show_filters": "Show Filters",
-      "hide_filters": "Hide Filters"
+      "hide_filters": "Hide Filters",
+      "promocode_applied": "Promocode Applied!"
+      
+
     }
 }
