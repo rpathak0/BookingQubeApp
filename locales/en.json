@@ -216,7 +216,10 @@
       "search_country_code": "Search Country Code",
       "show_filters": "Show Filters",
       "hide_filters": "Hide Filters",
-      "promocode_applied": "Promocode Applied!"
+      "promocode_applied": "Promocode Applied!",
+      "nationality": "Nationality",
+      "country_residence": "Country Of Residence"
+      
       
 
     }

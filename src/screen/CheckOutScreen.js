@@ -349,7 +349,6 @@ class CheckOutScreen extends Component {
         startTime: this.eventInfo.startTime,
         endTime: this.eventInfo.endTime,
       };
-      console.log(params);
       // creating custom header
       let axiosConfig = {};
       // calling api
@@ -363,7 +362,6 @@ class CheckOutScreen extends Component {
 
             let timeslots = [];
             if (success === true) {
-              console.log("Response:", newResponse.data.data.free_tickets);
               newResponse.data.data.event.slots.map(item => {
                 let startdatetime = null;
                 let currentdatetime = null;
@@ -459,7 +457,6 @@ class CheckOutScreen extends Component {
     let cfData = this.state.finalData;
     let custom_feilds = [];
     cfData.forEach((cfValues, i) => {
-      // console.log(Object.entries(cfValues),this.state.customField);
       const cfValuesArray = Object.entries(cfValues);
       cfValuesArray.forEach(cf => {
         if (cf[0] !== undefined) {
@@ -508,7 +505,6 @@ class CheckOutScreen extends Component {
         // processing response
         .then(response => {
           let newResponse = response.data;
-          // console.log('custom fields', response);
           if (newResponse?.status) {
             this.setState({
               customField: newResponse.custom_fields,
@@ -819,7 +815,6 @@ class CheckOutScreen extends Component {
         .post(BASE_URL + 'book-tickets', params, axiosConfig)
         .then(response => {
           let newResponse = response;
-          console.log('book-tickets response', response);
           if (newResponse) {
             const {status, url, redirectToPaymentUrl} = newResponse.data;
             if (status === true) {
@@ -857,8 +852,6 @@ class CheckOutScreen extends Component {
     const ticket = {...item, promocodeText: promocodeText};
     const newTickets = tickets.map(t => (t.id == ticket.id ? ticket : t));
     this.setState({tickets: newTickets});
-    //  console.log(newTickets);
-    // this.setState({...this.state.tickets})
   };
 
   applyPromocode = async item => {
@@ -1001,7 +994,6 @@ class CheckOutScreen extends Component {
 
       const parsedPhone = parsePhoneNumber(CountryCallingCode + phone, CountryCode);
       if (parsedPhone) {
-        console.log("Phone Number Valid:", parsedPhone.isValid())
         if (!parsedPhone.isValid()) {
             Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], {
             cancelable: false,
@@ -1020,7 +1012,8 @@ class CheckOutScreen extends Component {
         this.setState({showModalProcessingLoader: true});
         // preparing params
         const params = {
-          name: firstname + ' ' + lastname,
+          first_name: firstname,
+          last_name: lastname,
           email: email,
           phone: CountryCallingCode + phone,
           country_id: CountryId,
@@ -1323,7 +1316,6 @@ class CheckOutScreen extends Component {
         // }
 
         const parsedPhoneNumber = parsePhoneNumber(this.state.CountryCallingCode + this.state.waiver_phone, this.state.CountryCode);
-        console.log("Phone Number valid:", parsedPhoneNumber.isValid());
         if (!parsedPhoneNumber.isValid()) {
           Alert.alert('', t('enter_mobile_valid'), [{text: t('ok')}], { cancelable: false });
           return;
@@ -1562,7 +1554,6 @@ class CheckOutScreen extends Component {
                               onValueChange={value => {
                                 const {quantity, item} = JSON.parse(value);
                                 this.handleSelectValue(quantity, JSON.parse(item), '');
-                                console.log("Quantity:" + quantity + " Item:" + item)
                                 this.pickerValue = JSON.stringify(value);
                               }}
                             />
@@ -2094,7 +2085,7 @@ class CheckOutScreen extends Component {
             </View>
           </View>
 
-          <Text style={styles.textInputText}>{t('Nationality')}*</Text>
+          <Text style={styles.textInputText}>{t('country_residence')}*</Text>
           <View style={{
                 flexDirection: 'row',
                 height: hp(6),
@@ -2224,7 +2215,7 @@ class CheckOutScreen extends Component {
             />
           </View>
 
-          <Text style={styles.textInputText}>{t('Nationality')}*</Text>
+          <Text style={styles.textInputText}>{t('nationality')}*</Text>
           <View style={{
                 flexDirection: 'row',
                 height: hp(6),
@@ -2256,7 +2247,6 @@ class CheckOutScreen extends Component {
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}
                   onSelectItem={(item) => {
-                    console.log(item);
                     this.setState({
                       waiver_country_id: item.value
                     })
@@ -2304,7 +2294,6 @@ class CheckOutScreen extends Component {
                   style={{ backgroundColor: 'transparent', borderWidth: 2,borderColor: '#ccc' }}
                   textStyle={{ fontSize: 12}}
                   onSelectItem={(item) => {
-                    console.log(item);
                     this.setState({
                       CountryCode: item.code
                     })
