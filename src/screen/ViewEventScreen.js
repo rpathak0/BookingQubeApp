@@ -228,29 +228,6 @@ class ViewEventScreen extends Component {
                 backgroundColor: '#000',
               }}
             >
-            <WebView 
-                  scalesPageToFit={true}
-                  bounces={false}
-                  javaScriptEnabled
-                  style={{ height: 400, width: '100%' }}
-                  source={{
-                    html: `
-                          <!DOCTYPE html>
-                          <html>
-                            <head></head>
-                            <body>
-                              <div>
-                                <iframe src="https://inflatarun.com/inflatarun-ticket-categories/"
-                                style="border:0px #ffffff none;" name="myiFrame" scrolling="yes" frameborder="1"
-                                marginheight="0px" marginwidth="0px" height="1000px" width="100%" allowfullscreen></iframe>
-                              </div>
-                            </body>
-                          </html>
-                    `,
-                  }}
-                  automaticallyAdjustContentInsets={false}
-                />
-
                 <Text style={{
                   fontSize: wp(6),
                   fontWeight: '700',

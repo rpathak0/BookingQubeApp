@@ -863,6 +863,7 @@ class CheckOutScreen extends Component {
 
   applyPromocode = async item => {
     const {t} = this.props;
+    const {finalDate} = this.eventInfo;
     Keyboard.dismiss();
     const axios = require('axios');
     const token = await getData(async_keys.userId);
@@ -881,6 +882,7 @@ class CheckOutScreen extends Component {
           promocode: item.promocodeText,
           ticket_id: item.id,
           customer_id: this.state.userId,
+          booking_date: finalDate.start_date,
         };
 
         // creating custom header
