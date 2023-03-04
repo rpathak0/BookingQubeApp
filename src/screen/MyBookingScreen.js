@@ -25,7 +25,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
+import ReactNativePickerModule from 'react-native-picker-module';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
@@ -90,6 +91,9 @@ class MyBookingScreen extends Component {
       barCodeFile: null,
       qrCodeOrderNumber: null,
     };
+
+    this.pickerRef = React.createRef();
+    this.eventsPickerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -605,17 +609,28 @@ class MyBookingScreen extends Component {
 
               <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
-                <RNPickerSelect
-                  onValueChange={this.handleSelectedEvent}
+                <TouchableOpacity onPress={() => this.pickerRef.current.show()}>
+                  {this.state.selectedEvent === '' ? (
+                    <Text style={styles.descriptionText}>
+                      {t('select_item')}
+                    </Text>
+                  ) : (
+                    <Text style={styles.descriptionText}>
+                      {this.state.selectedEvent}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+              <ReactNativePickerModule
+                  ref={this.pickerRef}
+                  value={this.state.selectedEvent}
+                  title={t('select_item')}
                   items={this.state.attendEventData.map(item => ({
                     label: item.event_title,
                     value: item.event_title,
                   }))}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{label: t('select_item'), value: null}}
-                />
-              </View>
+                  onValueChange={this.handleSelectedEvent}
+              />
 
               <Text style={styles.textInputText}>{t('event_date')}</Text>
               <View style={styles.inputContainer}>
@@ -652,9 +667,9 @@ class MyBookingScreen extends Component {
                 </View>
               </View>
 
-              {this.state.ticketList.map(item => {
+              {this.state.ticketList.map((item, index) => {
                 return (
-                  <View style={styles.bookedTicketContainer}>
+                  <View style={styles.bookedTicketContainer} key={index}>
                     <View style={styles.orderIdWrapper}>
                       <Text style={styles.orderIdText}>
                         {t('order_id')} #{item.order_number}
@@ -973,15 +988,25 @@ class MyBookingScreen extends Component {
             <View style={styles.homeContainer}>
               <Text style={styles.textInputText}>{t('events')}</Text>
               <View style={styles.inputContainer}>
-                <RNPickerSelect
-                  onValueChange={this.handleSelectedShow}
-                  items={[{label: t('all_events'), value: t('all_events')}]}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{label: t('select_item'), value: null}}
-                />
+                <TouchableOpacity onPress={() => this.eventsPickerRef.current.show()}>
+                  {this.state.selectedShow === '' ? (
+                    <Text style={styles.descriptionText}>
+                      {t('select_item')}
+                    </Text>
+                  ) : (
+                    <Text style={styles.descriptionText}>
+                      {this.state.selectedShow}
+                    </Text>
+                  )}
+                </TouchableOpacity>
               </View>
-
+              <ReactNativePickerModule
+                ref={this.eventsPickerRef}
+                title={t('select_item')}
+                items={[{label: t('all_events'), value: t('all_events')}]}
+                value={this.state.selectedShow}
+                onValueChange={this.handleSelectedShow}
+              />
               <Text style={styles.textInputText}>{t('booking_date')}</Text>
               <View style={styles.inputContainer}>
                 <TouchableOpacity onPress={this.handleBookingDate}>
