@@ -425,7 +425,7 @@ class EventListScreen extends Component {
               onPress={() => this.setState({
                 showFilters: !this.state.showFilters,
               })}>
-              <Text style={styles.resetText}>{t('show_filters')}</Text>
+              <Text style={styles.resetText}>{this.state.showFilters ? t('hide_filters') : t('show_filters')}</Text>
             </TouchableOpacity>
 
             {this.state.showFilters && (
