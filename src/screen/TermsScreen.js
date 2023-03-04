@@ -61,7 +61,7 @@ class TermsScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('terms')}
-          navAction="home"
+          navAction="back"
           nav={this.props.navigation}
         />
 

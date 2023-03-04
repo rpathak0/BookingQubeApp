@@ -60,7 +60,7 @@ class PrivacyScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('privacy')}
-          navAction="home"
+          navAction="back"
           nav={this.props.navigation}
         />
 

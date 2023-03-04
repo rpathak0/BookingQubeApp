@@ -68,7 +68,7 @@ class AboutScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('about')}
-          navAction="home"
+          navAction="back"
           nav={this.props.navigation}
         />
 

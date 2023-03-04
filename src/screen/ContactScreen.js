@@ -62,7 +62,7 @@ class ContactScreen extends Component {
       <SafeAreaView style={styles.container}>
         <HeaderComponent
           title={t('contact')}
-          navAction="home"
+          navAction="back"
           nav={this.props.navigation}
         />
 
