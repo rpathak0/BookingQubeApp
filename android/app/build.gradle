@@ -98,8 +98,8 @@ android {
         applicationId "com.bookingqube.bookingqubeapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.9"
+        versionCode 10
+        versionName "1.10"
        missingDimensionStrategy 'react-native-camera', 'mlkit'
        vectorDrawables.useSupportLibrary = true
     }
